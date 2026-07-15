@@ -38,7 +38,7 @@ export function UsersTable({ initialUsers }: { initialUsers: User[] }) {
   async function handleAdd() {
     setLoading(true);
     setError("");
-    const result = await addUser({ ...formData, role: "CUSTOMER" });
+    const result = await addUser({ ...formData, role: "AGENCY_AGENT" });
     if (result.success) {
       const newUser = result.data as User;
       setUsers((prev) => [{ ...newUser, createdAt: new Date().toISOString() }, ...prev]);
