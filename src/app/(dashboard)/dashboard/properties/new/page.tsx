@@ -189,8 +189,9 @@ export default function NewPropertyPage() {
       router.push("/dashboard/properties");
     } else {
       setLoading(false);
-      if (result.errors) {
-        setErrors(result.errors);
+      const failed = result as { success: false; error: string; errors?: Record<string, string[]> };
+      if (failed.errors) {
+        setErrors(failed.errors);
       }
     }
   };
