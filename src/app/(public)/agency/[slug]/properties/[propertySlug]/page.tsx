@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { formatCurrency } from "@/shared/lib/utils";
 import { PropertyViewTracker } from "@/shared/components/shared/property-view-tracker";
 import { ContactTracker } from "@/shared/components/shared/contact-tracker";
+import { ImageGallery } from "@/shared/components/shared/image-gallery";
 import Image from "next/image";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -90,6 +91,11 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
               {property.isFeatured && (
                 <Badge variant="warning" className="text-sm px-4 py-1.5">مميز</Badge>
               )}
+              {property.images.length > 1 && (
+                <Badge variant="default" className="text-sm px-4 py-1.5 bg-black/40 backdrop-blur-sm text-white border-white/20">
+                  📷 {property.images.length} صور
+                </Badge>
+              )}
             </div>
             <h1 className="font-[family-name:var(--font-public-heading)] text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 no-break">
               {property.title}
@@ -123,24 +129,13 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
             </div>
 
             {/* Gallery */}
-            {property.images.length > 1 && (
-              <div className="grid grid-cols-4 gap-3">
-                {property.images.map((img) => (
-                  <div key={img.id} className="relative aspect-square overflow-hidden rounded-xl border border-border/50 shadow-sm">
-                    {img.url.startsWith("data:") ? (
-                      <img src={img.url} alt={img.altText || ""} className="h-full w-full object-cover hover:scale-110 transition-transform duration-300" />
-                    ) : (
-                      <Image
-                        src={img.url}
-                        alt={img.altText || ""}
-                        fill
-                        sizes="(max-width: 640px) 25vw, 150px"
-                        className="object-cover hover:scale-110 transition-transform duration-300"
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
+            {property.images.length > 0 && (
+              <ImageGallery
+                images={property.images.map((img) => ({
+                  url: img.url,
+                  altText: img.altText,
+                }))}
+              />
             )}
 
             {/* Description */}
