@@ -5,6 +5,8 @@ import { prisma } from "@/shared/lib/prisma";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
 
