@@ -9,9 +9,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"]
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();
-  if (!user?.agencyId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const agencyId = user?.agencyId || "registration";
 
   try {
     const formData = await request.formData();
@@ -30,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (isSupabaseConfigured()) {
-      const result = await uploadLogo(file, user.agencyId);
+      const result = await uploadLogo(file, agencyId);
       if (result) {
         return NextResponse.json({ url: result.url });
       }

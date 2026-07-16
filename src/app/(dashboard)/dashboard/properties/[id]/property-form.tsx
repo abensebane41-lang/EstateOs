@@ -150,6 +150,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
     for (const img of newImages) {
       const formData = new FormData();
       formData.append("file", img.file);
+      formData.append("propertyId", propertyId);
       try {
         const res = await fetch("/api/upload", { method: "POST", body: formData });
         if (!res.ok) continue;

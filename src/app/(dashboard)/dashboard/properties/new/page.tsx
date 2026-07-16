@@ -145,6 +145,7 @@ export default function NewPropertyPage() {
       for (let i = 0; i < images.length; i++) {
         const formData = new FormData();
         formData.append("file", images[i].file);
+        formData.append("propertyId", propertyId);
         const res = await fetch("/api/upload", { method: "POST", body: formData });
         if (!res.ok) continue;
         const data = await res.json();
