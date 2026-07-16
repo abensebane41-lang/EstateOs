@@ -14,8 +14,8 @@ const AGENCY_DATA = [
   { name: "Hoggar Immo", slug: "hoggarimmo", phone: "+213 555 100 010", email: "info@hoggarimmo.com", address: "Boulevard Emir Abdelkader, Bechar", description: "Immobilier dans le sud-ouest" },
 ];
 
-const STATES = ["Alger", "Oran", "Constantine", "Annaba", "Batna", "Tlemcen", "Tizi Ouzou", "Sétif", "Ghardaia", "Bechar"];
-const CITIES = ["Alger Centre", "Oran Centre", "Constantine Centre", "Annaba Centre", "Batna Centre", "Tlemcen Centre", "Tizi Ouzou Centre", "Sétif Centre", "Ghardaia Centre", "Bechar Centre"];
+const STATES = ["الجزائر", "وهران", "قسنطينة", "عنابة", "باتنة", "تلمسان", "تيزي وزو", "سطيف", "غرداية", "بشار"];
+const CITIES = ["بئر مراد رايس", "السانية", "الخروب", "الحجار", "نقاوس", "نداروم", "أزفون", "العلمة", "المنيعة", "العبادلة"];
 
 const IMAGES = [
   "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",

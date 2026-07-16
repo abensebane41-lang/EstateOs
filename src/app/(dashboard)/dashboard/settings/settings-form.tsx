@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Badge } from "@/shared/components/ui/badge";
 import { updateAgencyProfile } from "@/modules/agency/actions";
-import { Save, Building2, CreditCard, Users, Home, Globe, Copy, Check } from "lucide-react";
+import { Save, Building2, CreditCard, Users, Home, Globe, Copy, Check, Upload, X } from "lucide-react";
 
 interface AgencyData {
   id: string;
@@ -26,6 +26,10 @@ interface AgencyData {
 }
 
 export function SettingsForm({ agency }: { agency: AgencyData }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(agency.logoUrl);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [formData, setFormData] = useState({
     name: agency.name || "",
     phone: agency.phone || "",
@@ -52,13 +56,45 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
+  function handleLogoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) return;
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
+  }
+
+  function removeLogo() {
+    setLogoFile(null);
+    setLogoPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function uploadLogoToStorage(): Promise<string | null> {
+    if (!logoFile) return null;
+    setUploadingLogo(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", logoFile);
+      const res = await fetch("/api/upload/logo", { method: "POST", body: fd });
+      const data = await res.json();
+      return res.ok && data.url ? data.url : null;
+    } catch { return null; }
+    finally { setUploadingLogo(false); }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setMessage(null);
 
     try {
-      const result = await updateAgencyProfile(formData);
+      let logoUrl: string | undefined = undefined;
+      if (logoFile) {
+        const uploaded = await uploadLogoToStorage();
+        if (uploaded) logoUrl = uploaded;
+      }
+      const result = await updateAgencyProfile({ ...formData, logoUrl });
       if (result.success) {
         setMessage({ type: "success", text: "تم حفظ التغييرات بنجاح" });
       } else {
@@ -163,6 +199,40 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
           </div>
         </div>
       )}
+
+      <div className="rounded-xl border border-border bg-white p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-text-primary">
+          <Upload className="h-5 w-5" />
+          شعار الوكالة (اللوغو)
+        </h3>
+        <div className="flex items-center gap-6">
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="relative flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-border transition-colors hover:border-primary/50"
+          >
+            {logoPreview ? (
+              <>
+                <img src={logoPreview} alt="شعار الوكالة" className="h-full w-full object-cover" />
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); removeLogo(); }}
+                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-error text-white"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </>
+            ) : (
+              <Upload className="h-6 w-6 text-text-tertiary" />
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-text-secondary">اضغط لرفع شعار الوكالة</p>
+            <p className="text-xs text-text-tertiary">JPG, PNG, WebP — حد أقصى 2 ميغابايت</p>
+            {uploadingLogo && <p className="mt-1 text-xs text-accent">جاري الرفع...</p>}
+          </div>
+        </div>
+        <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleLogoSelect} />
+      </div>
 
       <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-white p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-text-primary">

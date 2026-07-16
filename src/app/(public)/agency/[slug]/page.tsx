@@ -6,7 +6,7 @@ import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency } from "@/shared/lib/utils";
-import { parseFilters, filterProperties, getCitiesForState } from "@/shared/lib/property-filters";
+import { parseFilters, filterProperties } from "@/shared/lib/property-filters";
 import { FilterBar } from "@/shared/components/shared/filter-bar";
 import { Pagination } from "@/shared/components/shared/pagination";
 
@@ -70,8 +70,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
   const filters = parseFilters(sp, agency.id);
   const { properties, pagination } = await filterProperties(filters);
 
-  const [allCities, stats, featuredProperty] = await Promise.all([
-    getCitiesForState(sp.state || "", agency.id),
+  const [stats, featuredProperty] = await Promise.all([
     prisma.property.aggregate({
       where: { agencyId: agency.id, status: "PUBLISHED" },
       _count: true,
@@ -83,7 +82,6 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
     }),
   ]);
 
-  const citiesToShow = allCities.length > 0 ? allCities : [];
   const heroImage = featuredProperty?.images[0]?.url || DEFAULT_HERO;
 
   return (
@@ -188,7 +186,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
           </p>
         </div>
 
-        <FilterBar cities={citiesToShow} totalResults={pagination.total} />
+        <FilterBar totalResults={pagination.total} />
 
         {properties.length === 0 ? (
           <div className="py-20 text-center">

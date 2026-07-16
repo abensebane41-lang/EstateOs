@@ -7,6 +7,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { PriceInputString } from "@/shared/components/shared/price-input";
 import { ChevronDown, ChevronUp, X, Search, SlidersHorizontal } from "lucide-react";
+import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
 
 const PROPERTY_TYPES = [
   { value: "APARTMENT", label: "شقة" },
@@ -27,23 +28,13 @@ const SORT_OPTIONS = [
   { value: "views", label: "الأكثر مشاهدة" },
 ];
 
-const ALGERIA_STATES = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة",
-  "تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة",
-  "سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","عمان","وهران","البيض","إليزي",
-  "برج بوعريريج","بومرداس","الشريعة","الوادي","خنشلة","توقرت","جانت","المغير","النعمة",
-  "عين تموشنت","غرداية","غليزان","تيميمون","برج باجي مختار","أولاد جلال","بني عباس","تيموشنت",
-  "عين_salهر","تقرت","معسكر","الogonal","الحجار","الطارف"," Tilimsan","Ain Defla",
-  "Naama","Ain Temouchent","Ghardaia","Relizane","El M'Ghair","El Meniaa","Ouled Djellal",
-  "Bordj Badji Mokhtar","Beni Abbes","Timimoun","Touggourt","Djanet","In Salah","In Guezzam",
-];
+const ALGERIA_STATES = WILAYAS.map(w => w.name);
 
 interface FilterBarProps {
-  cities: string[];
   totalResults: number;
 }
 
-export function FilterBar({ cities, totalResults }: FilterBarProps) {
+export function FilterBar({ totalResults }: FilterBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [expanded, setExpanded] = useState(false);
@@ -65,6 +56,10 @@ export function FilterBar({ cities, totalResults }: FilterBarProps) {
   const [featured, setFeatured] = useState(searchParams.get("featured") === "1");
   const [sort, setSort] = useState(searchParams.get("sort") || "newest");
   const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  const selectedWilaya = WILAYAS.find(w => w.name === state);
+  const stateCode = selectedWilaya?.code || "";
+  const communesForState = stateCode ? (COMMUNES[stateCode] || []) : [];
 
   const activeFilterCount = [
     search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea,
@@ -189,11 +184,11 @@ export function FilterBar({ cities, totalResults }: FilterBarProps) {
           <select
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            disabled={!state && cities.length === 0}
+            disabled={!state}
             className="flex h-11 w-full rounded-xl border border-border/60 bg-surface-secondary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors disabled:opacity-50"
           >
             <option value="">الكل</option>
-            {cities.map((c) => (
+            {communesForState.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
