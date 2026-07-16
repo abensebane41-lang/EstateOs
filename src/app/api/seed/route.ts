@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     const adminResult = await auth.api.signUpEmail({
-      body: { name: "مدير النظام", email: "abensebane41@gmail.com", password: "kader&26&benyem" },
+      body: { name: "مدير النظام", email: "abensebane41@gmail.com", password: "Kader@2026!Secure" },
     });
 
     await prisma.user.update({
