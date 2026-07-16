@@ -1,6 +1,6 @@
 import { prisma } from "@/shared/lib/prisma";
 import { notFound } from "next/navigation";
-import { MapPin, Phone, Mail, ChevronRight, Bed, Maximize, Bath, Car, Square, Eye } from "lucide-react";
+import { MapPin, Phone, Mail, ChevronRight, Bed, Maximize, Bath, Car, Square, Eye, MessageCircle } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 import { formatCurrency } from "@/shared/lib/utils";
 import { PropertyViewTracker } from "@/shared/components/shared/property-view-tracker";
@@ -54,6 +54,11 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
     where: { slug: propertySlug, agencyId: agency.id, status: "PUBLISHED" },
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
+
+  if (!property) notFound();
+
+  const contactPhone = property.agentPhone || agency.phone;
+  const whatsappUrl = contactPhone ? `https://wa.me/${contactPhone.replace(/[^0-9]/g, "")}` : null;
 
   if (!property) notFound();
 
@@ -232,12 +237,12 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
                 </div>
               </div>
 
-              {agency.phone && (
+              {contactPhone && (
                 <ContactTracker
                   agencyId={agency.id}
                   propertyId={property.id}
                   method="PHONE"
-                  href={`tel:${agency.phone}`}
+                  href={`tel:${contactPhone}`}
                   className="flex w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-l from-primary to-primary-light py-3.5 text-sm font-medium text-white hover:from-primary-light hover:to-primary transition-all duration-300 mb-3 shadow-md"
                 >
                   <Phone className="h-4 w-4" />
@@ -245,16 +250,16 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
                 </ContactTracker>
               )}
 
-              {agency.email && (
+              {whatsappUrl && (
                 <ContactTracker
                   agencyId={agency.id}
                   propertyId={property.id}
-                  method="EMAIL"
-                  href={`mailto:${agency.email}`}
-                  className="flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-accent/30 py-3.5 text-sm font-medium text-accent hover:bg-accent/5 transition-colors"
+                  method="FORM"
+                  href={whatsappUrl}
+                  className="flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-[#25D366]/30 py-3.5 text-sm font-medium text-[#25D366] hover:bg-[#25D366]/5 transition-colors"
                 >
-                  <Mail className="h-4 w-4" />
-                  أرسل رسالة
+                  <MessageCircle className="h-4 w-4" />
+                  واتساب
                 </ContactTracker>
               )}
 

@@ -118,6 +118,7 @@ model Property {
   address      String
   city         String
   state        String?
+  agentPhone   String?
   latitude     String?
   longitude    String?
   isFeatured   Boolean  @default(false)

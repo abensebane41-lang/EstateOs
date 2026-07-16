@@ -20,7 +20,7 @@ import {
 import { updateProperty, deleteProperty } from "@/modules/property/actions";
 import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
 import { PriceInput } from "@/shared/components/shared/price-input";
-import { Plus, X, Star } from "lucide-react";
+import { Plus, X, Star, Phone } from "lucide-react";
 
 const PROPERTY_TYPES = [
   { value: "APARTMENT", label: "شقة" },
@@ -62,6 +62,7 @@ interface PropertyFormProps {
     address: string;
     city: string;
     state: string | null;
+    agentPhone?: string | null;
     images?: { id: string; url: string; isPrimary: boolean; altText?: string | null }[];
   };
   mode: "edit" | "view";
@@ -88,6 +89,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
     address: property.address,
     city: property.city,
     state: initialWilayaCode,
+    agentPhone: property.agentPhone || "",
   });
 
   const selectedCommunes = form.state ? (COMMUNES[form.state] || []) : [];
@@ -176,6 +178,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
       address: form.address,
       city: form.city,
       state: wilayaName,
+      agentPhone: form.agentPhone || undefined,
     };
 
     const result = await updateProperty(property.id, data);
@@ -352,6 +355,19 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
                 </CardContent>
               </Card>
             )}
+
+            <Card>
+              <CardHeader>
+                <CardTitle>رقم هاتف الوكيل</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label htmlFor="agentPhone">رقم الهاتف</Label>
+                <Input id="agentPhone" name="agentPhone" value={form.agentPhone} onChange={handleChange} placeholder="0555123456" dir="ltr" />
+                <p className="mt-1.5 text-xs text-text-tertiary">
+                  رقم هاتفك أو رقم صاحب العقار — سيظهر في زر "اتصل الآن" وواتساب
+                </p>
+              </CardContent>
+            </Card>
 
             <div className="flex gap-3">
               <Button type="submit" disabled={loading} className="flex-1">
