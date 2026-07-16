@@ -125,7 +125,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
                 {agency.name.charAt(0)}
               </div>
             )}
-            <h1 className="font-[family-name:var(--font-public-heading)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-wide mb-4">
+            <h1 className="font-[family-name:var(--font-public-heading)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-wide mb-4 no-break">
               {agency.name}
             </h1>
             {agency.description && (
@@ -247,7 +247,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
                       </div>
                     </div>
                     <div className="p-5">
-                      <h3 className="font-semibold text-lg text-text-primary line-clamp-1 group-hover:text-primary transition-colors mb-2">
+                      <h3 className="font-semibold text-lg text-text-primary line-clamp-1 group-hover:text-primary transition-colors mb-2 no-break">
                         {property.title}
                       </h3>
                       <p className="text-sm text-text-secondary flex items-center gap-1.5 mb-3">

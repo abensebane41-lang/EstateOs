@@ -6,12 +6,34 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number, currency = "DZD"): string {
+  if (amount >= 1_000_000_000) {
+    const billions = amount / 1_000_000_000;
+    const formatted = billions === Math.floor(billions) ? String(billions) : billions.toFixed(1).replace(/\.0$/, "");
+    return `${formatted} مليار د.ج`;
+  }
+  if (amount >= 1_000_000) {
+    const millions = amount / 1_000_000;
+    const formatted = millions === Math.floor(millions) ? String(millions) : millions.toFixed(1).replace(/\.0$/, "");
+    return `${formatted} مليون د.ج`;
+  }
   return new Intl.NumberFormat("ar-DZ", {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
+}
+
+export function formatPriceFilter(amount: number): string {
+  if (amount >= 1_000_000_000) {
+    const val = amount / 1_000_000_000;
+    return val === Math.floor(val) ? `${val} مليار` : `${val} مليار`;
+  }
+  if (amount >= 1_000_000) {
+    const val = amount / 1_000_000;
+    return val === Math.floor(val) ? `${val} مليون` : `${val} مليون`;
+  }
+  return String(amount);
 }
 
 export function formatDate(date: Date | string): string {

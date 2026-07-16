@@ -91,7 +91,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
                 <Badge variant="warning" className="text-sm px-4 py-1.5">مميز</Badge>
               )}
             </div>
-            <h1 className="font-[family-name:var(--font-public-heading)] text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3">
+            <h1 className="font-[family-name:var(--font-public-heading)] text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 no-break">
               {property.title}
             </h1>
             <p className="text-white/80 flex items-center gap-2 text-lg">

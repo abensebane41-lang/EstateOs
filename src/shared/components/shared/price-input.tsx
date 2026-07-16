@@ -11,8 +11,8 @@ const UNITS = [
 ];
 
 function detectUnit(total: number): number {
-  if (total > 0 && total % 1_000_000_000 === 0) return 1_000_000_000;
-  if (total > 0 && total % 1_000_000 === 0) return 1_000_000;
+  if (total >= 1_000_000_000 && total % 1_000_000_000 === 0) return 1_000_000_000;
+  if (total >= 1_000_000 && total % 1_000_000 === 0) return 1_000_000;
   return 1;
 }
 
@@ -105,6 +105,18 @@ interface PriceInputStringProps {
 export function PriceInputString({ value, onChange, label, placeholder, className }: PriceInputStringProps) {
   const [displayValue, setDisplayValue] = useState("");
   const [unit, setUnit] = useState(1);
+
+  useEffect(() => {
+    const numValue = Number(value) || 0;
+    if (numValue > 0) {
+      const detected = detectUnit(numValue);
+      setUnit(detected);
+      setDisplayValue(formatDisplay(numValue, detected));
+    } else {
+      setDisplayValue("");
+      setUnit(1);
+    }
+  }, []);
 
   useEffect(() => {
     const numValue = Number(value) || 0;

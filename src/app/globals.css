@@ -115,7 +115,8 @@
 
   body {
     @apply bg-surface text-text-primary font-sans antialiased;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-break: keep-all;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -125,10 +126,34 @@
     text-align: right;
   }
 
-  /* Arabic text wrapping — avoid mid-word breaks */
-  h1, h2, h3, h4, h5, h6, p, span, label, td, th {
-    overflow-wrap: break-word;
-    word-break: normal;
+  /* Typography — prevent mid-word breaks for both Arabic and English */
+  h1, h2, h3, h4, h5, h6, p, span, label, td, th, li, a, div {
+    overflow-wrap: anywhere;
+    word-break: keep-all;
+    hyphens: manual;
+  }
+
+  /* English text within RTL should not break words */
+  [dir="rtl"] a,
+  [dir="rtl"] span,
+  [dir="rtl"] p,
+  [dir="rtl"] td,
+  [dir="rtl"] th {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  /* Utility class for mixed RTL/LTR content */
+  .no-break {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    hyphens: manual;
+    white-space: nowrap;
+  }
+
+  .allow-break {
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 }
 
