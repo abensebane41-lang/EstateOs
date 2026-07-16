@@ -115,8 +115,6 @@
 
   body {
     @apply bg-surface text-text-primary font-sans antialiased;
-    overflow-wrap: anywhere;
-    word-break: keep-all;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -124,36 +122,6 @@
   /* RTL Support */
   [dir="rtl"] {
     text-align: right;
-  }
-
-  /* Typography — prevent mid-word breaks for both Arabic and English */
-  h1, h2, h3, h4, h5, h6, p, span, label, td, th, li, a, div {
-    overflow-wrap: anywhere;
-    word-break: keep-all;
-    hyphens: manual;
-  }
-
-  /* English text within RTL should not break words */
-  [dir="rtl"] a,
-  [dir="rtl"] span,
-  [dir="rtl"] p,
-  [dir="rtl"] td,
-  [dir="rtl"] th {
-    word-break: keep-all;
-    overflow-wrap: anywhere;
-  }
-
-  /* Utility class for mixed RTL/LTR content */
-  .no-break {
-    word-break: keep-all;
-    overflow-wrap: anywhere;
-    hyphens: manual;
-    white-space: nowrap;
-  }
-
-  .allow-break {
-    word-break: break-word;
-    overflow-wrap: anywhere;
   }
 }
 
@@ -164,6 +132,24 @@
   padding-inline: 1rem;
   max-width: 1200px;
   width: 100%;
+}
+
+/* Typography — prevent mid-word breaks (outside @layer for higher specificity) */
+html[dir="rtl"] {
+  unicode-bidi: plaintext !important;
+}
+
+html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3,
+html[dir="rtl"] h4, html[dir="rtl"] h5, html[dir="rtl"] h6,
+html[dir="rtl"] p, html[dir="rtl"] span, html[dir="rtl"] a,
+html[dir="rtl"] td, html[dir="rtl"] th, html[dir="rtl"] li,
+html[dir="rtl"] label, html[dir="rtl"] div, html[dir="rtl"] strong {
+  unicode-bidi: plaintext !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  -ms-hyphens: none !important;
 }
 
 /* Focus visible styles */
