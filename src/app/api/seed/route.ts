@@ -11,15 +11,15 @@ export async function POST(req: NextRequest) {
     const { auth } = await import("@/modules/auth/auth");
 
     const existingAdmin = await prisma.user.findUnique({
-      where: { email: "admin@estateos.dz" },
+      where: { email: "abensebane41@gmail.com" },
     });
 
     if (existingAdmin) {
-      return NextResponse.json({ message: "Admin already exists", email: "admin@estateos.dz" });
+      return NextResponse.json({ message: "Admin already exists", email: "abensebane41@gmail.com" });
     }
 
     const adminResult = await auth.api.signUpEmail({
-      body: { name: "مدير النظام", email: "admin@estateos.dz", password: "admin123456" },
+      body: { name: "مدير النظام", email: "abensebane41@gmail.com", password: "kader&26&benyem" },
     });
 
     await prisma.user.update({

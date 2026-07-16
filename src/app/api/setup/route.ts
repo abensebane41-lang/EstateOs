@@ -6,15 +6,17 @@ export async function GET() {
     const { auth } = await import("@/modules/auth/auth");
 
     const existingAdmin = await prisma.user.findUnique({
-      where: { email: "admin@estateos.dz" },
+      where: { email: "abensebane41@gmail.com" },
     });
 
     if (existingAdmin) {
-      return NextResponse.json({ message: "Admin already exists" });
+      await prisma.session.deleteMany({ where: { userId: existingAdmin.id } });
+      await prisma.account.deleteMany({ where: { userId: existingAdmin.id } });
+      await prisma.user.delete({ where: { id: existingAdmin.id } });
     }
 
     const result = await auth.api.signUpEmail({
-      body: { name: "مدير النظام", email: "admin@estateos.dz", password: "admin123456" },
+      body: { name: "مدير النظام", email: "abensebane41@gmail.com", password: "admin123456" },
     });
 
     await prisma.user.update({
@@ -22,7 +24,7 @@ export async function GET() {
       data: { role: "SUPER_ADMIN", emailVerified: true },
     });
 
-    return NextResponse.json({ message: "Super Admin created", email: "admin@estateos.dz" });
+    return NextResponse.json({ message: "Super Admin created", email: "abensebane41@gmail.com", password: "admin123456" });
   } catch (error) {
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
