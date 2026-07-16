@@ -1,6 +1,5 @@
 {
   "buildCommand": "npx prisma generate && npx next build",
-
   "framework": "nextjs",
   "installCommand": "npm install",
   "outputDirectory": ".next",
@@ -8,5 +7,11 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/health",
+      "schedule": "0 12 */6 * *"
+    }
+  ]
 }
