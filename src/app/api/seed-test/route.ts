@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/shared/lib/prisma";
 
-const agencies = [
+const AGENCY_DATA = [
   { name: "Kadikou Imobilier", slug: "kadikouimobilier", phone: "+213 555 100 001", email: "contact@kadikouimobilier.com", address: "Rue Didouche Mourad, Alger Centre", description: "Agence immobilière de premier plan à Alger" },
   { name: "Casa Realty", slug: "casarealty", phone: "+213 555 100 002", email: "info@casarealty.com", address: "Boulevard Khemisti, Oran", description: "Spécialiste de l'immobilier résidentiel à Oran" },
   { name: "Atlas Propriétés", slug: "atlasproprietes", phone: "+213 555 100 003", email: "contact@atlasproprietes.com", address: "Rue Ahmed Bey, Constantine", description: "Votre partenaire immobilier à Constantine" },
@@ -14,10 +14,10 @@ const agencies = [
   { name: "Hoggar Immo", slug: "hoggarimmo", phone: "+213 555 100 010", email: "info@hoggarimmo.com", address: "Boulevard Emir Abdelkader, Bechar", description: "Immobilier dans le sud-ouest" },
 ];
 
-const states = ["Alger", "Oran", "Constantine", "Annaba", "Batna", "Tlemcen", "Tizi Ouzou", "Sétif", "Ghardaia", "Bechar"];
-const cities = ["Alger Centre", "Oran Centre", "Constantine Centre", "Annaba Centre", "Batna Centre", "Tlemcen Centre", "Tizi Ouzou Centre", "Sétif Centre", "Ghardaia Centre", "Bechar Centre"];
+const STATES = ["Alger", "Oran", "Constantine", "Annaba", "Batna", "Tlemcen", "Tizi Ouzou", "Sétif", "Ghardaia", "Bechar"];
+const CITIES = ["Alger Centre", "Oran Centre", "Constantine Centre", "Annaba Centre", "Batna Centre", "Tlemcen Centre", "Tizi Ouzou Centre", "Sétif Centre", "Ghardaia Centre", "Bechar Centre"];
 
-const UNSPLASH_IMAGES = [
+const IMAGES = [
   "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
   "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
@@ -40,7 +40,7 @@ const UNSPLASH_IMAGES = [
   "https://images.unsplash.com/photo-1600563438938-a9a27216b4f5?w=800&q=80",
 ];
 
-const titles = [
+const TITLES = [
   "Appartement moderne", "Villa avec piscine", "Maison familiale", "Terrain constructible",
   "Bureau moderne", "Local commercial", "Studio étudiant", "Duplex luxueux",
   "Penthouse vue panoramique", "Maison de ville", "Immeuble résidentiel", "Entrepôt moderne",
@@ -48,171 +48,104 @@ const titles = [
   "Boutique centre-ville", "Hangar industriel", "Studio meublé", "Loft spacieux",
 ];
 
-const descriptions = [
-  "Bel appartement lumineux avec vue panoramique sur la ville. Entièrement rénové avec des matériaux de qualité.",
-  "Magnifique villa avec piscine et jardin paysager. Idéale pour les familles cherchant le confort et le luxe.",
-  "Maison spacieuse idéale pour famille nombreuse. Grand jardin arboré et garage double.",
-  "Grand terrain viabilisé idéal pour projet résidentiel ou commercial. Superficie 500m².",
-  "Espace de bureau moderne et fonctionnel au centre des affaires. Climatisé, parking disponible.",
-  "Local commercial en pleine activité. Situé sur une artère principale à forte fréquentation.",
-  "Studio parfait pour étudiant ou jeune professionnel. Meublé et entièrement équipé.",
-  "Duplex haut de gamme avec finitions soignées. Terrasse privée avec vue exceptionnelle.",
-  "Penthouse avec terrasse panoramique. Prestations haut de gamme, vue mer dégagée.",
-  "Maison de ville charmante au centre historique. Pierre apparente, charme authentique.",
-  "Immeuble résidentiel 8 appartements à fort potentiel locatif. Bon rendement.",
-  "Entrepôt moderne 200m² avec accès poids lourd. Idéal logistique.",
-  "Appartement F3 rénové avec goût. Parquet massif, moulures, cuisine équipée.",
-  "Villa avec grand jardin 800m² et dépendances. piscine chauffée.",
-  "Maison plain pied 120m² sur terrain spacious 300m². Triple exposition.",
-  "Terrain agricole 2000m² avec source d'eau. Idéal maraîchage.",
-  "Boutique idéalement située en centre-ville. Vitrine grande largeur.",
-  "Hangar industriel 350m^ avec grue intégrée et bureau attenant.",
-  "Studio meublé entièrement équipé. Idéal investissement locatif.",
-  "Loft spacieux 180m² avec mezzanine. Lumière naturelle zénithale.",
+const DESCS = [
+  "Bel appartement lumineux avec vue panoramique. Entièrement rénové.",
+  "Magnifique villa avec piscine et jardin paysager.",
+  "Maison spacieuse idéale pour famille nombreuse.",
+  "Grand terrain viabilisé idéal pour projet résidentiel.",
+  "Espace de bureau moderne au centre des affaires.",
+  "Local commercial en pleine activité commerciale.",
+  "Studio parfait pour étudiant ou jeune professionnel.",
+  "Duplex haut de gamme avec finitions soignées.",
+  "Penthouse avec terrasse panoramique vue mer.",
+  "Maison de ville charmante au centre historique.",
+  "Immeuble résidentiel à fort potentiel locatif.",
+  "Entrepôt moderne 200m² avec accès poids lourd.",
+  "Appartement F3 rénové avec goût. Parquet massif.",
+  "Villa avec grand jardin 800m² et piscine chauffée.",
+  "Maison plain pied 120m² sur terrain spacious.",
+  "Terrain agricole 2000m² avec source d'eau.",
+  "Boutique idéalement située en centre-ville.",
+  "Hangar industriel 350m² avec grue intégrée.",
+  "Studio meublé entièrement équipé.",
+  "Loft spacieux 180m² avec mezzanine.",
 ];
 
-function getImagesForProperty(propIndex: number) {
-  const images = [];
-  const count = propIndex % 3 === 0 ? 3 : propIndex % 2 === 0 ? 2 : 1;
-  for (let j = 0; j < count; j++) {
-    const imgIndex = (propIndex * 3 + j) % UNSPLASH_IMAGES.length;
-    images.push({
-      url: UNSPLASH_IMAGES[imgIndex],
-      altText: titles[propIndex % titles.length],
-      sortOrder: j,
-      isPrimary: j === 0,
-    });
-  }
-  return images;
-}
+const TYPES = ["APARTMENT", "VILLA", "HOUSE", "LAND", "COMMERCIAL", "WAREHOUSE"];
 
 export async function GET() {
   try {
     await prisma.propertyFavorite.deleteMany();
     await prisma.propertyImage.deleteMany();
-    await prisma.property.deleteMany();
     await prisma.lead.deleteMany();
     await prisma.analyticsEvent.deleteMany();
     await prisma.agencyNotification.deleteMany();
     await prisma.subscription.deleteMany();
     await prisma.session.deleteMany();
     await prisma.account.deleteMany();
+    await prisma.property.deleteMany();
     await prisma.user.deleteMany();
     await prisma.verification.deleteMany();
     await prisma.agency.deleteMany();
 
     const { auth } = await import("@/modules/auth/auth");
 
-    const createdAgencies = [];
-    let totalProperties = 0;
+    const allAgencies = await prisma.agency.createMany({ data: AGENCY_DATA });
+    const agencies = await prisma.agency.findMany();
 
-    for (let i = 0; i < agencies.length; i++) {
-      const agencyData = agencies[i];
-
-      const agency = await prisma.agency.create({ data: agencyData });
-
+    for (const agency of agencies) {
+      const i = agencies.indexOf(agency);
       await prisma.subscription.create({
-        data: {
-          agencyId: agency.id,
-          status: "ACTIVE",
-          planName: "Professional",
-          startDate: new Date(),
-          endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-        },
+        data: { agencyId: agency.id, status: "ACTIVE", planName: "Professional", startDate: new Date(), endDate: new Date(Date.now() + 365 * 86400000) },
       });
 
-      const email = `owner${i + 1}@test.com`;
-      const result = await auth.api.signUpEmail({
-        body: { name: `${agencyData.name} Owner`, email, password: "test123456" },
-      });
-      await prisma.user.update({
-        where: { id: result.user.id },
-        data: { agencyId: agency.id, role: "AGENCY_OWNER", emailVerified: true },
-      });
-
-      for (let j = 0; j < 20; j++) {
-        const typeIndex = j % 6;
-        const listingIndex = j % 2;
-        const propertyTypes = ["APARTMENT", "VILLA", "HOUSE", "LAND", "COMMERCIAL", "WAREHOUSE"];
-        const listingTypes = ["SALE", "RENT"];
-        const propType = propertyTypes[typeIndex];
-        const listingType = listingTypes[listingIndex];
-
-        const basePrice = listingType === "RENT"
-          ? 20000 + j * 30000
-          : 3000000 + j * 3000000;
-        const bedrooms = (propType === "LAND" || propType === "COMMERCIAL" || propType === "WAREHOUSE")
-          ? null
-          : 1 + (j % 5);
-        const area = propType === "LAND"
-          ? 200 + j * 150
-          : propType === "WAREHOUSE"
-            ? 150 + j * 50
-            : 30 + j * 15;
-        const slug = `${titles[j % titles.length].toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${agency.slug}-${j}`;
-
-        const property = await prisma.property.create({
-          data: {
-            agencyId: agency.id,
-            title: `${titles[j % titles.length]} ${cities[i]}`,
-            slug,
-            description: descriptions[j % descriptions.length],
-            propertyType: propType,
-            listingType,
-            status: "PUBLISHED",
-            price: basePrice,
-            currency: "DZD",
-            bedrooms,
-            bathrooms: bedrooms ? Math.max(1, Math.floor(bedrooms / 2)) : null,
-            floor: propType === "APARTMENT" ? (j % 10) + 1 : null,
-            area,
-            furnished: j % 3 === 0,
-            parking: j % 2 === 0,
-            balcony: j % 2 === 0,
-            address: `${10 + j} Rue ${titles[j % titles.length]}, ${cities[i]}`,
-            city: cities[i],
-            state: states[i],
-            isFeatured: j % 5 === 0,
-          },
+      try {
+        const result = await auth.api.signUpEmail({
+          body: { name: `${agency.name} Owner`, email: `owner${i + 1}@test.com`, password: "test123456" },
         });
+        await prisma.user.update({ where: { id: result.user.id }, data: { agencyId: agency.id, role: "AGENCY_OWNER", emailVerified: true } });
+      } catch {}
 
-        const images = getImagesForProperty(j);
-        for (const img of images) {
-          await prisma.propertyImage.create({
-            data: { ...img, propertyId: property.id },
-          });
-        }
+      const props = Array.from({ length: 20 }, (_, j) => ({
+        agencyId: agency.id,
+        title: `${TITLES[j]} ${CITIES[i]}`,
+        slug: `${TITLES[j].toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${agency.slug}-${j}`,
+        description: DESCS[j],
+        propertyType: TYPES[j % 6],
+        listingType: j % 2 === 0 ? "SALE" : "RENT",
+        status: "PUBLISHED",
+        price: j % 2 === 0 ? 3000000 + j * 3000000 : 20000 + j * 30000,
+        currency: "DZD",
+        bedrooms: TYPES[j % 6] === "LAND" || TYPES[j % 6] === "COMMERCIAL" || TYPES[j % 6] === "WAREHOUSE" ? null : 1 + (j % 5),
+        bathrooms: TYPES[j % 6] === "LAND" || TYPES[j % 6] === "COMMERCIAL" || TYPES[j % 6] === "WAREHOUSE" ? null : Math.max(1, Math.floor((1 + (j % 5)) / 2)),
+        floor: TYPES[j % 6] === "APARTMENT" ? (j % 10) + 1 : null,
+        area: TYPES[j % 6] === "LAND" ? 200 + j * 150 : TYPES[j % 6] === "WAREHOUSE" ? 150 + j * 50 : 30 + j * 15,
+        furnished: j % 3 === 0,
+        parking: j % 2 === 0,
+        balcony: j % 2 === 0,
+        address: `${10 + j} Rue ${TITLES[j]}, ${CITIES[i]}`,
+        city: CITIES[i],
+        state: STATES[i],
+        isFeatured: j % 5 === 0,
+      }));
 
-        totalProperties++;
-      }
+      await prisma.property.createMany({ data: props });
 
-      createdAgencies.push(agency.slug);
+      const createdProps = await prisma.property.findMany({ where: { agencyId: agency.id }, select: { id: true } });
+      const images = createdProps.flatMap((p, idx) => [
+        { propertyId: p.id, url: IMAGES[idx % IMAGES.length], altText: TITLES[idx % TITLES.length], sortOrder: 0, isPrimary: true },
+        { propertyId: p.id, url: IMAGES[(idx + 1) % IMAGES.length], altText: TITLES[idx % TITLES.length], sortOrder: 1, isPrimary: false },
+      ]);
+      await prisma.propertyImage.createMany({ data: images });
     }
 
     const adminExists = await prisma.user.findUnique({ where: { email: "abensebane41@gmail.com" } });
     if (!adminExists) {
-      const { auth } = await import("@/modules/auth/auth");
-      const adminResult = await auth.api.signUpEmail({
-        body: { name: "مدير النظام", email: "abensebane41@gmail.com", password: "Kader@2026!Secure" },
-      });
-      await prisma.user.update({
-        where: { id: adminResult.user.id },
-        data: { role: "SUPER_ADMIN", emailVerified: true },
-      });
+      const adminResult = await auth.api.signUpEmail({ body: { name: "مدير النظام", email: "abensebane41@gmail.com", password: "Kader@2026!Secure" } });
+      await prisma.user.update({ where: { id: adminResult.user.id }, data: { role: "SUPER_ADMIN", emailVerified: true } });
     }
 
-    return NextResponse.json({
-      message: "Seed completed!",
-      agencies: agencies.length,
-      properties: totalProperties,
-      images: totalProperties * 2,
-      superAdmin: { email: "abensebane41@gmail.com", password: "Kader@2026!Secure" },
-      testAccounts: agencies.map((a, i) => ({
-        agency: a.name,
-        email: `owner${i + 1}@test.com`,
-        password: "test123456",
-      })),
-    });
+    return NextResponse.json({ message: "Seed done!", agencies: 10, properties: 200, images: 400 });
   } catch (error) {
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
