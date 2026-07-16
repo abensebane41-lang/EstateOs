@@ -20,7 +20,7 @@ import {
 import { updateProperty, deleteProperty } from "@/modules/property/actions";
 import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
 import { PriceInput } from "@/shared/components/shared/price-input";
-import { Plus, X, Star, Phone } from "lucide-react";
+import { Plus, X, Star, Phone, Video } from "lucide-react";
 
 const PROPERTY_TYPES = [
   { value: "APARTMENT", label: "شقة" },
@@ -63,6 +63,7 @@ interface PropertyFormProps {
     city: string;
     state: string | null;
     agentPhone?: string | null;
+    videoUrl?: string | null;
     images?: { id: string; url: string; isPrimary: boolean; altText?: string | null }[];
   };
   mode: "edit" | "view";
@@ -90,6 +91,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
     city: property.city,
     state: initialWilayaCode,
     agentPhone: property.agentPhone || "",
+    videoUrl: property.videoUrl || "",
   });
 
   const selectedCommunes = form.state ? (COMMUNES[form.state] || []) : [];
@@ -179,6 +181,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
       city: form.city,
       state: wilayaName,
       agentPhone: form.agentPhone || undefined,
+      videoUrl: form.videoUrl || undefined,
     };
 
     const result = await updateProperty(property.id, data);
@@ -365,6 +368,19 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
                 <Input id="agentPhone" name="agentPhone" value={form.agentPhone} onChange={handleChange} placeholder="0555123456" dir="ltr" />
                 <p className="mt-1.5 text-xs text-text-tertiary">
                   رقم هاتفك أو رقم صاحب العقار — سيظهر في زر "اتصل الآن" وواتساب
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>فيديو العقار</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label htmlFor="videoUrl">رابط الفيديو</Label>
+                <Input id="videoUrl" name="videoUrl" value={form.videoUrl} onChange={handleChange} placeholder="https://www.youtube.com/watch?v=..." dir="ltr" />
+                <p className="mt-1.5 text-xs text-text-tertiary">
+                  رابط فيديو العقار من YouTube أو TikTok أو Instagram أو أي منصة أخرى
                 </p>
               </CardContent>
             </Card>

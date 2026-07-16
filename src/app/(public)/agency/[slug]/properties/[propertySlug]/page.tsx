@@ -143,6 +143,54 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
               />
             )}
 
+            {/* Video */}
+            {(property as Record<string, unknown>).videoUrl && (
+              <div className="rounded-2xl border border-border/50 bg-white p-8 shadow-luxury">
+                <h2 className="font-[family-name:var(--font-public-heading)] text-xl font-semibold text-text-primary mb-5 flex items-center gap-3">
+                  <div className="h-8 w-1 rounded-full bg-accent" />
+                  فيديو العقار
+                </h2>
+                {(() => {
+                  const url = (property as Record<string, string>).videoUrl || "";
+                  const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                  const tiktokMatch = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+                  const instaMatch = url.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/);
+
+                  if (ytMatch) {
+                    return (
+                      <div className="relative aspect-video w-full overflow-hidden rounded-xl">
+                        <iframe
+                          src={`https://www.youtube.com/embed/${ytMatch[1]}`}
+                          className="absolute inset-0 h-full w-full"
+                          allowFullScreen
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        />
+                      </div>
+                    );
+                  }
+                  return (
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 rounded-xl border border-border/50 bg-surface-secondary p-4 hover:bg-surface-tertiary transition-colors"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
+                        <svg className="h-5 w-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-medium text-text-primary text-sm">شاهد الفيديو</p>
+                        <p className="text-xs text-text-tertiary truncate max-w-[250px]">{url}</p>
+                      </div>
+                    </a>
+                  );
+                })()}
+              </div>
+            )}
+
             {/* Description */}
             <div className="rounded-2xl border border-border/50 bg-white p-8 shadow-luxury">
               <h2 className="font-[family-name:var(--font-public-heading)] text-xl font-semibold text-text-primary mb-5 flex items-center gap-3">

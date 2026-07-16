@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { createProperty } from "@/modules/property/actions";
 import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
 import { PriceInput } from "@/shared/components/shared/price-input";
-import { Plus, X, Star, Phone } from "lucide-react";
+import { Plus, X, Star, Phone, Video } from "lucide-react";
 
 const PROPERTY_TYPES = [
   { value: "APARTMENT", label: "شقة" },
@@ -64,6 +64,7 @@ export default function NewPropertyPage() {
     state: "",
     city: "",
     agentPhone: "",
+    videoUrl: "",
   });
 
   const selectedCommunes = form.state ? (COMMUNES[form.state] || []) : [];
@@ -180,6 +181,7 @@ export default function NewPropertyPage() {
       city: form.city,
       state: wilayaName,
       agentPhone: form.agentPhone || undefined,
+      videoUrl: form.videoUrl || undefined,
       isFeatured: false,
     };
 
@@ -501,6 +503,28 @@ export default function NewPropertyPage() {
                   />
                   <p className="mt-1.5 text-xs text-text-tertiary">
                     رقم هاتفك أو رقم صاحب العقار — سيظهر في زر "اتصل الآن" وواتساب
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>فيديو العقار</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div>
+                  <Label htmlFor="videoUrl">رابط الفيديو</Label>
+                  <Input
+                    id="videoUrl"
+                    name="videoUrl"
+                    value={form.videoUrl}
+                    onChange={handleChange}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    dir="ltr"
+                  />
+                  <p className="mt-1.5 text-xs text-text-tertiary">
+                    رابط فيديو العقار من YouTube أو TikTok أو Instagram أو أي منصة أخرى
                   </p>
                 </div>
               </CardContent>

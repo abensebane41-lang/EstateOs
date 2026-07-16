@@ -91,6 +91,7 @@ CREATE TABLE "Property" (
     "city" TEXT NOT NULL,
     "state" TEXT,
     "agentPhone" TEXT,
+    "videoUrl" TEXT,
     "latitude" TEXT,
     "longitude" TEXT,
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,

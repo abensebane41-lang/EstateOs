@@ -21,6 +21,7 @@ const createPropertySchema = z.object({
   city: z.string().min(2, "المدينة مطلوبة"),
   state: z.string().optional(),
   agentPhone: z.string().optional(),
+  videoUrl: z.string().optional(),
   latitude: z.string().optional(),
   longitude: z.string().optional(),
   isFeatured: z.boolean().default(false),
@@ -74,6 +75,7 @@ export async function createProperty(
         city: parsed.data.city,
         state: parsed.data.state ?? null,
         agentPhone: parsed.data.agentPhone ?? null,
+        videoUrl: parsed.data.videoUrl ?? null,
         latitude: parsed.data.latitude ?? null,
         longitude: parsed.data.longitude ?? null,
         isFeatured: parsed.data.isFeatured,
@@ -139,6 +141,7 @@ export async function updateProperty(
     if (parsed.data.city !== undefined) updateData.city = parsed.data.city;
     if (parsed.data.state !== undefined) updateData.state = parsed.data.state ?? null;
     if (parsed.data.agentPhone !== undefined) updateData.agentPhone = parsed.data.agentPhone ?? null;
+    if (parsed.data.videoUrl !== undefined) updateData.videoUrl = parsed.data.videoUrl ?? null;
     if (parsed.data.latitude !== undefined) updateData.latitude = parsed.data.latitude ?? null;
     if (parsed.data.longitude !== undefined) updateData.longitude = parsed.data.longitude ?? null;
     if (parsed.data.isFeatured !== undefined) updateData.isFeatured = parsed.data.isFeatured;
