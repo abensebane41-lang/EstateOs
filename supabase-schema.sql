@@ -90,6 +90,7 @@ CREATE TABLE "Property" (
     "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "state" TEXT,
+    "agentPhone" TEXT,
     "latitude" TEXT,
     "longitude" TEXT,
     "isFeatured" BOOLEAN NOT NULL DEFAULT false,

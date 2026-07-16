@@ -3,6 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 
 export interface PropertyFilters {
   agencyId?: string;
+  search?: string;
   listingType?: string;
   propertyType?: string;
   state?: string;
@@ -26,6 +27,7 @@ export interface PropertyFilters {
 export function parseFilters(searchParams: Record<string, string | undefined>, agencyId?: string): PropertyFilters {
   return {
     agencyId,
+    search: searchParams.search || undefined,
     listingType: searchParams.purpose || undefined,
     propertyType: searchParams.type || undefined,
     state: searchParams.state || undefined,
@@ -56,6 +58,16 @@ function buildWhereClause(filters: PropertyFilters): Prisma.PropertyWhereInput {
 
   if (filters.agencyId) {
     and.push({ agencyId: filters.agencyId });
+  }
+
+  if (filters.search) {
+    and.push({
+      OR: [
+        { title: { contains: filters.search, mode: "insensitive" } },
+        { city: { contains: filters.search, mode: "insensitive" } },
+        { address: { contains: filters.search, mode: "insensitive" } },
+      ],
+    });
   }
 
   if (filters.listingType) {

@@ -29,9 +29,9 @@ export async function getLeads(
     }
     if (filters?.search) {
       where.OR = [
-        { name: { contains: filters.search } },
-        { email: { contains: filters.search } },
-        { phone: { contains: filters.search } },
+        { name: { contains: filters.search, mode: "insensitive" } },
+        { email: { contains: filters.search, mode: "insensitive" } },
+        { phone: { contains: filters.search, mode: "insensitive" } },
       ];
     }
 

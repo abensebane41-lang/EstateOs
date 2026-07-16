@@ -64,14 +64,16 @@ export function FilterBar({ cities, totalResults }: FilterBarProps) {
   const [balcony, setBalcony] = useState(searchParams.get("balcony") === "1");
   const [featured, setFeatured] = useState(searchParams.get("featured") === "1");
   const [sort, setSort] = useState(searchParams.get("sort") || "newest");
+  const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const activeFilterCount = [
-    purpose, type, state, city, minPrice, maxPrice, minArea, maxArea,
+    search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea,
     bedrooms, bathrooms, floor, furnished, parking, balcony, featured,
   ].filter(Boolean).length;
 
   const applyFilters = useCallback(() => {
     const params = new URLSearchParams();
+    if (search) params.set("search", search);
     if (purpose) params.set("purpose", purpose);
     if (type) params.set("type", type);
     if (state) params.set("state", state);
@@ -90,10 +92,10 @@ export function FilterBar({ cities, totalResults }: FilterBarProps) {
     if (sort && sort !== "newest") params.set("sort", sort);
     params.set("page", "1");
     router.push(`?${params.toString()}`, { scroll: false });
-  }, [purpose, type, state, city, minPrice, maxPrice, minArea, maxArea, bedrooms, bathrooms, floor, furnished, parking, balcony, featured, sort, router]);
+  }, [search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea, bedrooms, bathrooms, floor, furnished, parking, balcony, featured, sort, router]);
 
   function resetFilters() {
-    setPurpose(""); setType(""); setState(""); setCity("");
+    setSearch(""); setPurpose(""); setType(""); setState(""); setCity("");
     setMinPrice(""); setMaxPrice(""); setMinArea(""); setMaxArea("");
     setBedrooms(""); setBathrooms(""); setFloor("");
     setFurnished(false); setParking(false); setBalcony(false); setFeatured(false);
@@ -121,6 +123,26 @@ export function FilterBar({ cities, totalResults }: FilterBarProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="col-span-2 sm:col-span-3 lg:col-span-4">
+          <Label className="text-xs text-text-secondary mb-1.5 block font-medium">بحث بالاسم أو العنوان</Label>
+          <div className="relative">
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-tertiary" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") applyFilters(); }}
+              placeholder="مثال: فيلا وهران..."
+              className="flex h-11 w-full rounded-xl border border-border/60 bg-surface-secondary pr-10 pl-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
+            />
+            {search && (
+              <button onClick={() => { setSearch(""); }} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-primary">
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
         <div>
           <Label className="text-xs text-text-secondary mb-1.5 block font-medium">نوع العملية</Label>
           <select

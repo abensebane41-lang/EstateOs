@@ -201,9 +201,9 @@ export async function getProperties(
     }
     if (filters?.search) {
       where.OR = [
-        { title: { contains: filters.search } },
-        { city: { contains: filters.search } },
-        { address: { contains: filters.search } },
+        { title: { contains: filters.search, mode: "insensitive" } },
+        { city: { contains: filters.search, mode: "insensitive" } },
+        { address: { contains: filters.search, mode: "insensitive" } },
       ];
     }
 
