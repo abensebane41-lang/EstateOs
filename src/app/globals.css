@@ -107,10 +107,15 @@
   :root {
     --background: var(--color-surface);
     --foreground: var(--color-text-primary);
+    color-scheme: light;
   }
 
   * {
     @apply border-border;
+  }
+
+  html {
+    background-color: var(--color-surface) !important;
   }
 
   body {
