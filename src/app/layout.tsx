@@ -34,8 +34,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <head>
+      <meta name="color-scheme" content="light" />
+    </head>
     <html lang="ar" dir="rtl" className={`${ibmPlexSansArabic.variable} ${inter.variable} ${cinzel.variable}`} style={{ colorScheme: "light" }} suppressHydrationWarning>
-      <body className="min-h-screen bg-surface font-sans antialiased">
+      <body className="min-h-screen bg-surface font-sans antialiased" style={{ backgroundColor: "#FAFAF8" }}>
         {children}
       </body>
     </html>
