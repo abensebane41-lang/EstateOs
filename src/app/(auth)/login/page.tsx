@@ -9,7 +9,7 @@ import { Label } from "@/shared/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { LogIn } from "lucide-react";
 
-const AUTH_BASE = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005";
+const AUTH_BASE = typeof window !== "undefined" ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005");
 
 export default function LoginPage() {
   const router = useRouter();
