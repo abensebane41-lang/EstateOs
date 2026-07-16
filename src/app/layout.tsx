@@ -26,6 +26,9 @@ const cinzel = Cinzel({
 export const metadata: Metadata = {
   title: "EstateOS | منصة إدارة العقارات",
   description: "منصة احترافية لإدارة العقارات والوكلاء العقاريين",
+  other: {
+    "color-scheme": "light",
+  },
 };
 
 export default function RootLayout({
