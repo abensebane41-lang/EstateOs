@@ -20,7 +20,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-white/80 mb-6 backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-            منصة مجانية للوكلاء العقاريين
+            منصة احترافية للوكلاء العقاريين
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 font-public-heading tracking-tight">
             EstateOS
