@@ -29,7 +29,7 @@ export function FavoriteButton({
     startTransition(async () => {
       const result = await toggleFavorite(userId, propertyId);
       if (result.success) {
-        setFavorited(result.data.favorited);
+        setFavorited((result.data as { favorited: boolean }).favorited);
       }
     });
   }
