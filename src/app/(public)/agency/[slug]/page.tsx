@@ -129,7 +129,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
               {agency.name}
             </h1>
             {agency.description && (
-              <p lang="fr" className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed text-center">
+              <p lang="fr" dir="ltr" className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed text-center">
                 {agency.description}
               </p>
             )}
