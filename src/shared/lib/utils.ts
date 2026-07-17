@@ -45,9 +45,13 @@ export function formatDate(date: Date | string): string {
 }
 
 export function slugify(text: string): string {
-  return text
+  const slug = text
     .toLowerCase()
-    .replace(/[^\w\s\u0600-\u06FF-]/g, "")
+    .replace(/[^\w\s\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF-]/gu, "")
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
+  if (!slug) {
+    return `property-${Date.now()}`;
+  }
+  return slug;
 }

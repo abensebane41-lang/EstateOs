@@ -89,6 +89,8 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
 
   if (!agency) notFound();
 
+  if (!propertySlug) notFound();
+
   const property = await prisma.property.findFirst({
     where: { slug: propertySlug, agencyId: agency.id, status: "PUBLISHED" },
     include: { images: { orderBy: { sortOrder: "asc" } } },
@@ -98,8 +100,6 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
 
   const contactPhone = property.agentPhone || agency.phone;
   const whatsappUrl = contactPhone ? `https://wa.me/${contactPhone.replace(/[^0-9]/g, "")}` : null;
-
-  if (!property) notFound();
 
   const primaryImage = property.images.find((img) => img.isPrimary) || property.images[0];
 

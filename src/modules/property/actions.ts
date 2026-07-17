@@ -6,6 +6,7 @@ import { success, failure } from "@/server/actions/response";
 import type { ActionResponse } from "@/shared/lib/errors";
 import { slugify } from "@/shared/lib/utils";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
+import { revalidatePath } from "next/cache";
 
 const createPropertySchema = z.object({
   title: z.string().min(2, "العنوان مطلوب"),
@@ -82,6 +83,12 @@ export async function createProperty(
       },
     });
 
+    const agency = await prisma.agency.findUnique({ where: { id: agencyId }, select: { slug: true } });
+    if (agency) {
+      revalidatePath(`/agency/${agency.slug}`);
+      revalidatePath(`/agency/${agency.slug}/properties/${slug}`);
+    }
+
     return success(property);
   } catch (error) {
     console.error("Create property error:", error);
@@ -152,6 +159,15 @@ export async function updateProperty(
       data: updateData,
     });
 
+    const agency = await prisma.agency.findUnique({ where: { id: user.agencyId! }, select: { slug: true } });
+    if (agency) {
+      revalidatePath(`/agency/${agency.slug}`);
+      revalidatePath(`/agency/${agency.slug}/properties/${existing.slug}`);
+      if (slug !== existing.slug) {
+        revalidatePath(`/agency/${agency.slug}/properties/${slug}`);
+      }
+    }
+
     return success(property);
   } catch (error) {
     console.error("Update property error:", error);
@@ -169,6 +185,13 @@ export async function deleteProperty(id: string): Promise<ActionResponse> {
     if (existing.agencyId !== user.agencyId) return failure("غير مصرح");
 
     await prisma.property.delete({ where: { id } });
+
+    const agency = await prisma.agency.findUnique({ where: { id: user.agencyId! }, select: { slug: true } });
+    if (agency) {
+      revalidatePath(`/agency/${agency.slug}`);
+      revalidatePath(`/agency/${agency.slug}/properties/${existing.slug}`);
+    }
+
     return success({ message: "تم حذف العقار بنجاح" });
   } catch (error) {
     console.error("Delete property error:", error);

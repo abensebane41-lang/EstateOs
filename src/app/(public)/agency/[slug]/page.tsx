@@ -10,8 +10,6 @@ import { parseFilters, filterProperties } from "@/shared/lib/property-filters";
 import { FilterBar } from "@/shared/components/shared/filter-bar";
 import { Pagination } from "@/shared/components/shared/pagination";
 
-export const revalidate = 300;
-
 const TYPE_LABELS: Record<string, string> = {
   APARTMENT: "شقة",
   VILLA: "فيلا",
