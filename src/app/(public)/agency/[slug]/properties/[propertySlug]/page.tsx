@@ -105,23 +105,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
 
-  if (!property || property.status !== "PUBLISHED") {
-    return (
-      <div style={{padding:40,fontFamily:"monospace",direction:"ltr"}}>
-        <h1>Property Debug</h1>
-        <pre>{JSON.stringify({
-          slug,
-          rawPropertySlug,
-          propertySlug,
-          agencyId: agency.id,
-          agencyName: agency.name,
-          found: !!property,
-          status: property?.status,
-          dbSlug: property?.slug,
-        }, null, 2)}</pre>
-      </div>
-    );
-  }
+  if (!property || property.status !== "PUBLISHED") notFound();
 
   const contactPhone = property.agentPhone || agency.phone;
   const whatsappUrl = contactPhone ? `https://wa.me/${contactPhone.replace(/[^0-9]/g, "")}` : null;
