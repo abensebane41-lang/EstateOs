@@ -7,7 +7,7 @@ import { Label } from "@/shared/components/ui/label";
 import { Badge } from "@/shared/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/shared/components/ui/dialog";
 import { addUser, deleteUser } from "@/modules/user/actions";
-import { UserPlus, Trash2 } from "lucide-react";
+import { UserPlus, Trash2, Copy, Check, Eye, EyeOff } from "lucide-react";
 
 interface User {
   id: string;
@@ -31,9 +31,12 @@ const roleVariants: Record<string, "default" | "secondary" | "accent"> = {
 export function UsersTable({ initialUsers }: { initialUsers: User[] }) {
   const [users, setUsers] = useState(initialUsers);
   const [addDialog, setAddDialog] = useState(false);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [successInfo, setSuccessInfo] = useState<{ name: string; email: string; password: string } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   async function handleAdd() {
     setLoading(true);
@@ -42,12 +45,22 @@ export function UsersTable({ initialUsers }: { initialUsers: User[] }) {
     if (result.success) {
       const newUser = result.data as User;
       setUsers((prev) => [{ ...newUser, createdAt: new Date().toISOString() }, ...prev]);
+      setSuccessInfo({ name: formData.name, email: formData.email, password: formData.password });
       setAddDialog(false);
-      setFormData({ name: "", email: "", phone: "" });
+      setFormData({ name: "", email: "", phone: "", password: "" });
     } else {
-      setError(result.error);
+      setError(typeof result.error === "string" ? result.error : "خطأ في الإدخال");
     }
     setLoading(false);
+  }
+
+  function copyCredentials() {
+    if (!successInfo) return;
+    const text = `حسابك في EstateOS\nالبريد: ${successInfo.email}\nكلمة المرور: ${successInfo.password}`;
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   }
 
   async function handleDelete(id: string) {
@@ -125,15 +138,67 @@ export function UsersTable({ initialUsers }: { initialUsers: User[] }) {
               <Input type="email" value={formData.email} onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))} placeholder="user@email.com" dir="ltr" className="text-left" />
             </div>
             <div className="space-y-2">
+              <Label>كلمة المرور</Label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) => setFormData((p) => ({ ...p, password: e.target.value }))}
+                  placeholder="6 أحرف على الأقل"
+                  dir="ltr"
+                  className="text-left pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary hover:text-text-secondary"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+            <div className="space-y-2">
               <Label>الهاتف (اختياري)</Label>
               <Input value={formData.phone} onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))} dir="ltr" className="text-left" />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAddDialog(false)}>إلغاء</Button>
-            <Button onClick={handleAdd} disabled={loading || !formData.name || !formData.email}>
+            <Button onClick={handleAdd} disabled={loading || !formData.name || !formData.email || !formData.password}>
               {loading ? "جاري الإضافة..." : "إضافة"}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!successInfo} onOpenChange={() => setSuccessInfo(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>تمت الإضافة بنجاح</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <p className="text-sm text-text-secondary">أرسل هذه البيانات للمستخدم عبر واتساب أو مكالمة:</p>
+            <div className="rounded-xl border border-border bg-surface-secondary p-4 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-xs text-text-secondary">الاسم</span>
+                <span className="text-sm font-medium text-text-primary">{successInfo?.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-text-secondary">البريد</span>
+                <span className="text-sm font-medium text-text-primary" dir="ltr">{successInfo?.email}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-xs text-text-secondary">كلمة المرور</span>
+                <span className="text-sm font-mono font-medium text-text-primary" dir="ltr">{successInfo?.password}</span>
+              </div>
+            </div>
+            <Button onClick={copyCredentials} variant="outline" className="w-full gap-2">
+              {copied ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+              {copied ? "تم النسخ" : "نسخ البيانات"}
+            </Button>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setSuccessInfo(null)}>حسناً</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

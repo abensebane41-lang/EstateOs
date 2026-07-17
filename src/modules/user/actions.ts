@@ -9,6 +9,7 @@ const addUserSchema = z.object({
   name: z.string().min(2, "الاسم مطلوب"),
   email: z.string().email("البريد الإلكتروني غير صحيح"),
   phone: z.string().optional(),
+  password: z.string().min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
   role: z.enum(["AGENCY_OWNER", "AGENCY_AGENT"], { message: "الدور غير صحيح" }),
 });
 
@@ -50,20 +51,29 @@ export async function addUser(data: z.infer<typeof addUserSchema>) {
     const existing = await prisma.user.findUnique({ where: { email: parsed.data.email } });
     if (existing) return failure("البريد الإلكتروني مستخدم بالفعل");
 
-    const tempPassword = Math.random().toString(36).slice(-12) + "A1!";
-    const newUser = await prisma.user.create({
-      data: {
+    const { auth } = await import("@/modules/auth/auth");
+    const result = await auth.api.signUpEmail({
+      body: {
         name: parsed.data.name,
         email: parsed.data.email,
+        password: parsed.data.password,
+      },
+    });
+
+    const newUser = await prisma.user.update({
+      where: { id: result.user.id },
+      data: {
         phone: parsed.data.phone || null,
         role: parsed.data.role,
         agencyId: user.agencyId,
-        password: tempPassword,
+        emailVerified: true,
       },
       select: { id: true, name: true, email: true, role: true, phone: true, createdAt: true },
     });
+
     return success(newUser);
   } catch (error) {
+    console.error("Add user error:", error);
     return failure("Failed to add user");
   }
 }
