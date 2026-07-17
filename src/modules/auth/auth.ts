@@ -13,27 +13,8 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
-    sendVerificationEmail: async ({ user, token }: { user: { name: string; email: string }; token: string }) => {
-      const verifyURL = `${baseURL}/api/auth/verify-email?token=${token}&callbackURL=${encodeURIComponent(baseURL + "/dashboard")}`;
-      try {
-        const { sendEmail } = await import("@/shared/lib/email");
-        await sendEmail({
-          to: user.email,
-          subject: "تأكيد البريد الإلكتروني - EstateOS",
-          html: `<div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #0F2747;">تأكيد البريد الإلكتروني</h2>
-            <p>مرحباً ${user.name},</p>
-            <p>يرجى تأكيد بريدك الإلكتروني بالضغط على الزر أدناه:</p>
-            <a href="${verifyURL}" style="display: inline-block; background: #0F2747; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">تأكيد البريد</a>
-            <p style="color: #666; font-size: 14px;">إذا لم تقم بإنشاء حساب، تجاهل هذه الرسالة.</p>
-          </div>`,
-        });
-      } catch (e) {
-        console.error("[Auth] Failed to send verification email:", e);
-      }
-    },
-    sendResetPassword: async ({ user, token }) => {
+    requireEmailVerification: false,
+    sendResetPassword: async ({ user, token }: { user: { name: string; email: string }; token: string }) => {
       const resetURL = `${baseURL}/reset-password?token=${token}`;
       try {
         const { sendEmail } = await import("@/shared/lib/email");
