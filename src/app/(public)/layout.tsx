@@ -24,9 +24,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             EstateOS
           </Link>
           <nav className="flex items-center gap-6">
-            <Link href="/pricing" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
-              الأسعار
-            </Link>
             <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
               تسجيل الدخول
             </Link>

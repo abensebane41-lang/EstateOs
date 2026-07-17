@@ -84,7 +84,7 @@ export async function registerAgency(data: z.infer<typeof registerSchema>): Prom
       });
 
       const trialEndsAt = new Date();
-      trialEndsAt.setDate(trialEndsAt.getDate() + 14);
+      trialEndsAt.setDate(trialEndsAt.getDate() + 7);
 
       await prisma.subscription.create({
         data: {
