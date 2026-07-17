@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, Menu } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -11,9 +11,10 @@ import { getUnreadNotificationCount } from "@/modules/agency/actions";
 interface TopbarProps {
   title?: string;
   agency?: { name: string; logoUrl?: string | null } | null;
+  onMenuClick?: () => void;
 }
 
-export function Topbar({ title, agency }: TopbarProps) {
+export function Topbar({ title, agency, onMenuClick }: TopbarProps) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -25,6 +26,11 @@ export function Topbar({ title, agency }: TopbarProps) {
   return (
     <header className="flex h-16 items-center justify-between border-b border-border bg-white px-6">
       <div className="flex items-center gap-4">
+        {onMenuClick && (
+          <Button variant="ghost" size="icon" onClick={onMenuClick} className="lg:hidden">
+            <Menu className="h-5 w-5" />
+          </Button>
+        )}
         {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
       </div>
 

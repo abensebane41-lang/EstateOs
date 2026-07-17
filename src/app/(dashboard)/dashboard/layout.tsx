@@ -1,5 +1,4 @@
-import { Sidebar } from "@/shared/components/layout/sidebar";
-import { Topbar } from "@/shared/components/layout/topbar";
+import { DashboardShell } from "@/shared/components/layout/dashboard-shell";
 import { SuspendedPage } from "@/shared/components/shared/suspended-page";
 import { prisma } from "@/shared/lib/prisma";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
@@ -60,14 +59,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar agency={{ name: agency.name, logoUrl: agency.logoUrl, slug: agency.slug }} userRole={user.role} />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Topbar agency={{ name: agency.name, logoUrl: agency.logoUrl }} />
-        <main className="flex-1 overflow-y-auto bg-surface-secondary p-4 sm:p-6">
-          {children}
-        </main>
-      </div>
-    </div>
+    <DashboardShell agency={{ name: agency.name, logoUrl: agency.logoUrl, slug: agency.slug }} userRole={user.role}>
+      {children}
+    </DashboardShell>
   );
 }

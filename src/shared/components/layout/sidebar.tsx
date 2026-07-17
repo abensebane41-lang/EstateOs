@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -14,7 +14,6 @@ import {
   Home,
   Bell,
   Shield,
-  Menu,
   X,
   ExternalLink,
 } from "lucide-react";
@@ -35,14 +34,15 @@ interface SidebarProps {
   onToggle?: () => void;
   agency?: { name: string; logoUrl?: string | null; slug?: string | null } | null;
   userRole?: string;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export function Sidebar({ collapsed = false, onToggle, agency, userRole }: SidebarProps) {
+export function Sidebar({ collapsed = false, onToggle, agency, userRole, mobileOpen = false, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    setMobileOpen(false);
+    onMobileClose?.();
   }, [pathname]);
 
   const navContent = (
@@ -63,7 +63,7 @@ export function Sidebar({ collapsed = false, onToggle, agency, userRole }: Sideb
         <button onClick={onToggle} className="rounded-lg p-2 hover:bg-surface-secondary transition-colors hidden lg:block">
           <ChevronLeft className={cn("h-4 w-4 text-text-secondary transition-transform", collapsed && "rotate-180")} />
         </button>
-        <button onClick={() => setMobileOpen(false)} className="rounded-lg p-2 hover:bg-surface-secondary transition-colors lg:hidden">
+        <button onClick={onMobileClose} className="rounded-lg p-2 hover:bg-surface-secondary transition-colors lg:hidden">
           <X className="h-4 w-4 text-text-secondary" />
         </button>
       </div>
@@ -122,15 +122,8 @@ export function Sidebar({ collapsed = false, onToggle, agency, userRole }: Sideb
 
   return (
     <>
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="fixed top-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg lg:hidden"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
-
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setMobileOpen(false)} />
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={onMobileClose} />
       )}
 
       <aside
