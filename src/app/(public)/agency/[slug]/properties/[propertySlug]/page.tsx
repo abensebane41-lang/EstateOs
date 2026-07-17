@@ -69,7 +69,9 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { slug, propertySlug } = await params;
+  const { slug, propertySlug: rawSlug } = await params;
+  let propertySlug = rawSlug;
+  try { propertySlug = decodeURIComponent(rawSlug); } catch {}
   const agency = await prisma.agency.findUnique({ where: { slug }, select: { id: true } });
   if (!agency) return {};
   const property = await prisma.property.findFirst({
@@ -84,7 +86,10 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function AgencyPropertyDetailPage({ params }: Props) {
-  const { slug, propertySlug } = await params;
+  const { slug, propertySlug: rawPropertySlug } = await params;
+
+  let propertySlug = rawPropertySlug;
+  try { propertySlug = decodeURIComponent(rawPropertySlug); } catch {}
 
   const agency = await prisma.agency.findUnique({
     where: { slug },
@@ -97,8 +102,8 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
 
   let property;
   try {
-    property = await prisma.property.findUnique({
-      where: { agencyId_slug: { agencyId: agency.id, slug: propertySlug } },
+    property = await prisma.property.findFirst({
+      where: { slug: propertySlug, agencyId: agency.id },
       include: { images: { orderBy: { sortOrder: "asc" } } },
     });
   } catch (e) {
