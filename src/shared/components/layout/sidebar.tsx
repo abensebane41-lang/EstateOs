@@ -70,7 +70,9 @@ export function Sidebar({ collapsed = false, onToggle, agency, userRole, mobileO
 
       <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
         {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive = item.href === "/dashboard"
+            ? pathname === "/dashboard"
+            : pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.href}
