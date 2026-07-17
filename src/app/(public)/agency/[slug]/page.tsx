@@ -72,7 +72,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
   const filters = parseFilters(sp, agency.id);
   const { properties, pagination } = await filterProperties(filters);
 
-  const stats = await prisma.aggregate({
+  const stats = await prisma.property.aggregate({
       where: { agencyId: agency.id, status: "PUBLISHED" },
       _count: true,
     });
