@@ -100,18 +100,28 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
 
   if (!propertySlug) notFound();
 
-  let property;
-  try {
-    property = await prisma.property.findFirst({
-      where: { slug: propertySlug, agencyId: agency.id },
-      include: { images: { orderBy: { sortOrder: "asc" } } },
-    });
-  } catch (e) {
-    console.error("[PropertyDetail] Query error:", e);
-    property = null;
-  }
+  const property = await prisma.property.findFirst({
+    where: { slug: propertySlug, agencyId: agency.id },
+    include: { images: { orderBy: { sortOrder: "asc" } } },
+  });
 
-  if (!property || property.status !== "PUBLISHED") notFound();
+  if (!property || property.status !== "PUBLISHED") {
+    return (
+      <div style={{padding:40,fontFamily:"monospace",direction:"ltr"}}>
+        <h1>Property Debug</h1>
+        <pre>{JSON.stringify({
+          slug,
+          rawPropertySlug,
+          propertySlug,
+          agencyId: agency.id,
+          agencyName: agency.name,
+          found: !!property,
+          status: property?.status,
+          dbSlug: property?.slug,
+        }, null, 2)}</pre>
+      </div>
+    );
+  }
 
   const contactPhone = property.agentPhone || agency.phone;
   const whatsappUrl = contactPhone ? `https://wa.me/${contactPhone.replace(/[^0-9]/g, "")}` : null;
