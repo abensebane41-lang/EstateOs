@@ -31,11 +31,17 @@ export default function ForgotPasswordPage() {
       if (res.ok) {
         setSent(true);
       } else {
-        const data = await res.json();
-        setError(data.error?.message || "حدث خطأ. حاول مرة أخرى.");
+        let msg = "حدث خطأ. حاول مرة أخرى.";
+        try {
+          const data = await res.json();
+          msg = data.error?.message || data.message || `خطأ ${res.status}`;
+        } catch {
+          msg = `خطأ في الخادم (${res.status})`;
+        }
+        setError(msg);
       }
-    } catch {
-      setError("حدث خطأ غير متوقع");
+    } catch (e: any) {
+      setError(e?.message || "حدث خطأ غير متوقع");
     } finally {
       setLoading(false);
     }

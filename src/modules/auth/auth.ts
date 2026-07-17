@@ -18,8 +18,8 @@ export const auth = betterAuth({
       const resetURL = `${baseURL}/reset-password?token=${token}`;
       console.log(`[Auth] Password reset requested for ${user.email}, token: ${token.substring(0, 8)}...`);
       try {
-        const { sendEmail } = await import("@/shared/lib/email");
-        const result = await sendEmail({
+        const emailModule = await import("@/shared/lib/email");
+        const result = await emailModule.sendEmail({
           to: user.email,
           subject: "إعادة تعيين كلمة المرور - EstateOS",
           html: `<div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -30,9 +30,9 @@ export const auth = betterAuth({
             <p style="color: #666; font-size: 14px;">إذا لم تطلب هذا، تجاهل هذه الرسالة.</p>
           </div>`,
         });
-        console.log(`[Auth] Reset email result:`, result);
-      } catch (e) {
-        console.error("[Auth] Failed to send reset email:", e);
+        console.log(`[Auth] Reset email result:`, JSON.stringify(result));
+      } catch (e: any) {
+        console.error("[Auth] Failed to send reset email:", e?.message || e);
       }
     },
   },
