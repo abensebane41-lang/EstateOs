@@ -18,7 +18,7 @@ import {
   DialogClose,
 } from "@/shared/components/ui/dialog";
 import { updateProperty, deleteProperty } from "@/modules/property/actions";
-import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
+import { WILAYAS } from "@/shared/data/algeria";
 import { PriceInput } from "@/shared/components/shared/price-input";
 import { Plus, X, Star, Phone, Video } from "lucide-react";
 
@@ -94,7 +94,6 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
     videoUrl: property.videoUrl || "",
   });
 
-  const selectedCommunes = form.state ? (COMMUNES[form.state] || []) : [];
   const showBedrooms = !HIDE_BEDROOMS.includes(form.propertyType);
 
   const handleChange = (
@@ -267,10 +266,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
                   </div>
                   <div>
                     <Label htmlFor="city">البلدية *</Label>
-                    <select id="city" name="city" value={form.city} onChange={handleChange} className={SELECT_CLASSES} required disabled={!form.state}>
-                      <option value="">اختر البلدية</option>
-                      {selectedCommunes.map((c) => (<option key={c} value={c}>{c}</option>))}
-                    </select>
+                    <input id="city" name="city" value={form.city} onChange={handleChange} placeholder="اسم البلدية..." className={SELECT_CLASSES} required />
                   </div>
                 </div>
               </CardContent>

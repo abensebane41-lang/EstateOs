@@ -7,7 +7,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { PriceInputString } from "@/shared/components/shared/price-input";
 import { ChevronDown, ChevronUp, X, Search, SlidersHorizontal } from "lucide-react";
-import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
+import { WILAYAS } from "@/shared/data/algeria";
 
 const PROPERTY_TYPES = [
   { value: "APARTMENT", label: "شقة" },
@@ -57,8 +57,6 @@ export function FilterBar({ totalResults }: FilterBarProps) {
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
   const selectedWilaya = WILAYAS.find(w => w.name === state);
-  const stateCode = selectedWilaya?.code || "";
-  const communesForState = stateCode ? (COMMUNES[stateCode] || []) : [];
 
   const activeFilterCount = [
     search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea,
@@ -179,17 +177,13 @@ export function FilterBar({ totalResults }: FilterBarProps) {
 
         <div>
           <Label className="text-xs text-text-secondary mb-1.5 block font-medium">المدينة</Label>
-          <select
+          <input
+            type="text"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            disabled={!state}
-            className="flex h-11 w-full rounded-xl border border-border/60 bg-surface-secondary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors disabled:opacity-50"
-          >
-            <option value="">الكل</option>
-            {communesForState.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
+            placeholder="اسم البلدية..."
+            className="flex h-11 w-full rounded-xl border border-border/60 bg-surface-secondary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
+          />
         </div>
 
         <PriceInputString

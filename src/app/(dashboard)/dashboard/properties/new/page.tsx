@@ -9,7 +9,7 @@ import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { createProperty } from "@/modules/property/actions";
-import { WILAYAS, COMMUNES } from "@/shared/data/algeria";
+import { WILAYAS } from "@/shared/data/algeria";
 import { PriceInput } from "@/shared/components/shared/price-input";
 import { Plus, X, Star, Phone, Video } from "lucide-react";
 
@@ -67,7 +67,7 @@ export default function NewPropertyPage() {
     videoUrl: "",
   });
 
-  const selectedCommunes = form.state ? (COMMUNES[form.state] || []) : [];
+  const selectedWilaya = WILAYAS.find(w => w.code === form.state);
   const showBedrooms = !HIDE_BEDROOMS.includes(form.propertyType);
 
   const handleChange = (
@@ -349,22 +349,15 @@ export default function NewPropertyPage() {
 
                   <div>
                     <Label htmlFor="city">البلدية *</Label>
-                    <select
+                    <input
                       id="city"
                       name="city"
                       value={form.city}
                       onChange={handleChange}
+                      placeholder="اسم البلدية..."
                       className={SELECT_CLASSES}
                       required
-                      disabled={!form.state}
-                    >
-                      <option value="">اختر البلدية</option>
-                      {selectedCommunes.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
+                    />
                   </div>
                 </div>
               </CardContent>
