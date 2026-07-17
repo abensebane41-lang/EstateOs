@@ -36,8 +36,8 @@ export default function HomePage() {
               ابدأ مجاناً
               <ArrowRight className="mr-2 h-4 w-4" />
             </Link>
-            <Link href="/properties" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-8 py-3.5 text-base font-medium text-white hover:bg-white/10 transition-all duration-200 backdrop-blur-sm">
-              تصفح العقارات
+            <Link href="/pricing" className="inline-flex items-center justify-center rounded-xl border border-white/20 px-8 py-3.5 text-base font-medium text-white hover:bg-white/10 transition-all duration-200 backdrop-blur-sm">
+              عرض الأسعار
             </Link>
           </div>
         </div>

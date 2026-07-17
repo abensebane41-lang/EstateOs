@@ -13,7 +13,6 @@ export interface PropertyFilters {
   minArea?: number;
   maxArea?: number;
   bedrooms?: number;
-  bathrooms?: number;
   floor?: number;
   furnished?: boolean;
   parking?: boolean;
@@ -37,7 +36,6 @@ export function parseFilters(searchParams: Record<string, string | undefined>, a
     minArea: searchParams.minArea ? Number(searchParams.minArea) : undefined,
     maxArea: searchParams.maxArea ? Number(searchParams.maxArea) : undefined,
     bedrooms: searchParams.bedrooms ? Number(searchParams.bedrooms) : undefined,
-    bathrooms: searchParams.bathrooms ? Number(searchParams.bathrooms) : undefined,
     floor: searchParams.floor ? Number(searchParams.floor) : undefined,
     furnished: searchParams.furnished === "1" ? true : undefined,
     parking: searchParams.parking === "1" ? true : undefined,
@@ -102,10 +100,6 @@ function buildWhereClause(filters: PropertyFilters): Prisma.PropertyWhereInput {
 
   if (filters.bedrooms !== undefined) {
     and.push({ bedrooms: { gte: filters.bedrooms } });
-  }
-
-  if (filters.bathrooms !== undefined) {
-    and.push({ bathrooms: { gte: filters.bathrooms } });
   }
 
   if (filters.floor !== undefined) {
@@ -211,7 +205,6 @@ export function filtersToSearchParams(filters: PropertyFilters): string {
   if (filters.minArea) params.set("minArea", String(filters.minArea));
   if (filters.maxArea) params.set("maxArea", String(filters.maxArea));
   if (filters.bedrooms) params.set("bedrooms", String(filters.bedrooms));
-  if (filters.bathrooms) params.set("bathrooms", String(filters.bathrooms));
   if (filters.floor) params.set("floor", String(filters.floor));
   if (filters.furnished) params.set("furnished", "1");
   if (filters.parking) params.set("parking", "1");

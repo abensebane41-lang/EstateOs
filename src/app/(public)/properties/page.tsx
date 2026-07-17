@@ -124,7 +124,6 @@ export default async function PublicPropertiesPage({ searchParams }: Props) {
                   <div className="absolute left-3 top-3">
                     <FavoriteButton
                       propertyId={property.id}
-                      userId={user.id}
                       initialFavorited={favoritedIds.has(property.id)}
                     />
                   </div>

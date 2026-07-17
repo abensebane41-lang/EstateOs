@@ -9,12 +9,12 @@ export function formatCurrency(amount: number, currency = "DZD"): string {
   if (amount >= 1_000_000_000) {
     const billions = amount / 1_000_000_000;
     const formatted = billions === Math.floor(billions) ? String(billions) : billions.toFixed(1).replace(/\.0$/, "");
-    return `${formatted} مليار د.ج`;
+    return `${formatted} مليار سنتيم`;
   }
   if (amount >= 1_000_000) {
     const millions = amount / 1_000_000;
     const formatted = millions === Math.floor(millions) ? String(millions) : millions.toFixed(1).replace(/\.0$/, "");
-    return `${formatted} مليون د.ج`;
+    return `${formatted} مليون سنتيم`;
   }
   return new Intl.NumberFormat("ar-DZ", {
     style: "currency",

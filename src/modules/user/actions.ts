@@ -13,6 +13,8 @@ const addUserSchema = z.object({
   role: z.enum(["AGENCY_OWNER", "AGENCY_AGENT"], { message: "الدور غير صحيح" }),
 });
 
+const allowedRoles = z.enum(["AGENCY_OWNER", "AGENCY_AGENT"]);
+
 export async function getAgencyUsers() {
   try {
     const user = await getCurrentUser();
@@ -80,6 +82,9 @@ export async function addUser(data: z.infer<typeof addUserSchema>) {
 
 export async function updateUserRole(userId: string, role: string) {
   try {
+    const roleResult = allowedRoles.safeParse(role);
+    if (!roleResult.success) return failure("الدور غير صحيح");
+
     const user = await getCurrentUser();
     if (!user?.agencyId) return failure("يجب تسجيل الدخول أولاً");
     if (user.role !== "AGENCY_OWNER" && user.role !== "SUPER_ADMIN") {
@@ -92,7 +97,7 @@ export async function updateUserRole(userId: string, role: string) {
 
     const updated = await prisma.user.update({
       where: { id: userId },
-      data: { role },
+      data: { role: roleResult.data },
       select: { id: true, name: true, email: true, role: true },
     });
     return success(updated);

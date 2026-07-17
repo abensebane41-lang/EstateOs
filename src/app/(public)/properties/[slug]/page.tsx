@@ -64,7 +64,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
   const user = await getCurrentUser();
   let favorited = false;
   if (user) {
-    const favResult = await isFavorited(user.id, property.id);
+    const favResult = await isFavorited(property.id);
     favorited = favResult.success ? favResult.data.favorited : false;
   }
 
@@ -114,7 +114,6 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
                 {user && (
                   <FavoriteButton
                     propertyId={property.id}
-                    userId={user.id}
                     initialFavorited={favorited}
                   />
                 )}

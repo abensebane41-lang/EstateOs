@@ -5,7 +5,7 @@ import { uploadLogo, isSupabaseConfigured } from "@/shared/lib/storage";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser();

@@ -2,9 +2,14 @@
 
 import { prisma } from "@/shared/lib/prisma";
 import { success, failure } from "@/server/actions/response";
+import { getCurrentUser } from "@/shared/lib/auth-helpers";
 
-export async function toggleFavorite(userId: string, propertyId: string) {
+export async function toggleFavorite(propertyId: string) {
   try {
+    const user = await getCurrentUser();
+    if (!user) return failure("يجب تسجيل الدخول أولاً");
+    const userId = user.id;
+
     const existing = await prisma.propertyFavorite.findUnique({
       where: { userId_propertyId: { userId, propertyId } },
     });
@@ -21,10 +26,13 @@ export async function toggleFavorite(userId: string, propertyId: string) {
   }
 }
 
-export async function isFavorited(userId: string, propertyId: string) {
+export async function isFavorited(propertyId: string) {
   try {
+    const user = await getCurrentUser();
+    if (!user) return success({ favorited: false });
+
     const existing = await prisma.propertyFavorite.findUnique({
-      where: { userId_propertyId: { userId, propertyId } },
+      where: { userId_propertyId: { userId: user.id, propertyId } },
     });
     return success({ favorited: !!existing });
   } catch (error) {
@@ -32,10 +40,13 @@ export async function isFavorited(userId: string, propertyId: string) {
   }
 }
 
-export async function getUserFavorites(userId: string) {
+export async function getUserFavorites() {
   try {
+    const user = await getCurrentUser();
+    if (!user) return failure("يجب تسجيل الدخول أولاً");
+
     const favorites = await prisma.propertyFavorite.findMany({
-      where: { userId },
+      where: { userId: user.id },
       include: { property: { include: { images: { where: { isPrimary: true }, take: 1 } } } },
       orderBy: { createdAt: "desc" },
     });

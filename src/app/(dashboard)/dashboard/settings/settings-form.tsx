@@ -7,7 +7,8 @@ import { Label } from "@/shared/components/ui/label";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Badge } from "@/shared/components/ui/badge";
 import { updateAgencyProfile } from "@/modules/agency/actions";
-import { Save, Building2, CreditCard, Users, Home, Globe, Copy, Check, Upload, X } from "lucide-react";
+import { Save, Building2, CreditCard, Users, Home, Globe, Copy, Check, Upload, X, Lock } from "lucide-react";
+import { changePassword } from "@/modules/auth/actions";
 
 interface AgencyData {
   id: string;
@@ -40,6 +41,9 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [passwordData, setPasswordData] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const publicUrl = typeof window !== "undefined"
     ? `${window.location.origin}/agency/${agency.slug}`
@@ -104,6 +108,35 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
       setMessage({ type: "error", text: "حدث خطأ أثناء الحفظ" });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handlePasswordChange(e: React.FormEvent) {
+    e.preventDefault();
+    setPasswordSaving(true);
+    setPasswordMessage(null);
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordMessage({ type: "error", text: "كلمتا المرور غير متطابقتين" });
+      setPasswordSaving(false);
+      return;
+    }
+
+    try {
+      const result = await changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
+      });
+      if (result.success) {
+        setPasswordMessage({ type: "success", text: "تم تغيير كلمة المرور بنجاح" });
+        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      } else {
+        setPasswordMessage({ type: "error", text: result.error });
+      }
+    } catch {
+      setPasswordMessage({ type: "error", text: "حدث خطأ أثناء تغيير كلمة المرور" });
+    } finally {
+      setPasswordSaving(false);
     }
   }
 
@@ -275,6 +308,43 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
           <Button type="submit" disabled={saving}>
             <Save className="ml-2 h-4 w-4" />
             {saving ? "جاري الحفظ..." : "حفظ التغييرات"}
+          </Button>
+        </div>
+      </form>
+
+      <form onSubmit={handlePasswordChange} className="rounded-xl border border-border bg-white p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-text-primary">
+          <Lock className="h-5 w-5" />
+          تغيير كلمة المرور
+        </h3>
+
+        {passwordMessage && (
+          <div className={`mb-4 rounded-lg p-3 text-sm ${passwordMessage.type === "success" ? "bg-success/10 text-success" : "bg-error/10 text-error"}`}>
+            {passwordMessage.text}
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="currentPassword">كلمة المرور الحالية</Label>
+            <Input id="currentPassword" type="password" value={passwordData.currentPassword} onChange={(e) => setPasswordData((p) => ({ ...p, currentPassword: e.target.value }))} required dir="ltr" />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">كلمة المرور الجديدة</Label>
+              <Input id="newPassword" type="password" value={passwordData.newPassword} onChange={(e) => setPasswordData((p) => ({ ...p, newPassword: e.target.value }))} required dir="ltr" minLength={8} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
+              <Input id="confirmPassword" type="password" value={passwordData.confirmPassword} onChange={(e) => setPasswordData((p) => ({ ...p, confirmPassword: e.target.value }))} required dir="ltr" minLength={8} />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <Button type="submit" disabled={passwordSaving} variant="outline">
+            <Lock className="ml-2 h-4 w-4" />
+            {passwordSaving ? "جاري التغيير..." : "تغيير كلمة المرور"}
           </Button>
         </div>
       </form>

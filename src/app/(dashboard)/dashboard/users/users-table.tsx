@@ -20,11 +20,15 @@ interface User {
 
 const roleLabels: Record<string, string> = {
   AGENCY_OWNER: "مالك الوكالة",
+  AGENCY_AGENT: "مندوب",
+  SUPER_ADMIN: "مدير النظام",
   CUSTOMER: "عميل",
 };
 
 const roleVariants: Record<string, "default" | "secondary" | "accent"> = {
   AGENCY_OWNER: "default",
+  AGENCY_AGENT: "accent",
+  SUPER_ADMIN: "secondary",
   CUSTOMER: "secondary",
 };
 

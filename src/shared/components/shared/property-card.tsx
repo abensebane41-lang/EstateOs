@@ -13,7 +13,6 @@ interface PropertyCardProps {
   status?: "active" | "draft";
   isFeatured?: boolean;
   propertyId?: string;
-  userId?: string;
   isFavorited?: boolean;
   className?: string;
 }
@@ -28,7 +27,6 @@ export function PropertyCard({
   status = "active",
   isFeatured,
   propertyId,
-  userId,
   isFavorited,
   className,
 }: PropertyCardProps) {
@@ -51,11 +49,10 @@ export function PropertyCard({
             <MapPin className="h-12 w-12" />
           </div>
         )}
-        {propertyId && userId && (
+        {propertyId && (
           <div className="absolute right-3 top-3">
             <FavoriteButton
               propertyId={propertyId}
-              userId={userId}
               initialFavorited={isFavorited}
             />
           </div>

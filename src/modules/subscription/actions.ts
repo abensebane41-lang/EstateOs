@@ -163,6 +163,8 @@ export async function extendTrial(subscriptionId: string, days: number) {
   try {
     await requireSuperAdmin();
 
+    if (typeof days !== "number" || days < 1 || days > 90) return failure("عدد الأيام غير صحيح");
+
     const sub = await prisma.subscription.findUnique({ where: { id: subscriptionId } });
     if (!sub) return failure("Subscription not found");
 

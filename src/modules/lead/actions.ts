@@ -88,6 +88,9 @@ export async function updateLeadStatus(
   status: string
 ): Promise<ActionResponse> {
   try {
+    const statusResult = allowedLeadStatuses.safeParse(status);
+    if (!statusResult.success) return failure("الحالة غير صحيحة");
+
     const user = await getCurrentUser();
     if (!user?.agencyId) return failure("يجب تسجيل الدخول أولاً");
 
@@ -97,7 +100,7 @@ export async function updateLeadStatus(
 
     const lead = await prisma.lead.update({
       where: { id },
-      data: { status },
+      data: { status: statusResult.data },
     });
 
     return success(lead);
@@ -112,6 +115,8 @@ export async function updateLeadNotes(
   notes: string
 ): Promise<ActionResponse> {
   try {
+    if (typeof notes !== "string" || notes.length > 5000) return failure("الملاحظات غير صحيحة");
+
     const user = await getCurrentUser();
     if (!user?.agencyId) return failure("يجب تسجيل الدخول أولاً");
 
@@ -156,6 +161,8 @@ const contactSchema = z.object({
   propertyId: z.string().optional(),
   agencyId: z.string().min(1, "الوكالة مطلوبة"),
 });
+
+const allowedLeadStatuses = z.enum(["NEW", "CONTACTED", "QUALIFIED", "NEGOTIATING", "WON", "LOST"]);
 
 export async function createLead(data: z.infer<typeof contactSchema>): Promise<ActionResponse> {
   const parsed = contactSchema.safeParse(data);

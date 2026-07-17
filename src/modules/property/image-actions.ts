@@ -3,6 +3,15 @@
 import { prisma } from "@/shared/lib/prisma";
 import { success, failure } from "@/server/actions/response";
 import type { ActionResponse } from "@/shared/lib/errors";
+import { getCurrentUser } from "@/shared/lib/auth-helpers";
+
+async function verifyPropertyOwnership(propertyId: string) {
+  const user = await getCurrentUser();
+  if (!user?.agencyId) throw new Error("Unauthorized");
+  const property = await prisma.property.findUnique({ where: { id: propertyId }, select: { agencyId: true } });
+  if (!property || property.agencyId !== user.agencyId) throw new Error("Forbidden");
+  return user;
+}
 
 export async function addPropertyImage(
   propertyId: string,
@@ -11,6 +20,8 @@ export async function addPropertyImage(
   isPrimary?: boolean
 ): Promise<ActionResponse> {
   try {
+    await verifyPropertyOwnership(propertyId);
+
     const maxOrder = await prisma.propertyImage.findFirst({
       where: { propertyId },
       orderBy: { sortOrder: "desc" },
@@ -36,6 +47,15 @@ export async function addPropertyImage(
 
 export async function deletePropertyImage(imageId: string): Promise<ActionResponse> {
   try {
+    const user = await getCurrentUser();
+    if (!user?.agencyId) return failure("يجب تسجيل الدخول أولاً");
+
+    const image = await prisma.propertyImage.findUnique({
+      where: { id: imageId },
+      select: { property: { select: { agencyId: true } } },
+    });
+    if (!image || image.property.agencyId !== user.agencyId) return failure("غير مصرح");
+
     await prisma.propertyImage.delete({ where: { id: imageId } });
     return success({ message: "Image deleted" });
   } catch (error) {
@@ -46,6 +66,8 @@ export async function deletePropertyImage(imageId: string): Promise<ActionRespon
 
 export async function setPrimaryImage(imageId: string, propertyId: string): Promise<ActionResponse> {
   try {
+    await verifyPropertyOwnership(propertyId);
+
     await prisma.propertyImage.updateMany({
       where: { propertyId },
       data: { isPrimary: false },
@@ -65,6 +87,8 @@ export async function setPrimaryImage(imageId: string, propertyId: string): Prom
 
 export async function getPropertyImages(propertyId: string): Promise<ActionResponse> {
   try {
+    await verifyPropertyOwnership(propertyId);
+
     const images = await prisma.propertyImage.findMany({
       where: { propertyId },
       orderBy: { sortOrder: "asc" },

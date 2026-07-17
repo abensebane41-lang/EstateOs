@@ -182,6 +182,7 @@ model Lead {
   @@index([propertyId])
   @@index([status])
   @@index([agencyId, status])
+  @@index([agencyId, createdAt])
 }
 
 model Subscription {
@@ -201,6 +202,7 @@ model Subscription {
 
   @@index([agencyId])
   @@index([status])
+  @@index([agencyId, status])
 }
 
 model AnalyticsEvent {

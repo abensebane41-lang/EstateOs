@@ -162,3 +162,36 @@ export async function logoutAction(): Promise<ActionResponse> {
     return failure("حدث خطأ أثناء تسجيل الخروج");
   }
 }
+
+export async function changePassword(data: { currentPassword: string; newPassword: string }): Promise<ActionResponse> {
+  const schema = z.object({
+    currentPassword: z.string().min(1, "كلمة المرور الحالية مطلوبة"),
+    newPassword: z.string().min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل"),
+  });
+
+  const parsed = schema.safeParse(data);
+  if (!parsed.success) {
+    return failure("بيانات غير صحيحة");
+  }
+
+  try {
+    const headers = await (await import("next/headers")).headers();
+    const session = await auth.api.getSession({ headers });
+
+    if (!session?.user) {
+      return failure("يجب تسجيل الدخول أولاً");
+    }
+
+    const { currentPassword, newPassword } = parsed.data;
+
+    const result = await auth.api.changePassword({
+      headers,
+      body: { currentPassword, newPassword },
+    });
+
+    return success({ message: "تم تغيير كلمة المرور بنجاح" });
+  } catch (error) {
+    console.error("Change password error:", error);
+    return failure("كلمة المرور الحالية غير صحيحة");
+  }
+}

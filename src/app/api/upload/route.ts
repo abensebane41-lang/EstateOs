@@ -3,6 +3,7 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { uploadPropertyImage, isSupabaseConfigured } from "@/shared/lib/storage";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
+import { prisma } from "@/shared/lib/prisma";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -32,6 +33,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (isSupabaseConfigured() && propertyId) {
+      const property = await prisma.property.findUnique({ where: { id: propertyId }, select: { agencyId: true } });
+      if (!property || property.agencyId !== user.agencyId) {
+        return NextResponse.json({ error: "Property not found" }, { status: 404 });
+      }
       const result = await uploadPropertyImage(file, propertyId);
       if (result) {
         return NextResponse.json({ url: result.url, path: result.path, altText: altText || file.name });

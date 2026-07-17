@@ -27,7 +27,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       subscriptions: {
         orderBy: { createdAt: "desc" },
         take: 1,
-        select: { status: true, endDate: true },
+        select: { status: true, endDate: true, trialEndsAt: true },
       },
     },
   });
@@ -45,6 +45,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
         agencyName={agency.name}
         status={subStatus}
         endDate={subscription?.endDate?.toISOString()}
+      />
+    );
+  }
+
+  if (subStatus === "TRIAL" && subscription?.trialEndsAt && new Date(subscription.trialEndsAt) < new Date()) {
+    return (
+      <SuspendedPage
+        agencyName={agency.name}
+        status="EXPIRED"
+        endDate={subscription.trialEndsAt.toISOString()}
       />
     );
   }

@@ -48,7 +48,6 @@ export function FilterBar({ totalResults }: FilterBarProps) {
   const [minArea, setMinArea] = useState(searchParams.get("minArea") || "");
   const [maxArea, setMaxArea] = useState(searchParams.get("maxArea") || "");
   const [bedrooms, setBedrooms] = useState(searchParams.get("bedrooms") || "");
-  const [bathrooms, setBathrooms] = useState(searchParams.get("bathrooms") || "");
   const [floor, setFloor] = useState(searchParams.get("floor") || "");
   const [furnished, setFurnished] = useState(searchParams.get("furnished") === "1");
   const [parking, setParking] = useState(searchParams.get("parking") === "1");
@@ -63,7 +62,7 @@ export function FilterBar({ totalResults }: FilterBarProps) {
 
   const activeFilterCount = [
     search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea,
-    bedrooms, bathrooms, floor, furnished, parking, balcony, featured,
+    bedrooms, floor, furnished, parking, balcony, featured,
   ].filter(Boolean).length;
 
   const applyFilters = useCallback(() => {
@@ -78,7 +77,6 @@ export function FilterBar({ totalResults }: FilterBarProps) {
     if (minArea) params.set("minArea", minArea);
     if (maxArea) params.set("maxArea", maxArea);
     if (bedrooms) params.set("bedrooms", bedrooms);
-    if (bathrooms) params.set("bathrooms", bathrooms);
     if (floor) params.set("floor", floor);
     if (furnished) params.set("furnished", "1");
     if (parking) params.set("parking", "1");
@@ -87,12 +85,12 @@ export function FilterBar({ totalResults }: FilterBarProps) {
     if (sort && sort !== "newest") params.set("sort", sort);
     params.set("page", "1");
     router.push(`?${params.toString()}`, { scroll: false });
-  }, [search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea, bedrooms, bathrooms, floor, furnished, parking, balcony, featured, sort, router]);
+  }, [search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea, bedrooms, floor, furnished, parking, balcony, featured, sort, router]);
 
   function resetFilters() {
     setSearch(""); setPurpose(""); setType(""); setState(""); setCity("");
     setMinPrice(""); setMaxPrice(""); setMinArea(""); setMaxArea("");
-    setBedrooms(""); setBathrooms(""); setFloor("");
+    setBedrooms(""); setFloor("");
     setFurnished(false); setParking(false); setBalcony(false); setFeatured(false);
     setSort("newest");
     router.push("?", { scroll: false });
@@ -248,20 +246,6 @@ export function FilterBar({ totalResults }: FilterBarProps) {
 
       {expanded && (
         <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border/50 pt-5 sm:grid-cols-3 lg:grid-cols-6">
-          <div>
-            <Label className="text-xs text-text-secondary mb-1.5 block font-medium">الحمامات</Label>
-            <select
-              value={bathrooms}
-              onChange={(e) => setBathrooms(e.target.value)}
-              className="flex h-11 w-full rounded-xl border border-border/60 bg-surface-secondary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
-            >
-              <option value="">أي عدد</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-            </select>
-          </div>
-
           <div>
             <Label className="text-xs text-text-secondary mb-1.5 block font-medium">المساحة من</Label>
             <Input type="number" placeholder="م²" value={minArea} onChange={(e) => setMinArea(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />

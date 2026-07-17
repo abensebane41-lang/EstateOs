@@ -38,11 +38,11 @@ const LISTING_TYPE_LABELS: Record<string, string> = {
 };
 
 interface PropertiesPageProps {
-  searchParams?: {
+  searchParams: Promise<{
     status?: string;
     search?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function PropertiesPage({ searchParams }: PropertiesPageProps) {

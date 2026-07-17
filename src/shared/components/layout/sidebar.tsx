@@ -109,10 +109,13 @@ export function Sidebar({ collapsed = false, onToggle, agency, userRole }: Sideb
           <Home className="h-5 w-5 shrink-0" />
           {!collapsed && <span>الموقع العام</span>}
         </Link>
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors">
+        <a
+          href="/api/auth/sign-out"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors"
+        >
           <LogOut className="h-5 w-5 shrink-0" />
           {!collapsed && <span>تسجيل الخروج</span>}
-        </button>
+        </a>
       </div>
     </>
   );

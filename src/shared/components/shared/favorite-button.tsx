@@ -7,14 +7,12 @@ import { cn } from "@/shared/lib/utils";
 
 interface FavoriteButtonProps {
   propertyId: string;
-  userId: string;
   initialFavorited?: boolean;
   className?: string;
 }
 
 export function FavoriteButton({
   propertyId,
-  userId,
   initialFavorited = false,
   className,
 }: FavoriteButtonProps) {
@@ -27,7 +25,7 @@ export function FavoriteButton({
     if (isPending) return;
 
     startTransition(async () => {
-      const result = await toggleFavorite(userId, propertyId);
+      const result = await toggleFavorite(propertyId);
       if (result.success) {
         setFavorited((result.data as { favorited: boolean }).favorited);
       }

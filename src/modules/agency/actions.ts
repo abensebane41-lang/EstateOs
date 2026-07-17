@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/shared/lib/prisma";
+import { z } from "zod";
 import { success, failure } from "@/server/actions/response";
 import type { ActionResponse } from "@/shared/lib/errors";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
@@ -12,6 +13,15 @@ async function requireAgencyId(): Promise<string> {
   }
   return user.agencyId;
 }
+
+const updateAgencySchema = z.object({
+  name: z.string().min(2).optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional(),
+  address: z.string().optional(),
+  description: z.string().max(1000).optional(),
+  logoUrl: z.string().url().optional(),
+});
 
 export async function getAgencyProfile(): Promise<ActionResponse> {
   try {
@@ -39,10 +49,20 @@ export async function updateAgencyProfile(data: {
   logoUrl?: string;
 }): Promise<ActionResponse> {
   try {
+    const parsed = updateAgencySchema.safeParse(data);
+    if (!parsed.success) {
+      const errors: Record<string, string[]> = {};
+      parsed.error.issues.forEach((issue) => {
+        const path = issue.path.join(".");
+        if (!errors[path]) errors[path] = [];
+        errors[path].push(issue.message);
+      });
+      return failure("Validation failed", errors);
+    }
     const agencyId = await requireAgencyId();
     const agency = await prisma.agency.update({
       where: { id: agencyId },
-      data,
+      data: parsed.data,
     });
     return success(agency);
   } catch (error) {
