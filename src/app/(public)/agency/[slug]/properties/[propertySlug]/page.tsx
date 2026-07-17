@@ -9,6 +9,8 @@ import { ImageGallery } from "@/shared/components/shared/image-gallery";
 import Image from "next/image";
 import { Play } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 function VideoSection({ url }: { url: string }) {
   const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
 
@@ -68,8 +70,10 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { slug, propertySlug } = await params;
+  const agency = await prisma.agency.findUnique({ where: { slug }, select: { id: true } });
+  if (!agency) return {};
   const property = await prisma.property.findFirst({
-    where: { slug: propertySlug, agency: { slug }, status: "PUBLISHED" },
+    where: { slug: propertySlug, agencyId: agency.id, status: "PUBLISHED" },
     select: { title: true, description: true, city: true },
   });
   if (!property) return {};
@@ -91,12 +95,18 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
 
   if (!propertySlug) notFound();
 
-  const property = await prisma.property.findFirst({
-    where: { slug: propertySlug, agencyId: agency.id, status: "PUBLISHED" },
-    include: { images: { orderBy: { sortOrder: "asc" } } },
-  });
+  let property;
+  try {
+    property = await prisma.property.findUnique({
+      where: { agencyId_slug: { agencyId: agency.id, slug: propertySlug } },
+      include: { images: { orderBy: { sortOrder: "asc" } } },
+    });
+  } catch (e) {
+    console.error("[PropertyDetail] Query error:", e);
+    property = null;
+  }
 
-  if (!property) notFound();
+  if (!property || property.status !== "PUBLISHED") notFound();
 
   const contactPhone = property.agentPhone || agency.phone;
   const whatsappUrl = contactPhone ? `https://wa.me/${contactPhone.replace(/[^0-9]/g, "")}` : null;
