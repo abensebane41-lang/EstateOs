@@ -23,14 +23,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <Link href="/" className="text-xl font-bold text-primary font-public-heading">
             EstateOS
           </Link>
-          <nav className="flex items-center gap-6">
-            <Link href="/login" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
-              تسجيل الدخول
-            </Link>
-            <Link href="/register" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 transition-colors">
-              ابدأ مجاناً
-            </Link>
-          </nav>
         </div>
       </header>
       <main className="flex-1">{children}</main>

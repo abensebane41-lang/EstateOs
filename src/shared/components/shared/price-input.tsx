@@ -5,14 +5,14 @@ import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 
 const UNITS = [
-  { value: 1, label: "سنتيم" },
+  { value: 1, label: "د.ج" },
   { value: 1_000_000, label: "مليون سنتيم" },
   { value: 1_000_000_000, label: "مليار سنتيم" },
 ];
 
 function detectUnit(total: number): number {
-  if (total >= 1_000_000_000 && total % 1_000_000_000 === 0) return 1_000_000_000;
-  if (total >= 1_000_000 && total % 1_000_000 === 0) return 1_000_000;
+  if (total >= 1_000_000_000) return 1_000_000_000;
+  if (total >= 1_000_000) return 1_000_000;
   return 1;
 }
 
