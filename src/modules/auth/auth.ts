@@ -14,9 +14,8 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
-    sendResetPassword: async ({ user, token }: { user: { name: string; email: string }; token: string }) => {
-      const resetURL = `${baseURL}/reset-password?token=${token}`;
-      console.log(`[Auth] Password reset requested for ${user.email}, token: ${token.substring(0, 8)}...`);
+    sendResetPassword: async ({ user, url }: { user: { name: string; email: string }; url: string; token: string }) => {
+      console.log(`[Auth] Password reset requested for ${user.email}, url: ${url.substring(0, 40)}...`);
       try {
         const emailModule = await import("@/shared/lib/email");
         const result = await emailModule.sendEmail({
@@ -26,7 +25,7 @@ export const auth = betterAuth({
             <h2 style="color: #0F2747;">إعادة تعيين كلمة المرور</h2>
             <p>مرحباً ${user.name},</p>
             <p>تلقينا طلباً لإعادة تعيين كلمة المرور الخاص بك. اضغط على الرابط أدناه:</p>
-            <a href="${resetURL}" style="display: inline-block; background: #0F2747; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">إعادة التعيين</a>
+            <a href="${url}" style="display: inline-block; background: #0F2747; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">إعادة التعيين</a>
             <p style="color: #666; font-size: 14px;">إذا لم تطلب هذا، تجاهل هذه الرسالة.</p>
           </div>`,
         });
