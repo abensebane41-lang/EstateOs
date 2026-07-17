@@ -72,19 +72,12 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
   const filters = parseFilters(sp, agency.id);
   const { properties, pagination } = await filterProperties(filters);
 
-  const [stats, featuredProperty] = await Promise.all([
-    prisma.property.aggregate({
+  const stats = await prisma.aggregate({
       where: { agencyId: agency.id, status: "PUBLISHED" },
       _count: true,
-    }),
-    prisma.property.findFirst({
-      where: { agencyId: agency.id, status: "PUBLISHED" },
-      include: { images: { where: { isPrimary: true }, take: 1 } },
-      orderBy: { isFeatured: "desc" },
-    }),
-  ]);
+    });
 
-  const heroImage = featuredProperty?.images[0]?.url || DEFAULT_HERO;
+  const heroImage = DEFAULT_HERO;
 
   return (
     <div className="min-h-screen bg-surface">

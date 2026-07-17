@@ -124,7 +124,7 @@ export function Sidebar({ collapsed = false, onToggle, agency, userRole }: Sideb
     <>
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg lg:hidden"
+        className="fixed top-4 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg lg:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
