@@ -5,7 +5,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { formatCurrency } from "@/shared/lib/utils";
+import { formatCurrency, decodeSlug } from "@/shared/lib/utils";
 import { parseFilters, filterProperties } from "@/shared/lib/property-filters";
 import { FilterBar } from "@/shared/components/shared/filter-bar";
 import { Pagination } from "@/shared/components/shared/pagination";
@@ -36,7 +36,8 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
   const agency = await prisma.agency.findUnique({
     where: { slug },
     select: { name: true, description: true },
@@ -49,7 +50,8 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function AgencyLandingPage({ params, searchParams }: Props) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
   const sp = await searchParams;
 
   const agency = await prisma.agency.findUnique({

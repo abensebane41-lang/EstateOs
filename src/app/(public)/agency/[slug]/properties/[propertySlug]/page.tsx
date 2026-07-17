@@ -2,7 +2,7 @@ import { prisma } from "@/shared/lib/prisma";
 import { notFound } from "next/navigation";
 import { MapPin, Phone, Mail, ChevronRight, Bed, Maximize, Bath, Car, Square, Eye, MessageCircle } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
-import { formatCurrency } from "@/shared/lib/utils";
+import { formatCurrency, decodeSlug } from "@/shared/lib/utils";
 import { PropertyViewTracker } from "@/shared/components/shared/property-view-tracker";
 import { ContactTracker } from "@/shared/components/shared/contact-tracker";
 import { ImageGallery } from "@/shared/components/shared/image-gallery";
@@ -69,9 +69,9 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { slug, propertySlug: rawSlug } = await params;
-  let propertySlug = rawSlug;
-  try { propertySlug = decodeURIComponent(rawSlug); } catch {}
+  const { slug: rawSlug, propertySlug: rawPropSlug } = await params;
+  const slug = decodeSlug(rawSlug);
+  const propertySlug = decodeSlug(rawPropSlug);
   const agency = await prisma.agency.findUnique({ where: { slug }, select: { id: true } });
   if (!agency) return {};
   const property = await prisma.property.findFirst({
@@ -86,10 +86,9 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function AgencyPropertyDetailPage({ params }: Props) {
-  const { slug, propertySlug: rawPropertySlug } = await params;
-
-  let propertySlug = rawPropertySlug;
-  try { propertySlug = decodeURIComponent(rawPropertySlug); } catch {}
+  const { slug: rawSlug, propertySlug: rawPropSlug } = await params;
+  const slug = decodeSlug(rawSlug);
+  const propertySlug = decodeSlug(rawPropSlug);
 
   const agency = await prisma.agency.findUnique({
     where: { slug },

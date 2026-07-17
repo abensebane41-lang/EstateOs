@@ -55,3 +55,7 @@ export function slugify(text: string): string {
   }
   return slug;
 }
+
+export function decodeSlug(raw: string): string {
+  try { return decodeURIComponent(raw); } catch { return raw; }
+}

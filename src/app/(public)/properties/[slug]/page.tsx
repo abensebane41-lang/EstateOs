@@ -1,4 +1,4 @@
-export const revalidate = 3600; // ISR: revalidate every hour
+export const dynamic = "force-dynamic";
 
 import { notFound } from "next/navigation";
 import { prisma } from "@/shared/lib/prisma";
@@ -9,6 +9,7 @@ import { ContactForm } from "./contact-form";
 import { FavoriteButton } from "@/shared/components/shared/favorite-button";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { isFavorited } from "@/modules/property/favorite-actions";
+import { decodeSlug } from "@/shared/lib/utils";
 import type { Metadata } from "next";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -30,7 +31,8 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
   const property = await prisma.property.findFirst({
     where: { slug, status: "PUBLISHED" },
     select: { title: true, description: true, city: true, price: true },
@@ -44,7 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PublicPropertyDetailPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeSlug(rawSlug);
 
   const property = await prisma.property.findFirst({
     where: { slug, status: "PUBLISHED" },
