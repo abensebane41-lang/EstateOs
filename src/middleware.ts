@@ -52,30 +52,42 @@ export function middleware(request: NextRequest) {
   }
 
   const isSuperAdmin = pathname.startsWith("/super-admin");
-  const localeCookie = request.cookies.get("NEXT_LOCALE")?.value;
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isPublic = !isSuperAdmin && !isDashboard;
 
   let validLocale: string;
   if (isSuperAdmin) {
     validLocale = "ar";
+  } else if (isPublic) {
+    const publicLocale = request.cookies.get("PUBLIC_LOCALE")?.value;
+    validLocale = publicLocale && routing.locales.includes(publicLocale as "ar" | "fr")
+      ? publicLocale
+      : "ar";
   } else {
-    validLocale = localeCookie && routing.locales.includes(localeCookie as "ar" | "fr")
-      ? localeCookie
+    const dashboardLocale = request.cookies.get("NEXT_LOCALE")?.value;
+    validLocale = dashboardLocale && routing.locales.includes(dashboardLocale as "ar" | "fr")
+      ? dashboardLocale
       : "ar";
   }
 
   const newHeaders = new Headers(request.headers);
   const existingCookies = newHeaders.get("cookie") || "";
+  const cookieName = isPublic ? "PUBLIC_LOCALE" : "NEXT_LOCALE";
   const filtered = existingCookies
     .split(";")
     .map((c) => c.trim())
-    .filter((c) => !c.startsWith("NEXT_LOCALE="));
-  filtered.push(`NEXT_LOCALE=${validLocale}`);
+    .filter((c) => !c.startsWith("NEXT_LOCALE=") && !c.startsWith("PUBLIC_LOCALE="));
+  filtered.push(`${cookieName}=${validLocale}`);
   newHeaders.set("cookie", filtered.join("; "));
   const modifiedRequest = new NextRequest(request.url, { ...request, headers: newHeaders });
 
   const response = intlMiddleware(modifiedRequest);
 
-  response.cookies.set("NEXT_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  if (isPublic) {
+    response.cookies.set("PUBLIC_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  } else {
+    response.cookies.set("NEXT_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  }
 
   return response;
 }

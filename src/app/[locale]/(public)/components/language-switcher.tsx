@@ -12,7 +12,7 @@ export function LanguageSwitcher() {
   const otherLocale = routing.locales.find((l) => l !== locale)!;
 
   function switchLocale() {
-    document.cookie = `NEXT_LOCALE=${otherLocale};path=/;max-age=31536000`;
+    document.cookie = `PUBLIC_LOCALE=${otherLocale};path=/;max-age=31536000`;
     window.location.reload();
   }
 
