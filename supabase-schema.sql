@@ -10,6 +10,7 @@ CREATE TABLE "Agency" (
     "description" TEXT,
     "primaryColor" TEXT NOT NULL DEFAULT '#0F2747',
     "accentColor" TEXT NOT NULL DEFAULT '#C9A227',
+    "locale" TEXT NOT NULL DEFAULT 'ar',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Agency_pkey" PRIMARY KEY ("id")

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Building2,
@@ -19,15 +20,15 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
-const navigation = [
-  { name: "لوحة التحكم", href: "/dashboard", icon: LayoutDashboard },
-  { name: "العقارات", href: "/dashboard/properties", icon: Building2 },
-  { name: "العملاء المحتملون", href: "/dashboard/leads", icon: Users },
-  { name: "المستخدمين", href: "/dashboard/users", icon: Users },
-  { name: "الإحصائيات", href: "/dashboard/analytics", icon: BarChart3 },
-  { name: "الإشعارات", href: "/dashboard/notifications", icon: Bell },
-  { name: "الإعدادات", href: "/dashboard/settings", icon: Settings },
-];
+const NAV_HREFS = [
+  { href: "/dashboard", icon: LayoutDashboard, key: "dashboard" },
+  { href: "/dashboard/properties", icon: Building2, key: "properties" },
+  { href: "/dashboard/leads", icon: Users, key: "leads" },
+  { href: "/dashboard/users", icon: Users, key: "users" },
+  { href: "/dashboard/analytics", icon: BarChart3, key: "analytics" },
+  { href: "/dashboard/notifications", icon: Bell, key: "notifications" },
+  { href: "/dashboard/settings", icon: Settings, key: "settings" },
+] as const;
 
 interface SidebarProps {
   collapsed?: boolean;
@@ -40,10 +41,17 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed = false, onToggle, agency, userRole, mobileOpen = false, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   useEffect(() => {
     onMobileClose?.();
   }, [pathname]);
+
+  const navigation = NAV_HREFS.map((item) => ({
+    name: t(item.key as "dashboard" | "properties" | "leads" | "users" | "analytics" | "notifications" | "settings"),
+    href: item.href,
+    icon: item.icon,
+  }));
 
   const navContent = (
     <>
@@ -98,25 +106,25 @@ export function Sidebar({ collapsed = false, onToggle, agency, userRole, mobileO
             className="flex items-center gap-3 rounded-lg bg-accent/10 px-3 py-2.5 text-sm font-medium text-accent hover:bg-accent/20 transition-colors"
           >
             <ExternalLink className="h-5 w-5 shrink-0" />
-            {!collapsed && <span>عرض الموقع العام</span>}
+            {!collapsed && <span>{t("publicSiteLink")}</span>}
           </a>
         )}
         {userRole === "SUPER_ADMIN" && (
           <Link href="/super-admin" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-primary bg-primary/5 hover:bg-primary/10 transition-colors">
             <Shield className="h-5 w-5 shrink-0" />
-            {!collapsed && <span>لوحة المدير العام</span>}
+            {!collapsed && <span>{t("superAdminDashboard")}</span>}
           </Link>
         )}
         <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors">
           <Home className="h-5 w-5 shrink-0" />
-          {!collapsed && <span>الموقع العام</span>}
+          {!collapsed && <span>{t("home")}</span>}
         </Link>
         <a
           href="/api/auth/sign-out"
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors"
         >
           <LogOut className="h-5 w-5 shrink-0" />
-          {!collapsed && <span>تسجيل الخروج</span>}
+          {!collapsed && <span>{t("logout")}</span>}
         </a>
       </div>
     </>

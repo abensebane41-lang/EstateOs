@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LogOut } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 
@@ -12,6 +13,8 @@ export function SuspendedPage({
   status: string;
   endDate?: string | null;
 }) {
+  const t = useTranslations("suspended");
+  const tNav = useTranslations("nav");
   const isSuspended = status === "SUSPENDED";
   const isExpired = status === "EXPIRED";
 
@@ -35,7 +38,7 @@ export function SuspendedPage({
         </div>
 
         <h1 className="mb-2 text-xl font-bold text-text-primary">
-          {isSuspended ? "تم توقّف حسابك" : "اشتراكك منتهي"}
+          {isSuspended ? t("titleSuspended") : t("titleExpired")}
         </h1>
         <p className="mb-1 text-sm text-text-secondary">
           {agencyName}
@@ -44,24 +47,24 @@ export function SuspendedPage({
         <div className="my-4 rounded-xl bg-surface-secondary p-4">
           <p className="text-sm text-text-secondary">
             {isSuspended
-              ? "تم توقّف اشتراكك من قبل الإدارة. يرجى التواصل معنا لاستعادة الحساب."
-              : "انتهت صلاحية اشتراكك. يرجى تجديد الاشتراك لمواصلة الاستخدام."}
+              ? t("subtitle")
+              : t("expiredSubtitle")}
           </p>
           {endDate && (
             <p className="mt-2 text-xs text-text-tertiary">
-              تاريخ الانتهاء: {new Date(endDate).toLocaleDateString("ar-DZ")}
+              {t("subscriptionEnd")}: {new Date(endDate).toLocaleDateString("ar-DZ")}
             </p>
           )}
         </div>
 
         <p className="mb-6 text-sm text-text-secondary">
-          يمكنك التواصل مع الإدارة عبر البريد الإلكتروني أو الهاتف لتجديد اشتراكك.
+          {t("contactAdmin")}
         </p>
 
         <a href="/login" className="block">
           <Button className="w-full gap-2" variant="outline">
             <LogOut className="h-4 w-4" />
-            تسجيل الخروج
+            {tNav("logout")}
           </Button>
         </a>
       </div>

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 const RATE_LIMITS: Record<string, { max: number; windowMs: number }> = {
   "/api/track": { max: 30, windowMs: 60_000 },
@@ -25,31 +27,33 @@ function check(key: string, max: number, windowMs: number): boolean {
   return entry.count <= max;
 }
 
+const intlMiddleware = createMiddleware(routing);
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!pathname.startsWith("/api/")) {
+  if (pathname.startsWith("/api/")) {
+    if (pathname.startsWith("/api/auth/")) {
+      return NextResponse.next();
+    }
+
+    const rule = RATE_LIMITS[pathname] || DEFAULT_LIMIT;
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "anonymous";
+    const key = `${ip}:${pathname}`;
+
+    if (!check(key, rule.max, rule.windowMs)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/api/auth/")) {
-    return NextResponse.next();
-  }
-
-  const rule = RATE_LIMITS[pathname] || DEFAULT_LIMIT;
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "anonymous";
-  const key = `${ip}:${pathname}`;
-
-  if (!check(key, rule.max, rule.windowMs)) {
-    return NextResponse.json(
-      { error: "Too many requests. Please try again later." },
-      { status: 429 }
-    );
-  }
-
-  return NextResponse.next();
+  return intlMiddleware(request);
 }
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: ["/", "/(ar|fr)/:path*", "/((?!_next|_vercel|.*\\..*).*)"],
 };

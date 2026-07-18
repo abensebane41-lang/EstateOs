@@ -19,6 +19,7 @@ model Agency {
   description  String?
   primaryColor String   @default("#0F2747")
   accentColor  String   @default("#C9A227")
+  locale       String   @default("ar")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

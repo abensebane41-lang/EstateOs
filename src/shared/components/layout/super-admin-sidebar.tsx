@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Building2,
@@ -15,12 +16,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
-const navigation = [
-  { name: "لوحة التحكم", href: "/super-admin", icon: LayoutDashboard },
-  { name: "الوكالات", href: "/super-admin/agencies", icon: Building2 },
-  { name: "الاشتراكات", href: "/super-admin/subscriptions", icon: CreditCard },
-];
-
 interface SuperAdminSidebarProps {
   collapsed?: boolean;
   onToggle?: () => void;
@@ -28,7 +23,14 @@ interface SuperAdminSidebarProps {
 
 export function SuperAdminSidebar({ collapsed = false, onToggle }: SuperAdminSidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations("nav");
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const navigation = [
+    { name: t("superAdminDashboard"), href: "/super-admin", icon: LayoutDashboard },
+    { name: t("agencies"), href: "/super-admin/agencies", icon: Building2 },
+    { name: t("subscriptions"), href: "/super-admin/subscriptions", icon: CreditCard },
+  ];
 
   useEffect(() => {
     setMobileOpen(false);
@@ -57,7 +59,7 @@ export function SuperAdminSidebar({ collapsed = false, onToggle }: SuperAdminSid
         </div>
         {!collapsed && (
           <div>
-            <p className="text-sm font-medium text-text-primary">مدير النظام</p>
+            <p className="text-sm font-medium text-text-primary">{t("superAdminRole")}</p>
             <p className="text-xs text-text-secondary">Super Admin</p>
           </div>
         )}
@@ -90,14 +92,14 @@ export function SuperAdminSidebar({ collapsed = false, onToggle }: SuperAdminSid
           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors"
         >
           <Building2 className="h-5 w-5 shrink-0" />
-          {!collapsed && <span>لوحة الوكالة</span>}
+          {!collapsed && <span>{t("agencyDashboard")}</span>}
         </Link>
         <Link
           href="/api/auth/sign-out"
           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-error/10 hover:text-error transition-colors"
         >
           <LogOut className="h-5 w-5 shrink-0" />
-          {!collapsed && <span>تسجيل الخروج</span>}
+          {!collapsed && <span>{t("logout")}</span>}
         </Link>
       </div>
     </>

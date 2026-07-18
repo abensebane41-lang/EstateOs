@@ -21,6 +21,7 @@ const updateAgencySchema = z.object({
   address: z.string().optional(),
   description: z.string().max(1000).optional(),
   logoUrl: z.string().url().optional(),
+  locale: z.enum(["ar", "fr"]).optional(),
 });
 
 export async function getAgencyProfile(): Promise<ActionResponse> {
@@ -145,5 +146,19 @@ export async function deleteAgency(agencyId: string): Promise<ActionResponse> {
   } catch (error) {
     console.error("Delete agency error:", error);
     return failure("فشل في حذف الوكالة");
+  }
+}
+
+export async function updateAgencyLocale(locale: "ar" | "fr"): Promise<ActionResponse> {
+  try {
+    const agencyId = await requireAgencyId();
+    const agency = await prisma.agency.update({
+      where: { id: agencyId },
+      data: { locale },
+    });
+    return success(agency);
+  } catch (error) {
+    console.error("Update locale error:", error);
+    return failure("Failed to update locale");
   }
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "Agency" ADD COLUMN "locale" TEXT NOT NULL DEFAULT 'ar';

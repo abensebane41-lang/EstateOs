@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Bell, Search, Menu } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
@@ -15,6 +16,7 @@ interface TopbarProps {
 }
 
 export function Topbar({ title, agency, onMenuClick }: TopbarProps) {
+  const t = useTranslations("common");
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export function Topbar({ title, agency, onMenuClick }: TopbarProps) {
       <div className="flex items-center gap-4">
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary" />
-          <Input placeholder="بحث..." className="w-64 pl-9" />
+          <Input placeholder={`${t("search")}...`} className="w-64 pl-9" />
         </div>
         <Link href="/dashboard/notifications">
           <Button variant="ghost" size="icon" className="relative">

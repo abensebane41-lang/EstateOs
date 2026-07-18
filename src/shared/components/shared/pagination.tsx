@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -11,6 +13,7 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps) {
+  const t = useTranslations("pagination");
   const searchParams = useSearchParams();
 
   function getPageUrl(page: number) {
@@ -33,7 +36,7 @@ export function Pagination({ currentPage, totalPages, baseUrl }: PaginationProps
   }
 
   return (
-    <nav className="flex items-center justify-center gap-2" aria-label="التنقل بين الصفحات">
+    <nav className="flex items-center justify-center gap-2" aria-label={t("ariaLabel")}>
       {currentPage > 1 && (
         <Link
           href={getPageUrl(currentPage - 1)}
