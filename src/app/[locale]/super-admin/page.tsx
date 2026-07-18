@@ -10,32 +10,43 @@ interface Props {
 }
 
 export default async function SuperAdminDashboard({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+  await params;
+  setRequestLocale("ar");
   const t = await getTranslations("superAdmin");
 
-  const [totalAgencies, totalProperties, totalLeads, recentAgencies, subscriptions] = await Promise.all([
-    prisma.agency.count(),
-    prisma.property.count(),
-    prisma.lead.count(),
-    prisma.agency.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      include: {
-        _count: { select: { properties: true, leads: true } },
-        subscriptions: { select: { status: true } },
-      },
-    }),
-    prisma.subscription.groupBy({
-      by: ["status"],
-      _count: true,
-    }),
-  ]);
+  let totalAgencies = 0, totalProperties = 0, totalLeads = 0;
+  let recentAgencies: any[] = [];
+  let subscriptionStats: Record<string, number> = {};
 
-  const subscriptionStats = subscriptions.reduce((acc, s) => {
-    acc[s.status] = s._count;
-    return acc;
-  }, {} as Record<string, number>);
+  try {
+    const [a, b, c, agencies, subs] = await Promise.all([
+      prisma.agency.count(),
+      prisma.property.count(),
+      prisma.lead.count(),
+      prisma.agency.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        include: {
+          _count: { select: { properties: true, leads: true } },
+          subscriptions: { select: { status: true } },
+        },
+      }),
+      prisma.subscription.groupBy({
+        by: ["status"],
+        _count: true,
+      }),
+    ]);
+    totalAgencies = a;
+    totalProperties = b;
+    totalLeads = c;
+    recentAgencies = agencies;
+    subscriptionStats = subs.reduce((acc, s) => {
+      acc[s.status] = s._count;
+      return acc;
+    }, {} as Record<string, number>);
+  } catch (e) {
+    console.error("SuperAdmin dashboard error:", e);
+  }
 
   return (
     <div className="space-y-6" dir="rtl">

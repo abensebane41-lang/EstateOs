@@ -51,6 +51,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname.startsWith("/super-admin")) {
+    return NextResponse.rewrite(new URL(`/ar${pathname}`, request.url));
+  }
+
   const localeCookie = request.cookies.get("NEXT_LOCALE")?.value;
   const validLocale = localeCookie && routing.locales.includes(localeCookie as "ar" | "fr")
     ? localeCookie
