@@ -254,6 +254,10 @@
   "dashboard": {
     "welcome": "مرحباً بك في إدارة وكالتك",
     "welcomeAdmin": "مرحباً بك في لوحة تحكم المدير العام",
+    "noPermission": "لا تملك صلاحية",
+    "settingsSubtitle": "إعدادات وكالتك وحسابك",
+    "loadError": "حدث خطأ أثناء تحميل البيانات",
+    "loadErrorDesc": "يرجى المحاولة مرة أخرى",
     "totalProperties": "إجمالي العقارات",
     "publishedProperties": "منشور",
     "totalLeads": "العملاء المحتملون",

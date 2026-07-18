@@ -254,6 +254,10 @@
   "dashboard": {
     "welcome": "Bienvenue dans la gestion de votre agence",
     "welcomeAdmin": "Bienvenue dans le tableau de bord administrateur",
+    "noPermission": "Vous n'avez pas la permission",
+    "settingsSubtitle": "Paramètres de votre agence et de votre compte",
+    "loadError": "Une erreur s'est produite lors du chargement des données",
+    "loadErrorDesc": "Veuillez réessayer",
     "totalProperties": "Total des propriétés",
     "publishedProperties": "publiées",
     "totalLeads": "Prospects",
