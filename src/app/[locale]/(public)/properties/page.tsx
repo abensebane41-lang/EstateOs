@@ -6,16 +6,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import Link from "next/link";
 import { FavoriteButton } from "@/shared/components/shared/favorite-button";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
-
-const TYPE_LABELS: Record<string, string> = {
-  APARTMENT: "شقة",
-  VILLA: "فيلا",
-  HOUSE: "منزل أرضي",
-  LAND: "أرض",
-  OFFICE: "مكتب",
-  COMMERCIAL: "محل تجاري",
-  WAREHOUSE: "مستودع",
-};
+import { getTranslations } from "next-intl/server";
 
 interface Props {
   searchParams: Promise<{ city?: string; type?: string; minPrice?: string; maxPrice?: string }>;
@@ -28,6 +19,17 @@ export const metadata = {
 
 export default async function PublicPropertiesPage({ searchParams }: Props) {
   const params = await searchParams;
+  const tPropertyTypes = await getTranslations("propertyTypes");
+
+  const TYPE_LABELS: Record<string, string> = {
+    APARTMENT: tPropertyTypes("APARTMENT"),
+    VILLA: tPropertyTypes("VILLA"),
+    HOUSE: tPropertyTypes("HOUSE"),
+    LAND: tPropertyTypes("LAND"),
+    OFFICE: tPropertyTypes("OFFICE"),
+    COMMERCIAL: tPropertyTypes("COMMERCIAL"),
+    WAREHOUSE: tPropertyTypes("WAREHOUSE"),
+  };
 
   const where: Record<string, unknown> = { status: "PUBLISHED" };
   if (params.city) where.city = params.city;

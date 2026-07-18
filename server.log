@@ -25,3 +25,4 @@
  GET /dashboard/settings 307 in 699ms (next.js: 256ms, proxy.ts: 33ms, generate-params: 9ms, application-code: 410ms)
 ✓ Compiled in 180ms
 ✓ Compiled in 139ms
+✓ Compiled in 154ms

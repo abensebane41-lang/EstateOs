@@ -68,9 +68,10 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
 
   const t = await getTranslations("property");
   const tNav = await getTranslations("nav");
+  const tPropertyTypes = await getTranslations("propertyTypes");
 
   const TYPE_LABELS: Record<string, string> = Object.fromEntries(
-    Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tNav(tKey)])
+    Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tPropertyTypes(tKey)])
   );
   const STATUS_LABELS: Record<string, string> = {
     PUBLISHED: t("published"),
@@ -148,7 +149,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
                 <span className="text-sm">{property.area} م²</span>
               </div>
               {property.listingType && (
-                <Badge variant="outline">{property.listingType === "SALE" ? tNav("sale") : tNav("rent")}</Badge>
+                <Badge variant="outline">{property.listingType === "SALE" ? t("sale") : t("rent")}</Badge>
               )}
             </div>
 

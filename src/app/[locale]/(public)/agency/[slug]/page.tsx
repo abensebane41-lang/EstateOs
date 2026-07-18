@@ -82,13 +82,13 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
   const heroImage = DEFAULT_HERO;
 
   const t = await getTranslations("property");
-  const tNav = await getTranslations("nav");
+  const tPropertyTypes = await getTranslations("propertyTypes");
 
   const TYPE_LABELS: Record<string, string> = Object.fromEntries(
-    Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tNav(tKey)])
+    Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tPropertyTypes(tKey)])
   );
   const LISTING_LABELS: Record<string, string> = Object.fromEntries(
-    Object.entries(LISTING_KEYS).map(([key, tKey]) => [key, tNav(tKey)])
+    Object.entries(LISTING_KEYS).map(([key, tKey]) => [key, t(tKey)])
   );
 
   return (
