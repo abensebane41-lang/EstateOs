@@ -10,8 +10,8 @@ export default async function SuperAdminLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+  await params;
+  setRequestLocale("ar");
 
   const user = await getCurrentUser();
   if (!user || user.role !== "SUPER_ADMIN") redirect("/login");
