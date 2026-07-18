@@ -51,6 +51,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  const hadCookie = !!request.cookies.get("NEXT_LOCALE")?.value;
   let localeCookie = request.cookies.get("NEXT_LOCALE")?.value;
 
   if (!localeCookie || !routing.locales.includes(localeCookie as "ar" | "fr")) {
@@ -59,6 +60,10 @@ export function middleware(request: NextRequest) {
   }
 
   const response = intlMiddleware(request);
+
+  if (!hadCookie) {
+    response.cookies.set("NEXT_LOCALE", "ar", { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  }
 
   return response;
 }

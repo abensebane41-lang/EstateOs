@@ -32,3 +32,4 @@
  GET / 200 in 119ms (next.js: 12ms, proxy.ts: 4ms, generate-params: 25µs, application-code: 102ms)
  GET / 200 in 139ms (next.js: 17ms, proxy.ts: 6ms, generate-params: 10ms, application-code: 116ms)
 ✓ Compiled in 467ms
+✓ Compiled in 370ms
