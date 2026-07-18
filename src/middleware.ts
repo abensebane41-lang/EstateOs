@@ -51,7 +51,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return intlMiddleware(request);
+  const localeCookie = request.cookies.get("NEXT_LOCALE")?.value;
+  const response = intlMiddleware(request);
+
+  if (!localeCookie && response.status === 200) {
+    response.cookies.set("NEXT_LOCALE", "ar", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+  }
+
+  return response;
 }
 
 export const config = {
