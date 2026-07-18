@@ -1,14 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 
-const UNITS = [
-  { value: 1, label: "د.ج" },
-  { value: 1_000_000, label: "مليون سنتيم" },
-  { value: 1_000_000_000, label: "مليار سنتيم" },
-];
+function getUnits(locale: string) {
+  return locale === "fr"
+    ? [
+        { value: 1, label: "DA" },
+        { value: 1_000_000, label: "million DA" },
+        { value: 1_000_000_000, label: "milliard DA" },
+      ]
+    : [
+        { value: 1, label: "د.ج" },
+        { value: 1_000_000, label: "مليون سنتيم" },
+        { value: 1_000_000_000, label: "مليار سنتيم" },
+      ];
+}
 
 function detectUnit(total: number): number {
   if (total >= 1_000_000_000) return 1_000_000_000;
@@ -33,8 +42,10 @@ interface PriceInputProps {
 }
 
 export function PriceInput({ value, onChange, label, placeholder, required, id, className }: PriceInputProps) {
+  const locale = useLocale();
   const [displayValue, setDisplayValue] = useState("");
   const [unit, setUnit] = useState(1);
+  const UNITS = getUnits(locale);
 
   useEffect(() => {
     const numValue = Number(value) || 0;
@@ -104,8 +115,10 @@ interface PriceInputStringProps {
 }
 
 export function PriceInputString({ value, onChange, label, placeholder, className }: PriceInputStringProps) {
+  const locale = useLocale();
   const [displayValue, setDisplayValue] = useState("");
   const [unit, setUnit] = useState(1);
+  const UNITS = getUnits(locale);
 
   useEffect(() => {
     const numValue = Number(value) || 0;
