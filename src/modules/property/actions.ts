@@ -7,6 +7,7 @@ import type { ActionResponse } from "@/shared/lib/errors";
 import { slugify } from "@/shared/lib/utils";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { revalidatePath } from "next/cache";
+import { deletePropertyImages } from "@/shared/lib/storage";
 
 const createPropertySchema = z.object({
   title: z.string().min(2, "العنوان مطلوب"),
@@ -185,6 +186,7 @@ export async function deleteProperty(id: string): Promise<ActionResponse> {
     if (existing.agencyId !== user.agencyId) return failure("غير مصرح");
 
     await prisma.property.delete({ where: { id } });
+    deletePropertyImages(id).catch(() => {});
 
     const agency = await prisma.agency.findUnique({ where: { id: user.agencyId! }, select: { slug: true } });
     if (agency) {

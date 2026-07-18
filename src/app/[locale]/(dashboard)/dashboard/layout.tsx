@@ -7,7 +7,12 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
+  let user;
+  try {
+    user = await getCurrentUser();
+  } catch {
+    redirect("/login");
+  }
 
   if (!user) {
     redirect("/login");
@@ -17,19 +22,24 @@ export default async function DashboardLayout({ children }: { children: React.Re
     return <>{children}</>;
   }
 
-  const agency = await prisma.agency.findUnique({
-    where: { id: user.agencyId },
-    select: {
-      name: true,
-      logoUrl: true,
-      slug: true,
-      subscriptions: {
-        orderBy: { createdAt: "desc" },
-        take: 1,
-        select: { status: true, endDate: true, trialEndsAt: true },
+  let agency;
+  try {
+    agency = await prisma.agency.findUnique({
+      where: { id: user.agencyId },
+      select: {
+        name: true,
+        logoUrl: true,
+        slug: true,
+        subscriptions: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { status: true, endDate: true, trialEndsAt: true },
+        },
       },
-    },
-  });
+    });
+  } catch {
+    redirect("/login");
+  }
 
   if (!agency) {
     redirect("/login");

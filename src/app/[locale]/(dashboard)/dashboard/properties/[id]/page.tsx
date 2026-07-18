@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/shared/lib/prisma";
+import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { PropertyForm } from "./property-form";
 import { PropertyImagesSection } from "./property-images-section";
 import { PageHeader } from "@/shared/components/shared/page-header";
@@ -11,12 +12,15 @@ interface Props {
 export default async function PropertyDetailPage({ params }: Props) {
   const { id } = await params;
 
+  const user = await getCurrentUser();
+  if (!user?.agencyId) redirect("/login");
+
   const property = await prisma.property.findUnique({
     where: { id },
     include: { images: { orderBy: { sortOrder: "asc" } } },
   });
 
-  if (!property) notFound();
+  if (!property || property.agencyId !== user.agencyId) notFound();
 
   return (
     <div>

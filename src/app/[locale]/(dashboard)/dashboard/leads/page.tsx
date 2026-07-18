@@ -42,7 +42,7 @@ export default async function LeadsPage({
   const params = await searchParams;
   const status = params.status ?? "ALL";
   const search = params.search ?? "";
-  const page = Number(params.page) ?? 1;
+  const page = Number(params.page) || 1;
 
   const result = await getLeads({
     status,

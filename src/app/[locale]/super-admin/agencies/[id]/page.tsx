@@ -31,15 +31,26 @@ const STATUS_COLORS: Record<string, string> = {
 export default async function SuperAdminAgencyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const agency = await prisma.agency.findUnique({
-    where: { id },
-    include: {
-      users: { select: { id: true, name: true, email: true, role: true } },
-      properties: { select: { id: true, title: true, price: true, status: true, listingType: true }, orderBy: { createdAt: "desc" }, take: 10 },
-      _count: { select: { properties: true, leads: true } },
-      subscriptions: { orderBy: { createdAt: "desc" } },
-    },
-  });
+  let agency;
+  try {
+    agency = await prisma.agency.findUnique({
+      where: { id },
+      include: {
+        users: { select: { id: true, name: true, email: true, role: true } },
+        properties: { select: { id: true, title: true, price: true, status: true, listingType: true }, orderBy: { createdAt: "desc" }, take: 10 },
+        _count: { select: { properties: true, leads: true } },
+        subscriptions: { orderBy: { createdAt: "desc" } },
+      },
+    });
+  } catch {
+    return (
+      <div className="space-y-6" dir="rtl">
+        <div className="rounded-xl border border-error/20 bg-error/5 p-6">
+          <h1 className="text-lg font-bold text-error">خطأ في تحميل البيانات</h1>
+        </div>
+      </div>
+    );
+  }
 
   if (!agency) notFound();
 

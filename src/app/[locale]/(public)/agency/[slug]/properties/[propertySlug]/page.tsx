@@ -136,14 +136,18 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
       <section className="relative h-[50vh] min-h-[400px] max-h-[600px] overflow-hidden">
         {primaryImage ? (
           <>
-            <Image
-              src={primaryImage.url}
-              alt={primaryImage.altText || property.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
+            {primaryImage.url.startsWith("data:") ? (
+              <img src={primaryImage.url} alt={primaryImage.altText || property.title} className="h-full w-full object-cover" />
+            ) : (
+              <Image
+                src={primaryImage.url}
+                alt={primaryImage.altText || property.title}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
+              />
+            )}
             <div className="hero-overlay absolute inset-0" />
           </>
         ) : (

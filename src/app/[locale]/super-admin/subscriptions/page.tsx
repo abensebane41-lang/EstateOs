@@ -4,10 +4,21 @@ import { prisma } from "@/shared/lib/prisma";
 import { SubscriptionsTable } from "./subscriptions-table";
 
 export default async function SuperAdminSubscriptionsPage() {
-  const subscriptions = await prisma.subscription.findMany({
-    include: { agency: { select: { id: true, name: true, slug: true, email: true, phone: true } } },
-    orderBy: { createdAt: "desc" },
-  });
+  let subscriptions;
+  try {
+    subscriptions = await prisma.subscription.findMany({
+      include: { agency: { select: { id: true, name: true, slug: true, email: true, phone: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch {
+    return (
+      <div className="space-y-6" dir="rtl">
+        <div className="rounded-xl border border-error/20 bg-error/5 p-6">
+          <h1 className="text-lg font-bold text-error">خطأ في تحميل البيانات</h1>
+        </div>
+      </div>
+    );
+  }
 
   const serialized = subscriptions.map((s) => ({
     ...s,

@@ -189,10 +189,11 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
                 </a>
               )}
               <a
-                href={`https://wa.me/${property.agency.phone?.replace(/[^0-9]/g, "")}`}
+                href={property.agency.phone ? `https://wa.me/${property.agency.phone.replace(/[^0-9]/g, "")}` : undefined}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-success px-4 py-3 text-sm font-medium text-white hover:bg-success-light transition-colors"
+                className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${property.agency.phone ? "bg-success text-white hover:bg-success-light" : "bg-surface-secondary text-text-tertiary cursor-not-allowed"}`}
+                onClick={!property.agency.phone ? (e) => e.preventDefault() : undefined}
               >
                 <MessageSquare className="h-4 w-4" />
                 {t("contactViaWhatsApp")}
