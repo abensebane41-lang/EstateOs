@@ -75,6 +75,7 @@ export function PriceInput({ value, onChange, label, placeholder, required, id, 
           onChange={handleValueChange}
           placeholder={placeholder || "0"}
           min="0"
+          step="any"
           required={required}
           dir="ltr"
           className="text-left flex-1"
@@ -156,6 +157,7 @@ export function PriceInputString({ value, onChange, label, placeholder, classNam
           onChange={handleValueChange}
           placeholder={placeholder || "0"}
           min="0"
+          step="any"
           dir="ltr"
           className="text-left flex-1"
         />
