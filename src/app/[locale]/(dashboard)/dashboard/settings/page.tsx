@@ -44,7 +44,6 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
       logoUrl: true,
       primaryColor: true,
       accentColor: true,
-      locale: true,
       createdAt: true,
       _count: { select: { properties: true, leads: true } },
       subscriptions: {
