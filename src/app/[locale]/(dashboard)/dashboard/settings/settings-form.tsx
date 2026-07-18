@@ -153,7 +153,7 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
     setSelectedLocale(newLocale);
     document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=31536000`;
     updateAgencyLocale(newLocale as "ar" | "fr").catch(() => {});
-    router.refresh();
+    window.location.reload();
   }
 
   const subscription = agency.subscriptions[0];

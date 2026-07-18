@@ -1,21 +1,19 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter, usePathname } from "@/i18n/client";
 import { routing } from "@/i18n/routing";
 
 type Locale = (typeof routing.locales)[number];
 
 export function LanguageSwitcher() {
   const locale = useLocale() as Locale;
-  const router = useRouter();
-  const pathname = usePathname();
   const t = useTranslations("common");
 
   const otherLocale = routing.locales.find((l) => l !== locale)!;
 
   function switchLocale() {
-    router.replace(pathname, { locale: otherLocale });
+    document.cookie = `NEXT_LOCALE=${otherLocale};path=/;max-age=31536000`;
+    window.location.reload();
   }
 
   return (
