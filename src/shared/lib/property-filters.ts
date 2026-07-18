@@ -14,10 +14,6 @@ export interface PropertyFilters {
   maxArea?: number;
   bedrooms?: number;
   floor?: number;
-  furnished?: boolean;
-  parking?: boolean;
-  balcony?: boolean;
-  featured?: boolean;
   sort?: string;
   page?: number;
   limit?: number;
@@ -37,10 +33,6 @@ export function parseFilters(searchParams: Record<string, string | undefined>, a
     maxArea: searchParams.maxArea ? Number(searchParams.maxArea) : undefined,
     bedrooms: searchParams.bedrooms ? Number(searchParams.bedrooms) : undefined,
     floor: searchParams.floor ? Number(searchParams.floor) : undefined,
-    furnished: searchParams.furnished === "1" ? true : undefined,
-    parking: searchParams.parking === "1" ? true : undefined,
-    balcony: searchParams.balcony === "1" ? true : undefined,
-    featured: searchParams.featured === "1" ? true : undefined,
     sort: searchParams.sort || "newest",
     page: searchParams.page ? Number(searchParams.page) : 1,
     limit: searchParams.limit ? Number(searchParams.limit) : 12,
@@ -104,22 +96,6 @@ function buildWhereClause(filters: PropertyFilters): Prisma.PropertyWhereInput {
 
   if (filters.floor !== undefined) {
     and.push({ floor: filters.floor });
-  }
-
-  if (filters.furnished) {
-    and.push({ furnished: true });
-  }
-
-  if (filters.parking) {
-    and.push({ parking: true });
-  }
-
-  if (filters.balcony) {
-    and.push({ balcony: true });
-  }
-
-  if (filters.featured) {
-    and.push({ isFeatured: true });
   }
 
   if (and.length > 0) {
@@ -206,10 +182,6 @@ export function filtersToSearchParams(filters: PropertyFilters): string {
   if (filters.maxArea) params.set("maxArea", String(filters.maxArea));
   if (filters.bedrooms) params.set("bedrooms", String(filters.bedrooms));
   if (filters.floor) params.set("floor", String(filters.floor));
-  if (filters.furnished) params.set("furnished", "1");
-  if (filters.parking) params.set("parking", "1");
-  if (filters.balcony) params.set("balcony", "1");
-  if (filters.featured) params.set("featured", "1");
   if (filters.sort && filters.sort !== "newest") params.set("sort", filters.sort);
   return params.toString();
 }

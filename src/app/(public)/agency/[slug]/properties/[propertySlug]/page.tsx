@@ -201,7 +201,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
                 <div className="h-8 w-1 rounded-full bg-accent" />
                 الوصف
               </h2>
-              <p className="text-text-secondary leading-relaxed whitespace-pre-line text-base">{property.description}</p>
+              <p className="text-text-secondary leading-relaxed whitespace-pre-line text-base" style={{ overflowWrap: "break-word", wordBreak: "break-word" }}>{property.description}</p>
             </div>
 
             {/* Details Grid */}

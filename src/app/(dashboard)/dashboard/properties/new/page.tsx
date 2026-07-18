@@ -37,6 +37,7 @@ const SELECT_CLASSES =
   "flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1";
 
 const HIDE_BEDROOMS = ["LAND", "COMMERCIAL", "WAREHOUSE"];
+const HIDE_FLOOR = ["LAND", "COMMERCIAL", "WAREHOUSE"];
 
 interface UploadedImage {
   file: File;
@@ -65,10 +66,12 @@ export default function NewPropertyPage() {
     city: "",
     agentPhone: "",
     videoUrl: "",
+    floor: "",
   });
 
   const selectedWilaya = WILAYAS.find(w => w.code === form.state);
   const showBedrooms = !HIDE_BEDROOMS.includes(form.propertyType);
+  const showFloor = !HIDE_FLOOR.includes(form.propertyType);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -177,6 +180,7 @@ export default function NewPropertyPage() {
       price: form.price || 0,
       currency: "DZD",
       bedrooms: showBedrooms && form.bedrooms ? Number(form.bedrooms) : undefined,
+      floor: showFloor && form.floor ? Number(form.floor) : undefined,
       area: Number(form.area) || 0,
       address: form.address,
       city: form.city,
@@ -472,6 +476,28 @@ export default function NewPropertyPage() {
                       type="number"
                       min="0"
                       value={form.bedrooms}
+                      onChange={handleChange}
+                      placeholder="0"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {showFloor && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>الطابق</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <Label htmlFor="floor">رقم الطابق</Label>
+                    <Input
+                      id="floor"
+                      name="floor"
+                      type="number"
+                      min="0"
+                      value={form.floor}
                       onChange={handleChange}
                       placeholder="0"
                     />

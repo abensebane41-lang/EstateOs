@@ -46,6 +46,7 @@ const SELECT_CLASSES =
   "flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1";
 
 const HIDE_BEDROOMS = ["LAND", "COMMERCIAL", "WAREHOUSE"];
+const HIDE_FLOOR = ["LAND", "COMMERCIAL", "WAREHOUSE"];
 
 interface PropertyFormProps {
   property: {
@@ -64,6 +65,7 @@ interface PropertyFormProps {
     state: string | null;
     agentPhone?: string | null;
     videoUrl?: string | null;
+    floor?: number | null;
     images?: { id: string; url: string; isPrimary: boolean; altText?: string | null }[];
   };
   mode: "edit" | "view";
@@ -92,9 +94,11 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
     state: initialWilayaCode,
     agentPhone: property.agentPhone || "",
     videoUrl: property.videoUrl || "",
+    floor: property.floor !== null ? String(property.floor) : "",
   });
 
   const showBedrooms = !HIDE_BEDROOMS.includes(form.propertyType);
+  const showFloor = !HIDE_FLOOR.includes(form.propertyType);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -176,6 +180,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
       status: form.status,
       price: form.price || 0,
       bedrooms: showBedrooms && form.bedrooms ? Number(form.bedrooms) : undefined,
+      floor: showFloor && form.floor ? Number(form.floor) : undefined,
       area: Number(form.area) || 0,
       address: form.address,
       city: form.city,
@@ -352,6 +357,18 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
                 <CardContent>
                   <Label htmlFor="bedrooms">غرف النوم</Label>
                   <Input id="bedrooms" name="bedrooms" type="number" min="0" value={form.bedrooms} onChange={handleChange} placeholder="0" />
+                </CardContent>
+              </Card>
+            )}
+
+            {showFloor && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>الطابق</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Label htmlFor="floor">رقم الطابق</Label>
+                  <Input id="floor" name="floor" type="number" min="0" value={form.floor} onChange={handleChange} placeholder="0" />
                 </CardContent>
               </Card>
             )}

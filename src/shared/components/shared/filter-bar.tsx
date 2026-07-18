@@ -49,10 +49,6 @@ export function FilterBar({ totalResults }: FilterBarProps) {
   const [maxArea, setMaxArea] = useState(searchParams.get("maxArea") || "");
   const [bedrooms, setBedrooms] = useState(searchParams.get("bedrooms") || "");
   const [floor, setFloor] = useState(searchParams.get("floor") || "");
-  const [furnished, setFurnished] = useState(searchParams.get("furnished") === "1");
-  const [parking, setParking] = useState(searchParams.get("parking") === "1");
-  const [balcony, setBalcony] = useState(searchParams.get("balcony") === "1");
-  const [featured, setFeatured] = useState(searchParams.get("featured") === "1");
   const [sort, setSort] = useState(searchParams.get("sort") || "newest");
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
@@ -60,7 +56,7 @@ export function FilterBar({ totalResults }: FilterBarProps) {
 
   const activeFilterCount = [
     search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea,
-    bedrooms, floor, furnished, parking, balcony, featured,
+    bedrooms, floor,
   ].filter(Boolean).length;
 
   const applyFilters = useCallback(() => {
@@ -76,20 +72,15 @@ export function FilterBar({ totalResults }: FilterBarProps) {
     if (maxArea) params.set("maxArea", maxArea);
     if (bedrooms) params.set("bedrooms", bedrooms);
     if (floor) params.set("floor", floor);
-    if (furnished) params.set("furnished", "1");
-    if (parking) params.set("parking", "1");
-    if (balcony) params.set("balcony", "1");
-    if (featured) params.set("featured", "1");
     if (sort && sort !== "newest") params.set("sort", sort);
     params.set("page", "1");
     router.push(`?${params.toString()}`, { scroll: false });
-  }, [search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea, bedrooms, floor, furnished, parking, balcony, featured, sort, router]);
+  }, [search, purpose, type, state, city, minPrice, maxPrice, minArea, maxArea, bedrooms, floor, sort, router]);
 
   function resetFilters() {
     setSearch(""); setPurpose(""); setType(""); setState(""); setCity("");
     setMinPrice(""); setMaxPrice(""); setMinArea(""); setMaxArea("");
     setBedrooms(""); setFloor("");
-    setFurnished(false); setParking(false); setBalcony(false); setFeatured(false);
     setSort("newest");
     router.push("?", { scroll: false });
   }
@@ -253,25 +244,6 @@ export function FilterBar({ totalResults }: FilterBarProps) {
           <div>
             <Label className="text-xs text-text-secondary mb-1.5 block font-medium">الطابق</Label>
             <Input type="number" step="any" placeholder="رقم الطابق" value={floor} onChange={(e) => setFloor(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
-          </div>
-
-          <div className="flex items-end gap-5 sm:col-span-3 lg:col-span-3">
-            <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer hover:text-text-primary transition-colors">
-              <input type="checkbox" checked={furnished} onChange={(e) => setFurnished(e.target.checked)} className="h-4 w-4 rounded border-border accent-accent" />
-              مفروش
-            </label>
-            <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer hover:text-text-primary transition-colors">
-              <input type="checkbox" checked={parking} onChange={(e) => setParking(e.target.checked)} className="h-4 w-4 rounded border-border accent-accent" />
-              موقف سيارات
-            </label>
-            <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer hover:text-text-primary transition-colors">
-              <input type="checkbox" checked={balcony} onChange={(e) => setBalcony(e.target.checked)} className="h-4 w-4 rounded border-border accent-accent" />
-              شرفة
-            </label>
-            <label className="flex items-center gap-2 text-sm text-text-secondary cursor-pointer hover:text-text-primary transition-colors">
-              <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="h-4 w-4 rounded border-border accent-accent" />
-              مميز فقط
-            </label>
           </div>
         </div>
       )}

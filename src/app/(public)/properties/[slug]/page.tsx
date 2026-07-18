@@ -145,7 +145,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
             </div>
 
             <h2 className="mb-3 text-lg font-semibold text-text-primary">الوصف</h2>
-            <p className="leading-relaxed text-text-secondary whitespace-pre-line">{property.description}</p>
+            <p className="leading-relaxed text-text-secondary whitespace-pre-line" style={{ overflowWrap: "break-word", wordBreak: "break-word" }}>{property.description}</p>
           </div>
         </div>
 
