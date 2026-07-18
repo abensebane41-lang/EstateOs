@@ -51,19 +51,27 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hadCookie = !!request.cookies.get("NEXT_LOCALE")?.value;
-  let localeCookie = request.cookies.get("NEXT_LOCALE")?.value;
+  const localeCookie = request.cookies.get("NEXT_LOCALE")?.value;
+  const validLocale = localeCookie && routing.locales.includes(localeCookie as "ar" | "fr")
+    ? localeCookie
+    : "ar";
 
-  if (!localeCookie || !routing.locales.includes(localeCookie as "ar" | "fr")) {
-    localeCookie = "ar";
-    request.cookies.set("NEXT_LOCALE", "ar");
+  let modifiedRequest = request;
+  if (validLocale !== localeCookie) {
+    const newHeaders = new Headers(request.headers);
+    const existingCookies = newHeaders.get("cookie") || "";
+    const filtered = existingCookies
+      .split(";")
+      .map((c) => c.trim())
+      .filter((c) => !c.startsWith("NEXT_LOCALE="));
+    filtered.push(`NEXT_LOCALE=${validLocale}`);
+    newHeaders.set("cookie", filtered.join("; "));
+    modifiedRequest = new NextRequest(request.url, { ...request, headers: newHeaders });
   }
 
-  const response = intlMiddleware(request);
+  const response = intlMiddleware(modifiedRequest);
 
-  if (!hadCookie) {
-    response.cookies.set("NEXT_LOCALE", "ar", { path: "/", maxAge: 60 * 60 * 24 * 365 });
-  }
+  response.cookies.set("NEXT_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
 
   return response;
 }
