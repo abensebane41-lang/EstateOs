@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { PageHeader } from "@/shared/components/shared/page-header";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -28,6 +28,7 @@ interface UploadedImage {
 
 export default function NewPropertyPage() {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations("dashboard");
   const tPropertyTypes = useTranslations("propertyTypes");
   const tProperty = useTranslations("property");
@@ -351,7 +352,7 @@ export default function NewPropertyPage() {
                       <option value="">{t("wilayaPlaceholder")}</option>
                       {WILAYAS.map((w) => (
                         <option key={w.code} value={w.code}>
-                          {w.name}
+                          {locale === "fr" ? w.nameFr : w.name}
                         </option>
                       ))}
                     </select>

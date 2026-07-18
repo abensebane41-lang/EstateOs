@@ -5,39 +5,39 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number, currency = "DZD"): string {
+export function formatCurrency(amount: number, locale = "ar"): string {
   if (amount >= 1_000_000_000) {
     const billions = amount / 1_000_000_000;
     const formatted = billions === Math.floor(billions) ? String(billions) : billions.toFixed(1).replace(/\.0$/, "");
-    return `${formatted} مليار سنتيم`;
+    return locale === "fr" ? `${formatted} milliard DA` : `${formatted} مليار سنتيم`;
   }
   if (amount >= 1_000_000) {
     const millions = amount / 1_000_000;
     const formatted = millions === Math.floor(millions) ? String(millions) : millions.toFixed(1).replace(/\.0$/, "");
-    return `${formatted} مليون سنتيم`;
+    return locale === "fr" ? `${formatted} million DA` : `${formatted} مليون سنتيم`;
   }
-  return new Intl.NumberFormat("ar-DZ", {
+  return new Intl.NumberFormat(locale === "fr" ? "fr-DZ" : "ar-DZ", {
     style: "currency",
-    currency,
+    currency: "DZD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
 }
 
-export function formatPriceFilter(amount: number): string {
+export function formatPriceFilter(amount: number, locale = "ar"): string {
   if (amount >= 1_000_000_000) {
     const val = amount / 1_000_000_000;
-    return val === Math.floor(val) ? `${val} مليار` : `${val} مليار`;
+    return locale === "fr" ? `${val} milliard` : `${val} مليار`;
   }
   if (amount >= 1_000_000) {
     const val = amount / 1_000_000;
-    return val === Math.floor(val) ? `${val} مليون` : `${val} مليون`;
+    return locale === "fr" ? `${val} million` : `${val} مليون`;
   }
   return String(amount);
 }
 
-export function formatDate(date: Date | string): string {
-  return new Intl.DateTimeFormat("ar-DZ", {
+export function formatDate(date: Date | string, locale = "ar"): string {
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-DZ" : "ar-DZ", {
     year: "numeric",
     month: "long",
     day: "numeric",

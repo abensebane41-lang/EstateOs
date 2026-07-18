@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
@@ -54,6 +54,7 @@ interface PropertyFormProps {
 
 export function PropertyForm({ property, mode }: PropertyFormProps) {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations("dashboard");
   const tPropertyTypes = useTranslations("propertyTypes");
   const tProperty = useTranslations("property");
@@ -272,7 +273,7 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
                     <Label htmlFor="state">{t("wilayaLabel")}</Label>
                     <select id="state" name="state" value={form.state} onChange={handleChange} className={SELECT_CLASSES} required>
                       <option value="">{t("wilayaPlaceholder")}</option>
-                      {WILAYAS.map((w) => (<option key={w.code} value={w.code}>{w.name}</option>))}
+                      {WILAYAS.map((w) => (<option key={w.code} value={w.code}>{locale === "fr" ? w.nameFr : w.name}</option>))}
                     </select>
                   </div>
                   <div>

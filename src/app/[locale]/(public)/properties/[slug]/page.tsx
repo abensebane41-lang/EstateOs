@@ -9,7 +9,7 @@ import { ContactForm } from "./contact-form";
 import { FavoriteButton } from "@/shared/components/shared/favorite-button";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { isFavorited } from "@/modules/property/favorite-actions";
-import { decodeSlug } from "@/shared/lib/utils";
+import { decodeSlug, formatCurrency } from "@/shared/lib/utils";
 import { WILAYAS } from "@/shared/data/algeria";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -132,7 +132,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
                   />
                 )}
                 <p className="text-2xl font-bold text-accent">
-                  {new Intl.NumberFormat("ar-DZ", { style: "currency", currency: "DZD", minimumFractionDigits: 0 }).format(property.price)}
+                  {formatCurrency(property.price, locale)}
                 </p>
               </div>
             </div>

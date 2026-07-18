@@ -194,7 +194,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
             {/* Price Banner */}
             <div className="rounded-2xl bg-gradient-to-l from-primary to-primary-light p-6 text-white">
               <p className="text-sm text-white/70 mb-1">{t("price")}</p>
-              <p className="text-3xl font-bold">{formatCurrency(property.price)}</p>
+              <p className="text-3xl font-bold">{formatCurrency(property.price, locale)}</p>
             </div>
 
             {/* Gallery */}

@@ -276,7 +276,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
                         )}
                       </div>
                       <div className="border-t border-border/50 pt-4 flex items-center justify-between">
-                        <p className="text-xl font-bold text-accent">{formatCurrency(property.price)}</p>
+                        <p className="text-xl font-bold text-accent">{formatCurrency(property.price, locale)}</p>
                         <span className="flex items-center gap-1 text-xs text-text-tertiary">
                           <Eye className="h-3.5 w-3.5" />
                           {property.viewCount}

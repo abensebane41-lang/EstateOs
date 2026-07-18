@@ -6,9 +6,11 @@ import { Badge } from "@/shared/components/ui/badge";
 import Link from "next/link";
 import { FavoriteButton } from "@/shared/components/shared/favorite-button";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { formatCurrency } from "@/shared/lib/utils";
 
 interface Props {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ city?: string; type?: string; minPrice?: string; maxPrice?: string }>;
 }
 
@@ -17,8 +19,10 @@ export const metadata = {
   description: "تصفح أفضل العقارات المتاحة حالياً. شقق، فلل، مكاتب تجارية وأراضي.",
 };
 
-export default async function PublicPropertiesPage({ searchParams }: Props) {
-  const params = await searchParams;
+export default async function PublicPropertiesPage({ params, searchParams }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const sp = await searchParams;
   const tPropertyTypes = await getTranslations("propertyTypes");
 
   const TYPE_LABELS: Record<string, string> = {
@@ -32,8 +36,8 @@ export default async function PublicPropertiesPage({ searchParams }: Props) {
   };
 
   const where: Record<string, unknown> = { status: "PUBLISHED" };
-  if (params.city) where.city = params.city;
-  if (params.type) where.propertyType = params.type;
+  if (sp.city) where.city = sp.city;
+  if (sp.type) where.propertyType = sp.type;
 
   const [properties, cities] = await Promise.all([
     prisma.property.findMany({
@@ -72,7 +76,7 @@ export default async function PublicPropertiesPage({ searchParams }: Props) {
 
       <form className="mb-8 flex flex-wrap gap-4 rounded-xl border border-border bg-white p-4">
         <div className="flex-1 min-w-[200px]">
-          <select name="type" defaultValue={params.type || ""} className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+          <select name="type" defaultValue={sp.type || ""} className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">كل الأنواع</option>
             {Object.entries(TYPE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>
@@ -80,7 +84,7 @@ export default async function PublicPropertiesPage({ searchParams }: Props) {
           </select>
         </div>
         <div className="flex-1 min-w-[200px]">
-          <select name="city" defaultValue={params.city || ""} className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+          <select name="city" defaultValue={sp.city || ""} className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
             <option value="">كل المدن</option>
             {cities.map((c) => (
               <option key={c.city} value={c.city}>{c.city}</option>
@@ -151,7 +155,7 @@ export default async function PublicPropertiesPage({ searchParams }: Props) {
                 </div>
                 <div className="border-t border-border pt-3">
                   <p className="text-lg font-bold text-accent">
-                    {new Intl.NumberFormat("ar-DZ", { style: "currency", currency: "DZD", minimumFractionDigits: 0 }).format(property.price)}
+                    {formatCurrency(property.price, locale)}
                   </p>
                   <p className="text-xs text-text-tertiary mt-1">{property.agency.name}</p>
                 </div>
