@@ -1,19 +1,10 @@
 export const dynamic = "force-dynamic";
 
 import { prisma } from "@/shared/lib/prisma";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Building2, Users, Home, TrendingUp, DollarSign, Clock, CheckCircle, XCircle, Ban, CreditCard } from "lucide-react";
+import { Building2, Users, Home, TrendingUp, Clock, CheckCircle, XCircle, Ban } from "lucide-react";
 import Link from "next/link";
 
-interface Props {
-  params: Promise<{ locale: string }>;
-}
-
-export default async function SuperAdminDashboard({ params }: Props) {
-  await params;
-  setRequestLocale("ar");
-  const t = await getTranslations("superAdmin");
-
+export default async function SuperAdminDashboard() {
   let totalAgencies = 0, totalProperties = 0, totalLeads = 0;
   let recentAgencies: any[] = [];
   let subscriptionStats: Record<string, number> = {};
@@ -51,8 +42,8 @@ export default async function SuperAdminDashboard({ params }: Props) {
   return (
     <div className="space-y-6" dir="rtl">
       <div>
-        <h1 className="text-2xl font-bold text-text-primary">{t("title")}</h1>
-        <p className="text-sm text-text-secondary">{t("subtitle")}</p>
+        <h1 className="text-2xl font-bold text-text-primary">لوحة تحكم المدير</h1>
+        <p className="text-sm text-text-secondary">إدارة جميع الوكالات والاشتراكات</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -61,7 +52,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
             <Building2 className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="text-sm text-text-secondary">{t("totalAgencies")}</p>
+            <p className="text-sm text-text-secondary">إجمالي الوكالات</p>
             <p className="text-xl font-bold text-text-primary">{totalAgencies}</p>
           </div>
         </div>
@@ -70,7 +61,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
             <Home className="h-5 w-5 text-accent" />
           </div>
           <div>
-            <p className="text-sm text-text-secondary">{t("totalProperties")}</p>
+            <p className="text-sm text-text-secondary">إجمالي العقارات</p>
             <p className="text-xl font-bold text-text-primary">{totalProperties}</p>
           </div>
         </div>
@@ -79,7 +70,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
             <Users className="h-5 w-5 text-success" />
           </div>
           <div>
-            <p className="text-sm text-text-secondary">{t("totalLeads")}</p>
+            <p className="text-sm text-text-secondary">إجمالي العملاء</p>
             <p className="text-xl font-bold text-text-primary">{totalLeads}</p>
           </div>
         </div>
@@ -88,7 +79,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
             <TrendingUp className="h-5 w-5 text-warning" />
           </div>
           <div>
-            <p className="text-sm text-text-secondary">{t("activeSubscriptions")}</p>
+            <p className="text-sm text-text-secondary">الاشتراكات النشطة</p>
             <p className="text-xl font-bold text-text-primary">{subscriptionStats.ACTIVE || 0}</p>
           </div>
         </div>
@@ -96,10 +87,10 @@ export default async function SuperAdminDashboard({ params }: Props) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="rounded-xl border border-border bg-white p-6 lg:col-span-2">
-          <h2 className="mb-4 text-lg font-semibold text-text-primary">{t("agencies")}</h2>
+          <h2 className="mb-4 text-lg font-semibold text-text-primary">الوكالات</h2>
           <div className="space-y-3">
             {recentAgencies.length === 0 ? (
-              <p className="py-8 text-center text-sm text-text-secondary">{t("agenciesEmpty")}</p>
+              <p className="py-8 text-center text-sm text-text-secondary">لا توجد وكالات</p>
             ) : (
               recentAgencies.map((agency) => (
                 <Link
@@ -114,7 +105,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
                     <div>
                       <p className="font-medium text-text-primary">{agency.name}</p>
                       <p className="text-xs text-text-secondary">
-                        {agency._count.properties} {t("properties")} · {agency._count.leads} {t("leads")}
+                        {agency._count.properties} عقار · {agency._count.leads} عميل
                       </p>
                     </div>
                   </div>
@@ -126,19 +117,19 @@ export default async function SuperAdminDashboard({ params }: Props) {
             )}
           </div>
           <Link href="/super-admin/agencies" className="mt-4 block text-center text-sm text-primary hover:underline">
-            {t("viewAll")}
+            عرض الكل
           </Link>
         </div>
 
         <div className="space-y-4">
           <div className="rounded-xl border border-border bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-text-primary">{t("subscriptions")}</h2>
+            <h2 className="mb-4 text-lg font-semibold text-text-primary">الاشتراكات</h2>
             <div className="space-y-3">
               {subscriptionStats.TRIAL ? (
                 <div className="flex items-center justify-between rounded-lg bg-warning/10 p-3">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-warning" />
-                    <span className="text-sm font-medium text-text-primary">{t("statusTrial")}</span>
+                    <span className="text-sm font-medium text-text-primary">فترة تجريبية</span>
                   </div>
                   <span className="text-lg font-bold text-text-primary">{subscriptionStats.TRIAL}</span>
                 </div>
@@ -147,7 +138,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
                 <div className="flex items-center justify-between rounded-lg bg-success/10 p-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-success" />
-                    <span className="text-sm font-medium text-text-primary">{t("statusActive")}</span>
+                    <span className="text-sm font-medium text-text-primary">نشط</span>
                   </div>
                   <span className="text-lg font-bold text-text-primary">{subscriptionStats.ACTIVE}</span>
                 </div>
@@ -156,7 +147,7 @@ export default async function SuperAdminDashboard({ params }: Props) {
                 <div className="flex items-center justify-between rounded-lg bg-error/10 p-3">
                   <div className="flex items-center gap-2">
                     <Ban className="h-4 w-4 text-error" />
-                    <span className="text-sm font-medium text-text-primary">{t("statusSuspended")}</span>
+                    <span className="text-sm font-medium text-text-primary">معلق</span>
                   </div>
                   <span className="text-lg font-bold text-text-primary">{subscriptionStats.SUSPENDED}</span>
                 </div>
@@ -165,14 +156,14 @@ export default async function SuperAdminDashboard({ params }: Props) {
                 <div className="flex items-center justify-between rounded-lg bg-text-tertiary/10 p-3">
                   <div className="flex items-center gap-2">
                     <XCircle className="h-4 w-4 text-text-tertiary" />
-                    <span className="text-sm font-medium text-text-primary">{t("statusExpired")}</span>
+                    <span className="text-sm font-medium text-text-primary">منتهي</span>
                   </div>
                   <span className="text-lg font-bold text-text-primary">{subscriptionStats.EXPIRED}</span>
                 </div>
               ) : null}
             </div>
             <Link href="/super-admin/subscriptions" className="mt-4 block text-center text-sm text-primary hover:underline">
-              {t("manageSubscriptions")}
+              إدارة الاشتراكات
             </Link>
           </div>
         </div>

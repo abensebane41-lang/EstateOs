@@ -1,18 +1,12 @@
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { redirect } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
 import { SuperAdminSidebar } from "@/shared/components/layout/super-admin-sidebar";
 
 export default async function SuperAdminLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }) {
-  await params;
-  setRequestLocale("ar");
-
   const user = await getCurrentUser();
   if (!user || user.role !== "SUPER_ADMIN") redirect("/login");
 
