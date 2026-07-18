@@ -242,17 +242,17 @@ export function FilterBar({ totalResults }: FilterBarProps) {
         <div className="mt-5 grid grid-cols-2 gap-4 border-t border-border/50 pt-5 sm:grid-cols-3 lg:grid-cols-6">
           <div>
             <Label className="text-xs text-text-secondary mb-1.5 block font-medium">المساحة من</Label>
-            <Input type="number" placeholder="م²" value={minArea} onChange={(e) => setMinArea(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
+            <Input type="number" step="any" placeholder="م²" value={minArea} onChange={(e) => setMinArea(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
           </div>
 
           <div>
             <Label className="text-xs text-text-secondary mb-1.5 block font-medium">المساحة إلى</Label>
-            <Input type="number" placeholder="م²" value={maxArea} onChange={(e) => setMaxArea(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
+            <Input type="number" step="any" placeholder="م²" value={maxArea} onChange={(e) => setMaxArea(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
           </div>
 
           <div>
             <Label className="text-xs text-text-secondary mb-1.5 block font-medium">الطابق</Label>
-            <Input type="number" placeholder="رقم الطابق" value={floor} onChange={(e) => setFloor(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
+            <Input type="number" step="any" placeholder="رقم الطابق" value={floor} onChange={(e) => setFloor(e.target.value)} dir="ltr" className="text-left h-11 rounded-xl border-border/60 bg-surface-secondary" />
           </div>
 
           <div className="flex items-end gap-5 sm:col-span-3 lg:col-span-3">
