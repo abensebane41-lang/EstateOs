@@ -72,20 +72,21 @@ export function middleware(request: NextRequest) {
 
   const newHeaders = new Headers(request.headers);
   const existingCookies = newHeaders.get("cookie") || "";
-  const cookieName = isPublic ? "PUBLIC_LOCALE" : "NEXT_LOCALE";
   const filtered = existingCookies
     .split(";")
     .map((c) => c.trim())
     .filter((c) => !c.startsWith("NEXT_LOCALE=") && !c.startsWith("PUBLIC_LOCALE="));
-  filtered.push(`${cookieName}=${validLocale}`);
+  filtered.push(`NEXT_LOCALE=${validLocale}`);
   newHeaders.set("cookie", filtered.join("; "));
   const modifiedRequest = new NextRequest(request.url, { ...request, headers: newHeaders });
 
   const response = intlMiddleware(modifiedRequest);
 
   if (isPublic) {
+    response.cookies.delete("NEXT_LOCALE");
     response.cookies.set("PUBLIC_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   } else {
+    response.cookies.delete("PUBLIC_LOCALE");
     response.cookies.set("NEXT_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   }
 
