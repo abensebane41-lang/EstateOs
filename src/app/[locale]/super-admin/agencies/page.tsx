@@ -11,13 +11,25 @@ const STATUS_BADGES: Record<string, { icon: React.ReactNode; label: string; clas
 };
 
 export default async function SuperAdminAgenciesPage() {
-  const agencies = await prisma.agency.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      _count: { select: { properties: true, leads: true, users: true } },
-      subscriptions: { select: { status: true, trialEndsAt: true }, take: 1, orderBy: { createdAt: "desc" } },
-    },
-  });
+  let agencies;
+  try {
+    agencies = await prisma.agency.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: { select: { properties: true, leads: true, users: true } },
+        subscriptions: { select: { status: true, trialEndsAt: true }, take: 1, orderBy: { createdAt: "desc" } },
+      },
+    });
+  } catch (error) {
+    return (
+      <div className="space-y-6" dir="rtl">
+        <div className="rounded-xl border border-error/20 bg-error/5 p-6">
+          <h1 className="text-lg font-bold text-error">خطأ في تحميل البيانات</h1>
+          <pre className="mt-2 whitespace-pre-wrap text-xs text-text-secondary">{String(error)}</pre>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6" dir="rtl">
