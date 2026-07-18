@@ -24,6 +24,7 @@ interface AgencyData {
   logoUrl: string | null;
   primaryColor: string;
   accentColor: string;
+  locale?: string;
   createdAt: string;
   _count: { properties: number; leads: number };
   subscriptions: Array<{ status: string; trialEndsAt: string | null; startDate: string }>;

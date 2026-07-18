@@ -17,3 +17,10 @@
  GET / 200 in 362ms (next.js: 46ms, proxy.ts: 11ms, generate-params: 21ms, application-code: 305ms)
 ✓ Compiled in 332ms
 ✓ Compiled in 273ms
+○ Compiling /[locale]/dashboard/settings ...
+ GET /dashboard/settings 307 in 11.3s (next.js: 9.7s, proxy.ts: 79ms, generate-params: 3.5s, application-code: 1534ms)
+ GET /login 200 in 1034ms (next.js: 383ms, proxy.ts: 22ms, generate-params: 23ms, application-code: 629ms)
+✓ Compiled in 177ms
+✓ Compiled in 163ms
+ GET /dashboard/settings 307 in 699ms (next.js: 256ms, proxy.ts: 33ms, generate-params: 9ms, application-code: 410ms)
+✓ Compiled in 180ms

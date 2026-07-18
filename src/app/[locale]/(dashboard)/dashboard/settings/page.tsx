@@ -6,6 +6,8 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function SettingsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -29,27 +31,29 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
     );
   }
 
-  let agency;
-  try {
-    agency = await prisma.agency.findUnique({
-      where: { id: user.agencyId },
-      include: {
-        _count: { select: { properties: true, leads: true } },
-        subscriptions: { orderBy: { createdAt: "desc" }, take: 1 },
+  const agency = await prisma.agency.findUnique({
+    where: { id: user.agencyId },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      phone: true,
+      email: true,
+      address: true,
+      description: true,
+      logoUrl: true,
+      primaryColor: true,
+      accentColor: true,
+      locale: true,
+      createdAt: true,
+      _count: { select: { properties: true, leads: true } },
+      subscriptions: {
+        orderBy: { createdAt: "desc" },
+        take: 1,
+        select: { status: true, trialEndsAt: true, startDate: true, endDate: true },
       },
-    });
-  } catch (error) {
-    console.error("Settings page error:", error);
-    return (
-      <div>
-        <PageHeader title={tNav("settings")} description={t("settingsSubtitle")} />
-        <div className="rounded-xl border border-error/20 bg-error/5 p-8 text-center">
-          <p className="text-error font-medium">{t("loadError")}</p>
-          <p className="text-sm text-text-secondary mt-2">{t("loadErrorDesc")}</p>
-        </div>
-      </div>
-    );
-  }
+    },
+  });
 
   if (!agency) {
     redirect("/login");
