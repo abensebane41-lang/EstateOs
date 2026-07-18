@@ -9,6 +9,7 @@ import { ImageGallery } from "@/shared/components/shared/image-gallery";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { WILAYAS } from "@/shared/data/algeria";
 
 export const dynamic = "force-dynamic";
 
@@ -111,6 +112,10 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
   const t = await getTranslations("property");
   const tPropertyTypes = await getTranslations("propertyTypes");
 
+  const wilayaDisplayName = property.state
+    ? (locale === "fr" ? WILAYAS.find(w => w.name === property.state)?.nameFr : WILAYAS.find(w => w.name === property.state)?.name) || property.state
+    : "";
+
   const TYPE_LABELS: Record<string, string> = Object.fromEntries(
     Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tPropertyTypes(tKey)])
   );
@@ -166,7 +171,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
             </h1>
             <p className="text-white/80 flex items-center gap-2 text-lg">
               <MapPin className="h-5 w-5 text-accent" />
-              {property.address}، {property.city}{property.state ? `، ${property.state}` : ""}
+              {property.address}، {property.city}{wilayaDisplayName ? `، ${wilayaDisplayName}` : ""}
             </p>
           </div>
         </div>

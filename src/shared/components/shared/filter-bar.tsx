@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
@@ -10,10 +10,9 @@ import { PriceInputString } from "@/shared/components/shared/price-input";
 import { ChevronDown, ChevronUp, X, Search, SlidersHorizontal } from "lucide-react";
 import { WILAYAS } from "@/shared/data/algeria";
 
-const ALGERIA_STATES = WILAYAS.map(w => w.name);
-
 interface FilterBarProps {
   totalResults: number;
+  locale?: string;
 }
 
 export function FilterBar({ totalResults }: FilterBarProps) {
@@ -21,9 +20,20 @@ export function FilterBar({ totalResults }: FilterBarProps) {
   const tPropertyTypes = useTranslations("propertyTypes");
   const tProperty = useTranslations("property");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [expanded, setExpanded] = useState(false);
+
+  const ALGERIA_STATES = WILAYAS.map(w => ({ value: w.name, label: locale === "fr" ? w.nameFr : w.name }));
+  const stateToValue = (displayName: string): string => {
+    const w = WILAYAS.find(w => w.name === displayName || w.nameFr === displayName);
+    return w ? w.name : displayName;
+  };
+  const valueToDisplay = (value: string): string => {
+    const w = WILAYAS.find(w => w.name === value);
+    return w ? (locale === "fr" ? w.nameFr : w.name) : value;
+  };
 
   const [purpose, setPurpose] = useState(searchParams.get("purpose") || "");
   const [type, setType] = useState(searchParams.get("type") || "");
@@ -38,7 +48,7 @@ export function FilterBar({ totalResults }: FilterBarProps) {
   const [sort, setSort] = useState(searchParams.get("sort") || "newest");
   const [search, setSearch] = useState(searchParams.get("search") || "");
 
-  const selectedWilaya = WILAYAS.find(w => w.name === state);
+  const selectedWilaya = WILAYAS.find(w => w.name === state || w.nameFr === state);
 
   const PROPERTY_TYPES = [
     { value: "APARTMENT", label: tPropertyTypes("APARTMENT") },
@@ -166,7 +176,7 @@ export function FilterBar({ totalResults }: FilterBarProps) {
           >
             <option value="">{t("all")}</option>
             {ALGERIA_STATES.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
         </div>

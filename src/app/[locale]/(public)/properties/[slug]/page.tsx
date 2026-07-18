@@ -10,6 +10,7 @@ import { FavoriteButton } from "@/shared/components/shared/favorite-button";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { isFavorited } from "@/modules/property/favorite-actions";
 import { decodeSlug } from "@/shared/lib/utils";
+import { WILAYAS } from "@/shared/data/algeria";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -69,6 +70,10 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
   const t = await getTranslations("property");
   const tNav = await getTranslations("nav");
   const tPropertyTypes = await getTranslations("propertyTypes");
+
+  const wilayaDisplayName = property.state
+    ? (locale === "fr" ? WILAYAS.find(w => w.name === property.state)?.nameFr : WILAYAS.find(w => w.name === property.state)?.name) || property.state
+    : "";
 
   const TYPE_LABELS: Record<string, string> = Object.fromEntries(
     Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tPropertyTypes(tKey)])
@@ -134,7 +139,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
 
             <p className="mb-4 flex items-center gap-2 text-text-secondary">
               <MapPin className="h-4 w-4 shrink-0" />
-              {property.address}، {property.city}{property.state ? `، ${property.state}` : ""}
+              {property.address}، {property.city}{wilayaDisplayName ? `، ${wilayaDisplayName}` : ""}
             </p>
 
             <div className="mb-6 flex flex-wrap gap-6 border-b border-border pb-6">
