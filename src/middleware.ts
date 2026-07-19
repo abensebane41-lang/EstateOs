@@ -86,7 +86,6 @@ export function middleware(request: NextRequest) {
     response.cookies.delete("NEXT_LOCALE");
     response.cookies.set("PUBLIC_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   } else {
-    response.cookies.delete("PUBLIC_LOCALE");
     response.cookies.set("NEXT_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   }
 
