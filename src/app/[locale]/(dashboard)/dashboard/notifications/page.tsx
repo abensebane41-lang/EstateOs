@@ -17,11 +17,16 @@ export default async function NotificationsPage() {
     );
   }
 
-  const notifications = await prisma.agencyNotification.findMany({
-    where: { agencyId: user.agencyId },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
+  let notifications: Awaited<ReturnType<typeof prisma.agencyNotification.findMany>> = [];
+  try {
+    notifications = await prisma.agencyNotification.findMany({
+      where: { agencyId: user.agencyId },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    });
+  } catch {
+    notifications = [];
+  }
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 

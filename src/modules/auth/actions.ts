@@ -36,10 +36,13 @@ export async function registerAgency(data: z.infer<typeof registerSchema>): Prom
   const { agencyName, name, email, phone, password, logoUrl } = parsed.data;
 
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
-      return failure("البريد الإلكتروني مستخدم بالفعل");
-    }
+    const result = await auth.api.signUpEmail({
+      body: {
+        name,
+        email,
+        password,
+      },
+    });
 
     const slug = slugify(agencyName) || `agency-${Date.now()}`;
     let finalSlug = slug;
@@ -49,15 +52,7 @@ export async function registerAgency(data: z.infer<typeof registerSchema>): Prom
       counter++;
     }
 
-    const result = await auth.api.signUpEmail({
-      body: {
-        name,
-        email,
-        password,
-      },
-    });
-
-    await prisma.agency.create({
+    const agency = await prisma.agency.create({
       data: {
         name: agencyName,
         slug: finalSlug,
@@ -70,41 +65,35 @@ export async function registerAgency(data: z.infer<typeof registerSchema>): Prom
       },
     });
 
-    const agency = await prisma.agency.findFirst({
-      where: { slug: finalSlug },
+    await prisma.user.update({
+      where: { id: result.user.id },
+      data: {
+        agencyId: agency.id,
+        role: "AGENCY_OWNER",
+      },
     });
 
-    if (agency) {
-      await prisma.user.update({
-        where: { id: result.user.id },
-        data: {
-          agencyId: agency.id,
-          role: "AGENCY_OWNER",
-        },
+    const trialEndsAt = new Date();
+    trialEndsAt.setDate(trialEndsAt.getDate() + 7);
+
+    await prisma.subscription.create({
+      data: {
+        agencyId: agency.id,
+        status: "TRIAL",
+        startDate: new Date(),
+        trialEndsAt,
+      },
+    });
+
+    try {
+      const { sendEmail, welcomeEmailHTML } = await import("@/shared/lib/email");
+      await sendEmail({
+        to: email,
+        subject: `مرحباً بك في EstateOS - ${agencyName}`,
+        html: welcomeEmailHTML(agencyName),
       });
-
-      const trialEndsAt = new Date();
-      trialEndsAt.setDate(trialEndsAt.getDate() + 7);
-
-      await prisma.subscription.create({
-        data: {
-          agencyId: agency.id,
-          status: "TRIAL",
-          startDate: new Date(),
-          trialEndsAt,
-        },
-      });
-
-      try {
-        const { sendEmail, welcomeEmailHTML } = await import("@/shared/lib/email");
-        await sendEmail({
-          to: email,
-          subject: `مرحباً بك في EstateOS - ${agencyName}`,
-          html: welcomeEmailHTML(agencyName),
-        });
-      } catch (emailError) {
-        console.error("Failed to send welcome email:", emailError);
-      }
+    } catch (emailError) {
+      console.error("Failed to send welcome email:", emailError);
     }
 
     return success({ message: "تم إنشاء الحساب بنجاح" });

@@ -21,11 +21,16 @@ export default async function UsersPage({ params }: { params: Promise<{ locale: 
     );
   }
 
-  const users = await prisma.user.findMany({
-    where: { agencyId: user.agencyId },
-    select: { id: true, name: true, email: true, role: true, phone: true, createdAt: true },
-    orderBy: { createdAt: "desc" },
-  });
+  let users: { id: string; name: string; email: string; role: string; phone: string | null; createdAt: Date }[] = [];
+  try {
+    users = await prisma.user.findMany({
+      where: { agencyId: user.agencyId },
+      select: { id: true, name: true, email: true, role: true, phone: true, createdAt: true },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch {
+    users = [];
+  }
 
   return (
     <div>

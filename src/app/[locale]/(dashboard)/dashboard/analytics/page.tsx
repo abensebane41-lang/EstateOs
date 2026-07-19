@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { PageHeader } from "@/shared/components/shared/page-header";
 import { PropertyTypeChart } from "./property-type-chart";
 import { LeadStatusChart } from "./lead-status-chart";
@@ -14,6 +14,8 @@ export default async function AnalyticsPage() {
   const tLeadStatus = await getTranslations("leadStatus");
   const tProperty = await getTranslations("property");
   const tCommon = await getTranslations("common");
+  const rawLocale = await getLocale();
+  const dateLocale = rawLocale === "fr" ? "fr-DZ" : "ar-DZ";
 
   const TYPE_LABELS: Record<string, string> = {
     APARTMENT: tPropertyTypes("APARTMENT"), VILLA: tPropertyTypes("VILLA"), HOUSE: tPropertyTypes("HOUSE"), LAND: tPropertyTypes("LAND"), OFFICE: tPropertyTypes("OFFICE"), COMMERCIAL: tPropertyTypes("COMMERCIAL"), WAREHOUSE: tPropertyTypes("WAREHOUSE"),
@@ -126,7 +128,7 @@ export default async function AnalyticsPage() {
               <div key={p.id} className="flex items-center justify-between rounded-lg border border-border p-3">
                 <div>
                   <a href={`/dashboard/properties/${p.id}`} className="text-sm font-medium text-text-primary hover:text-accent transition-colors">{p.title}</a>
-                  <p className="text-xs text-text-tertiary">{new Date(p.createdAt).toLocaleDateString("ar-DZ")}</p>
+                  <p className="text-xs text-text-tertiary">{new Date(p.createdAt).toLocaleDateString(dateLocale)}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1 text-xs text-text-secondary">

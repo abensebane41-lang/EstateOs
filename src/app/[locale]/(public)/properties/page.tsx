@@ -11,7 +11,7 @@ import { formatCurrency } from "@/shared/lib/utils";
 
 interface Props {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ city?: string; type?: string; minPrice?: string; maxPrice?: string }>;
+  searchParams: Promise<{ city?: string; type?: string; minPrice?: string; maxPrice?: string; page?: string }>;
 }
 
 export default async function PublicPropertiesPage({ params, searchParams }: Props) {
@@ -33,22 +33,31 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
     WAREHOUSE: tPropertyTypes("WAREHOUSE"),
   };
 
+  const page = Number(sp.page) || 1;
+  const take = 12;
+  const skip = (page - 1) * take;
+
   const where: Record<string, unknown> = { status: "PUBLISHED" };
   if (sp.city) where.city = sp.city;
   if (sp.type) where.propertyType = sp.type;
 
-  const [properties, cities] = await Promise.all([
+  const [properties, totalCount, cities] = await Promise.all([
     prisma.property.findMany({
       where,
       include: { images: { where: { isPrimary: true }, take: 1 }, agency: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
+      take,
+      skip,
     }),
+    prisma.property.count({ where }),
     prisma.property.findMany({
       where: { status: "PUBLISHED" },
       select: { city: true },
       distinct: ["city"],
     }),
   ]);
+
+  const totalPages = Math.ceil(totalCount / take);
 
   const user = await getCurrentUser();
 
@@ -102,6 +111,7 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
           <p className="text-text-secondary">{t("searchHint")}</p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {properties.map((property) => (
             <Link
@@ -161,6 +171,31 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
             </Link>
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-2">
+            {page > 1 && (
+              <Link
+                href={`/properties?page=${page - 1}${sp.city ? `&city=${sp.city}` : ""}${sp.type ? `&type=${sp.type}` : ""}`}
+                className="inline-flex items-center rounded-lg border border-border bg-white px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary transition-colors"
+              >
+                {tCommon("previous")}
+              </Link>
+            )}
+            <span className="px-4 py-2 text-sm text-text-secondary">
+              {page} / {totalPages}
+            </span>
+            {page < totalPages && (
+              <Link
+                href={`/properties?page=${page + 1}${sp.city ? `&city=${sp.city}` : ""}${sp.type ? `&type=${sp.type}` : ""}`}
+                className="inline-flex items-center rounded-lg border border-border bg-white px-4 py-2 text-sm text-text-secondary hover:bg-surface-secondary transition-colors"
+              >
+                {tCommon("next")}
+              </Link>
+            )}
+          </div>
+        )}
+        </>
       )}
     </div>
   );

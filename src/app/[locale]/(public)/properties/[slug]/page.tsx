@@ -131,9 +131,9 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
 
       <nav className="mb-6 flex items-center gap-2 text-sm text-text-tertiary">
         <Link href="/" className="hover:text-primary transition-colors">{tNav("homePage")}</Link>
-        <ChevronLeft className="h-3 w-3" />
+        <ChevronLeft className={`h-3 w-3 ${locale === "ar" ? "rotate-180" : ""}`} />
         <Link href="/properties" className="hover:text-primary transition-colors">{tNav("properties")}</Link>
-        <ChevronLeft className="h-3 w-3" />
+        <ChevronLeft className={`h-3 w-3 ${locale === "ar" ? "rotate-180" : ""}`} />
         <span className="text-text-primary">{property.title}</span>
       </nav>
 

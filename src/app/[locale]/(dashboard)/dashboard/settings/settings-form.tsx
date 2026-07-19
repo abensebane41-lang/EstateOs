@@ -233,14 +233,14 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
             <div>
               <p className="text-sm text-text-secondary">{t("startDate")}</p>
               <p className="text-sm font-medium text-text-primary">
-                {new Date(subscription.startDate).toLocaleDateString("ar-DZ")}
+                {new Date(subscription.startDate).toLocaleDateString(locale === "fr" ? "fr-DZ" : "ar-DZ")}
               </p>
             </div>
             {trialEndsAt && (
               <div>
                 <p className="text-sm text-text-secondary">{t("trialEnds")}</p>
                 <p className={`text-sm font-medium ${isTrialExpired ? "text-error" : "text-text-primary"}`}>
-                  {trialEndsAt.toLocaleDateString("ar-DZ")}
+                  {trialEndsAt.toLocaleDateString(locale === "fr" ? "fr-DZ" : "ar-DZ")}
                   {isTrialExpired && ` ${t("expiredParentheses")}`}
                 </p>
               </div>
@@ -398,7 +398,7 @@ export function SettingsForm({ agency }: { agency: AgencyData }) {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-text-secondary">{t("createdAt")}</span>
-            <span className="text-sm text-text-primary">{new Date(agency.createdAt).toLocaleDateString("ar-DZ")}</span>
+            <span className="text-sm text-text-primary">{new Date(agency.createdAt).toLocaleDateString(locale === "fr" ? "fr-DZ" : "ar-DZ")}</span>
           </div>
         </div>
       </div>

@@ -16,6 +16,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     orderBy: { updatedAt: "desc" },
   });
 
+  const agencyProperties = await prisma.agency.findMany({
+    select: {
+      slug: true,
+      properties: {
+        where: { status: "PUBLISHED" },
+        select: { slug: true, updatedAt: true },
+      },
+    },
+  });
+
   const staticPages = [
     { url: base, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 1 },
     { url: `${base}/pricing`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.8 },
@@ -37,5 +47,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...agencyPages, ...propertyPages];
+  const agencyPropertyPages = agencyProperties.flatMap((a) =>
+    a.properties.map((p) => ({
+      url: `${base}/agency/${a.slug}/properties/${encodeURIComponent(p.slug)}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }))
+  );
+
+  return [...staticPages, ...agencyPages, ...agencyPropertyPages, ...propertyPages];
 }

@@ -194,7 +194,7 @@ export function welcomeEmailHTML(agencyName: string): string {
             <li>تتبع العملاء المحتملين</li>
             <li>إدارة حسابك وإعداداتك</li>
           </ul>
-          <p style="color:#999;font-size:13px;"> trial مجاني لمدة 14 يوماً</p>
+          <p style="color:#999;font-size:13px;"> trial مجاني لمدة 7 يوماً</p>
           <a href="${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3005"}/dashboard" class="btn">البدء الآن</a>
         </div>
         <div class="footer">

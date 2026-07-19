@@ -33,26 +33,50 @@ export default async function DashboardPage() {
 
   const agencyId = user.agencyId;
 
-  const [totalProperties, publishedProperties, totalLeads, convertedLeads, totalViews, recentLeads, featuredProperties] =
-    await Promise.all([
-      prisma.property.count({ where: { agencyId } }),
-      prisma.property.count({ where: { agencyId, status: "PUBLISHED" } }),
-      prisma.lead.count({ where: { agencyId } }),
-      prisma.lead.count({ where: { agencyId, status: "CONVERTED" } }),
-      prisma.property.aggregate({ where: { agencyId }, _sum: { viewCount: true } }),
-      prisma.lead.findMany({
-        where: { agencyId },
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        include: { property: { select: { title: true } } },
-      }),
-      prisma.property.findMany({
-        where: { agencyId, status: "PUBLISHED" },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-        include: { images: { where: { isPrimary: true }, take: 1 } },
-      }),
-    ]);
+  let totalProperties: number;
+  let publishedProperties: number;
+  let totalLeads: number;
+  let convertedLeads: number;
+  let totalViews: { _sum: { viewCount: number | null } };
+  let recentLeads: Array<{ id: string; name: string; status: string; property?: { title: string } | null }>;
+  let featuredProperties: Array<{ id: string; title: string; propertyType: string; city: string; price: number; viewCount: number; images: Array<{ isPrimary: boolean }> }>;
+
+  try {
+    [totalProperties, publishedProperties, totalLeads, convertedLeads, totalViews, recentLeads, featuredProperties] =
+      await Promise.all([
+        prisma.property.count({ where: { agencyId } }),
+        prisma.property.count({ where: { agencyId, status: "PUBLISHED" } }),
+        prisma.lead.count({ where: { agencyId } }),
+        prisma.lead.count({ where: { agencyId, status: "CONVERTED" } }),
+        prisma.property.aggregate({ where: { agencyId }, _sum: { viewCount: true } }),
+        prisma.lead.findMany({
+          where: { agencyId },
+          orderBy: { createdAt: "desc" },
+          take: 5,
+          include: { property: { select: { title: true } } },
+        }),
+        prisma.property.findMany({
+          where: { agencyId, status: "PUBLISHED" },
+          orderBy: { createdAt: "desc" },
+          take: 3,
+          include: { images: { where: { isPrimary: true }, take: 1 } },
+        }),
+      ]);
+  } catch {
+    return (
+      <div>
+        <PageHeader
+          title={tNav("dashboard")}
+          description={t("welcome")}
+        />
+        <EmptyState
+          icon={Building2}
+          title={t("noDataYet")}
+          description={t("contactSupport")}
+        />
+      </div>
+    );
+  }
 
   const totalViewCount = totalViews._sum.viewCount ?? 0;
 
