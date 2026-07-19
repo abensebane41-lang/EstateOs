@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -22,17 +21,20 @@ interface DeleteAgencyButtonProps {
 export function DeleteAgencyButton({ agencyId, agencyName }: DeleteAgencyButtonProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleDelete() {
     setLoading(true);
-    const result = await deleteAgency(agencyId);
-    setLoading(false);
-
-    if (result.success) {
-      router.push("/super-admin/agencies");
-    } else {
-      alert(result.error || "فشل في الحذف");
+    try {
+      const result = await deleteAgency(agencyId);
+      if (result.success) {
+        window.location.href = "/super-admin/agencies";
+      } else {
+        alert("خطأ: " + (result.error || "فشل في الحذف"));
+      }
+    } catch (err) {
+      alert("خطأ غير متوقع: " + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setLoading(false);
     }
   }
 

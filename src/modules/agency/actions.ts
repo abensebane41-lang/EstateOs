@@ -133,19 +133,33 @@ export async function getUnreadNotificationCount() {
 export async function deleteAgency(agencyId: string): Promise<ActionResponse> {
   try {
     const user = await getCurrentUser();
+    console.log("[deleteAgency] user:", user?.id, user?.role);
     if (!user || user.role !== "SUPER_ADMIN") {
       return failure("غير مصرح — مدير النظام فقط");
     }
 
     const agency = await prisma.agency.findUnique({ where: { id: agencyId } });
+    console.log("[deleteAgency] agency found:", !!agency);
     if (!agency) return failure("الوكالة غير موجودة");
 
+    await prisma.propertyFavorite.deleteMany({ where: { property: { agencyId } } });
+    await prisma.lead.deleteMany({ where: { agencyId } });
+    await prisma.analyticsEvent.deleteMany({ where: { agencyId } });
+    await prisma.agencyNotification.deleteMany({ where: { agencyId } });
+    await prisma.subscription.deleteMany({ where: { agencyId } });
+    await prisma.propertyImage.deleteMany({ where: { property: { agencyId } } });
+    await prisma.property.deleteMany({ where: { agencyId } });
+    await prisma.session.deleteMany({ where: { user: { agencyId } } });
+    await prisma.account.deleteMany({ where: { user: { agencyId } } });
+    await prisma.user.deleteMany({ where: { agencyId } });
     await prisma.agency.delete({ where: { id: agencyId } });
 
+    console.log("[deleteAgency] deleted successfully");
     return success({ message: "تم حذف الوكالة بنجاح" });
   } catch (error) {
-    console.error("Delete agency error:", error);
-    return failure("فشل في حذف الوكالة");
+    console.error("[deleteAgency] FULL ERROR:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    const msg = error instanceof Error ? error.message : "فشل في حذف الوكالة";
+    return failure(msg);
   }
 }
 
