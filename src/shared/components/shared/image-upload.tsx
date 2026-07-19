@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Upload, X, Star, ImagePlus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { addPropertyImage, deletePropertyImage, setPrimaryImage } from "@/modules/property/image-actions";
+import { useTranslations } from "next-intl";
 
 interface ImageUploadProps {
   propertyId: string;
@@ -15,6 +16,7 @@ export function ImageUpload({ propertyId, images, onImagesChange }: ImageUploadP
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations("dashboard");
 
   async function handleFileSelect(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -71,9 +73,9 @@ export function ImageUpload({ propertyId, images, onImagesChange }: ImageUploadP
       >
         <ImagePlus className="mb-3 h-10 w-10 text-text-tertiary" />
         <p className="text-sm text-text-secondary">
-          {uploading ? "جاري الرفع..." : "اسحب الصور هنا أو انقر للتحديد"}
+          {uploading ? t("uploading") : t("uploadHint")}
         </p>
-        <p className="mt-1 text-xs text-text-tertiary">JPG, PNG, WebP — حد أقصى 5 ميغابايت</p>
+        <p className="mt-1 text-xs text-text-tertiary">{t("uploadFormats")}</p>
       </div>
 
       <input
@@ -110,7 +112,7 @@ export function ImageUpload({ propertyId, images, onImagesChange }: ImageUploadP
               </div>
               {image.isPrimary && (
                 <div className="absolute right-2 top-2 rounded bg-accent px-2 py-0.5 text-xs font-medium text-primary-dark">
-                  رئيسية
+                  {t("primaryImage")}
                 </div>
               )}
             </div>

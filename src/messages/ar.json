@@ -40,7 +40,9 @@
     "areaUnit": "م²",
     "optional": "اختياري",
     "none": "—",
-    "ok": "حسناً"
+    "ok": "حسناً",
+    "removeFavorite": "إزالة من المفضلة",
+    "addFavorite": "إضافة إلى المفضلة"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -203,7 +205,18 @@
     "images": "صور",
     "primary": "أساسية",
     "bedsLabel": "غرف",
-    "bathsLabel": "حمامات"
+    "bathsLabel": "حمامات",
+    "contactSuccessTitle": "تم إرسال رسالتك بنجاح",
+    "contactSuccessDesc": "سيتواصل معك الوكيل قريباً",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "محمد أمين",
+    "emailLabel": "البريد الإلكتروني",
+    "phoneLabel": "رقم الهاتف (اختياري)",
+    "messageLabel": "الرسالة",
+    "sending": "جاري الإرسال...",
+    "sendMessage": "إرسال الرسالة",
+    "defaultMessage": "أنا مهتم بالعقار \"{name}\". هل يمكنني معرفة المزيد من التفاصيل؟",
+    "addressSeparator": "،"
   },
   "propertyTypes": {
     "APARTMENT": "شقة",
@@ -461,7 +474,28 @@
     "createdAt": "تاريخ الإنشاء",
     "accountInfo": "معلومات الحساب",
     "searchPlaceholder": "بحث...",
-    "language": "اللغة"
+    "language": "اللغة",
+    "leadDetailDesc": "تفاصيل العميل المحتمل",
+    "leadContactInfo": "معلومات الاتصال",
+    "leadEmail": "البريد الإلكتروني",
+    "leadPhone": "الهاتف",
+    "leadNotSpecified": "غير محدد",
+    "leadSource": "المصدر",
+    "leadCreatedAt": "تاريخ الإنشاء",
+    "leadMessage": "الرسالة",
+    "leadRelatedProperty": "العقار المرتبط",
+    "leadNotes": "الملاحظات",
+    "leadStatus": "الحالة",
+    "leadAdditionalInfo": "معلومات إضافية",
+    "leadLastUpdate": "آخر تحديث",
+    "leadBackToList": "العودة للقائمة",
+    "leadSearchPlaceholder": "بحث بالاسم، البريد الإلكتروني، أو الهاتف...",
+    "leadNotesPlaceholder": "أضف ملاحظات حول العميل المحتمل...",
+    "leadNotesSaving": "جاري الحفظ...",
+    "leadNotesSave": "حفظ الملاحظات",
+    "leadFilterAll": "الكل",
+    "leadAreaUnit": "م²",
+    "leadBedrooms": "غرف"
   },
   "superAdmin": {
     "title": "لوحة التحكم",
@@ -551,7 +585,15 @@
     "terms": "شروط الاستخدام",
     "contactUsLink": "تواصل معنا",
     "siteTitle": "عقارات",
-    "siteDescription": "منصة احترافية لإدارة العقارات والوكلاء العقاريين."
+    "siteDescription": "منصة احترافية لإدارة العقارات والوكلاء العقاريين.",
+    "platformDescription": "منصة إدارة العقارات الاحترافية للوكلاء العقاريين في الجزائر. أضف عقاراتك وتتبع عملائك من مكان واحد.",
+    "platform": "المنصة",
+    "createAgency": "إنشاء وكالة",
+    "legal": "القانونية",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfUse": "شروط الاستخدام",
+    "keywords": ["عقارات", "إدارة عقارات", "وكلاء عقاريين", "بيع عقارات", "تأجير عقارات", "الجزائر"],
+    "agencyDescriptionFallback": "عقارات {name} المتاحة للبيع والإيجار"
   },
   "suspended": {
     "titleSuspended": "تم توقّف حسابك",

@@ -55,7 +55,7 @@ export function Topbar({ title, agency, onMenuClick }: TopbarProps) {
           {agency?.logoUrl ? (
             <img src={agency.logoUrl} alt={agency.name} className="h-full w-full rounded-full object-cover" />
           ) : (
-            <AvatarFallback>{agency?.name?.charAt(0) || "أح"}</AvatarFallback>
+            <AvatarFallback>{agency?.name?.charAt(0) || "?"}</AvatarFallback>
           )}
         </Avatar>
       </div>

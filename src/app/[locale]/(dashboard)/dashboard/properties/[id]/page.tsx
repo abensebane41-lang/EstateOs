@@ -4,13 +4,18 @@ import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { PropertyForm } from "./property-form";
 import { PropertyImagesSection } from "./property-images-section";
 import { PageHeader } from "@/shared/components/shared/page-header";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ locale: string; id: string }>;
 }
 
 export default async function PropertyDetailPage({ params }: Props) {
-  const { id } = await params;
+  const { locale, id } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("dashboard");
+  const tNav = await getTranslations("nav");
 
   const user = await getCurrentUser();
   if (!user?.agencyId) redirect("/login");
@@ -28,20 +33,20 @@ export default async function PropertyDetailPage({ params }: Props) {
         title={property.title}
         description={`${property.city} — ${property.address}`}
         breadcrumbs={[
-          { label: "لوحة التحكم", href: "/dashboard" },
-          { label: "العقارات", href: "/dashboard/properties" },
+          { label: tNav("dashboard"), href: "/dashboard" },
+          { label: tNav("properties"), href: "/dashboard/properties" },
           { label: property.title },
         ]}
       />
 
       <div className="space-y-8">
         <section className="rounded-xl border border-border bg-white p-6">
-          <h3 className="mb-4 text-lg font-semibold text-text-primary">صور العقار</h3>
+          <h3 className="mb-4 text-lg font-semibold text-text-primary">{t("images")}</h3>
           <PropertyImagesSection propertyId={property.id} initialImages={JSON.parse(JSON.stringify(property.images))} />
         </section>
 
         <section className="rounded-xl border border-border bg-white p-6">
-          <h3 className="mb-4 text-lg font-semibold text-text-primary">تعديل البيانات</h3>
+          <h3 className="mb-4 text-lg font-semibold text-text-primary">{t("editProperty")}</h3>
           <PropertyForm property={JSON.parse(JSON.stringify(property))} mode="edit" />
         </section>
       </div>

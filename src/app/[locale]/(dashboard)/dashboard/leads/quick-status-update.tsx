@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { updateLeadStatus } from "@/modules/lead/actions";
+import { useTranslations } from "next-intl";
 
 const NEXT_STATUS: Record<string, string> = {
   NEW: "CONTACTED",
@@ -11,11 +12,11 @@ const NEXT_STATUS: Record<string, string> = {
   NEGOTIATION: "CONVERTED",
 };
 
-const NEXT_LABEL: Record<string, string> = {
-  NEW: "تواصل",
-  CONTACTED: "مهتم",
-  INTERESTED: "تفاوض",
-  NEGOTIATION: "تحويل",
+const NEXT_LABELS: Record<string, string> = {
+  NEW: "CONTACTED",
+  CONTACTED: "INTERESTED",
+  INTERESTED: "NEGOTIATION",
+  NEGOTIATION: "CONVERTED",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -36,9 +37,10 @@ export function QuickStatusUpdate({
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("leadStatus");
 
   const nextStatus = NEXT_STATUS[currentStatus];
-  const nextLabel = NEXT_LABEL[currentStatus];
+  const nextLabelKey = NEXT_LABELS[currentStatus];
 
   if (!nextStatus) return null;
 
@@ -55,7 +57,7 @@ export function QuickStatusUpdate({
       disabled={isPending}
       className={`inline-flex items-center rounded-lg px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50 ${STATUS_COLORS[currentStatus]}`}
     >
-      {isPending ? "..." : nextLabel}
+      {isPending ? "..." : t(nextLabelKey)}
     </button>
   );
 }

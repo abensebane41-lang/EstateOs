@@ -29,13 +29,16 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug: rawSlug } = await params;
+  const { locale, slug: rawSlug } = await params;
   const slug = decodeSlug(rawSlug);
   const property = await prisma.property.findFirst({
     where: { slug, status: "PUBLISHED" },
     select: { title: true, description: true, city: true, price: true },
   });
-  if (!property) return { title: "عقار غير موجود" };
+  if (!property) {
+    const t = await getTranslations({ locale, namespace: "property" });
+    return { title: t("propertyNotFound") };
+  }
   return {
     title: `${property.title} | EstateOS`,
     description: property.description.slice(0, 160),
@@ -70,6 +73,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
   const t = await getTranslations("property");
   const tNav = await getTranslations("nav");
   const tPropertyTypes = await getTranslations("propertyTypes");
+  const tCommon = await getTranslations("common");
 
   const wilayaDisplayName = property.state
     ? (locale === "fr" ? WILAYAS.find(w => w.name === property.state)?.nameFr : WILAYAS.find(w => w.name === property.state)?.name) || property.state
@@ -139,7 +143,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
 
             <p className="mb-4 flex items-center gap-2 text-text-secondary">
               <MapPin className="h-4 w-4 shrink-0" />
-              {property.address}، {property.city}{wilayaDisplayName ? `، ${wilayaDisplayName}` : ""}
+              {property.address}{t("addressSeparator")} {property.city}{wilayaDisplayName ? `${t("addressSeparator")} ${wilayaDisplayName}` : ""}
             </p>
 
             <div className="mb-6 flex flex-wrap gap-6 border-b border-border pb-6">
@@ -151,7 +155,7 @@ export default async function PublicPropertyDetailPage({ params }: Props) {
               ) : null}
               <div className="flex items-center gap-2">
                 <Maximize className="h-5 w-5 text-text-tertiary" />
-                <span className="text-sm">{property.area} م²</span>
+                <span className="text-sm">{property.area} {tCommon("areaUnit")}</span>
               </div>
               {property.listingType && (
                 <Badge variant="outline">{property.listingType === "SALE" ? t("sale") : t("rent")}</Badge>

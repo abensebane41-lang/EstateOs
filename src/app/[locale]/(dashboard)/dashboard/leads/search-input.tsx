@@ -3,12 +3,14 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 
 export function SearchInput({ currentSearch }: { currentSearch: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(currentSearch);
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("dashboard");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,7 +33,7 @@ export function SearchInput({ currentSearch }: { currentSearch: string }) {
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="بحث بالاسم، البريد الإلكتروني، أو الهاتف..."
+        placeholder={t("leadSearchPlaceholder")}
         className="flex h-10 w-full rounded-lg border border-border bg-white pr-10 pl-4 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
       />
     </form>

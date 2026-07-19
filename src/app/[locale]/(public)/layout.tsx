@@ -11,12 +11,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       template: "%s",
     },
     description: t("siteDescription"),
-    keywords: ["عقارات", "إدارة عقارات", "وكلاء عقاريين", "بيع عقارات", "تأجير عقارات", "الجزائر"],
+    keywords: t("keywords"),
     openGraph: {
       title: t("siteTitle"),
       description: t("siteDescription"),
       type: "website",
-      locale: "ar_DZ",
+      locale: locale === "ar" ? "ar_DZ" : "fr_FR",
     },
   };
 }

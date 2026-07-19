@@ -2,21 +2,16 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
+import { useTranslations } from "next-intl";
 
-const TABS = [
-  { value: "ALL", label: "الكل" },
-  { value: "NEW", label: "جديد" },
-  { value: "CONTACTED", label: "تم التواصل" },
-  { value: "INTERESTED", label: "مهتم" },
-  { value: "NEGOTIATION", label: "تفاوض" },
-  { value: "CONVERTED", label: "تم التحويل" },
-  { value: "LOST", label: "مفقود" },
-];
+const STATUSES = ["ALL", "NEW", "CONTACTED", "INTERESTED", "NEGOTIATION", "CONVERTED", "LOST"] as const;
 
 export function StatusFilter({ currentStatus }: { currentStatus: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("leadStatus");
+  const tDashboard = useTranslations("dashboard");
 
   function handleFilter(status: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -33,17 +28,17 @@ export function StatusFilter({ currentStatus }: { currentStatus: string }) {
 
   return (
     <div className="flex flex-wrap gap-2">
-      {TABS.map((tab) => (
+      {STATUSES.map((value) => (
         <button
-          key={tab.value}
-          onClick={() => handleFilter(tab.value)}
+          key={value}
+          onClick={() => handleFilter(value)}
           className={`inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-            currentStatus === tab.value
+            currentStatus === value
               ? "bg-primary text-white"
               : "bg-white border border-border text-text-secondary hover:bg-surface-secondary"
           }`}
         >
-          {tab.label}
+          {value === "ALL" ? tDashboard("leadFilterAll") : t(value)}
         </button>
       ))}
     </div>

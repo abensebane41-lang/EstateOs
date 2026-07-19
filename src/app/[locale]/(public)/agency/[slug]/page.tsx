@@ -37,16 +37,17 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { slug: rawSlug } = await params;
+  const { locale, slug: rawSlug } = await params;
   const slug = decodeSlug(rawSlug);
   const agency = await prisma.agency.findUnique({
     where: { slug },
     select: { name: true, description: true },
   });
   if (!agency) return {};
+  const t = await getTranslations({ locale, namespace: "public" });
   return {
     title: agency.name,
-    description: agency.description || `عقارات ${agency.name} المتاحة للبيع والإيجار`,
+    description: agency.description || t("agencyDescriptionFallback", { name: agency.name }),
   };
 }
 
@@ -83,6 +84,8 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
 
   const t = await getTranslations("property");
   const tPropertyTypes = await getTranslations("propertyTypes");
+  const tCommon = await getTranslations("common");
+  const tPublic = await getTranslations("public");
 
   const TYPE_LABELS: Record<string, string> = Object.fromEntries(
     Object.entries(TYPE_KEYS).map(([key, tKey]) => [key, tPropertyTypes(tKey)])
@@ -266,7 +269,7 @@ export default async function AgencyLandingPage({ params, searchParams }: Props)
                         </span>
                         <span className="flex items-center gap-1.5">
                           <Maximize className="h-3.5 w-3.5" />
-                          {property.area} م²
+                          {property.area} {tCommon("areaUnit")}
                         </span>
                         {property.bedrooms !== null && property.bedrooms !== undefined && (
                           <span className="flex items-center gap-1.5">

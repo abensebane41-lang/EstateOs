@@ -40,7 +40,9 @@
     "areaUnit": "m²",
     "optional": "Facultatif",
     "none": "—",
-    "ok": "D'accord"
+    "ok": "D'accord",
+    "removeFavorite": "Retirer des favoris",
+    "addFavorite": "Ajouter aux favoris"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -203,7 +205,18 @@
     "images": "photos",
     "primary": "Principale",
     "bedsLabel": "chambres",
-    "bathsLabel": "salles de bain"
+    "bathsLabel": "salles de bain",
+    "contactSuccessTitle": "Votre message a été envoyé avec succès",
+    "contactSuccessDesc": "L'agent vous contactera bientôt",
+    "fullName": "Nom complet",
+    "fullNamePlaceholder": "Mohamed Amine",
+    "emailLabel": "Adresse e-mail",
+    "phoneLabel": "Numéro de téléphone (facultatif)",
+    "messageLabel": "Message",
+    "sending": "Envoi en cours...",
+    "sendMessage": "Envoyer le message",
+    "defaultMessage": "Je suis intéressé par la propriété \"{name}\". Puis-je en savoir plus ?",
+    "addressSeparator": ","
   },
   "propertyTypes": {
     "APARTMENT": "Appartement",
@@ -461,7 +474,28 @@
     "createdAt": "Date de création",
     "accountInfo": "Informations du compte",
     "searchPlaceholder": "Rechercher...",
-    "language": "Langue"
+    "language": "Langue",
+    "leadDetailDesc": "Détails du prospect",
+    "leadContactInfo": "Informations de contact",
+    "leadEmail": "E-mail",
+    "leadPhone": "Téléphone",
+    "leadNotSpecified": "Non spécifié",
+    "leadSource": "Source",
+    "leadCreatedAt": "Date de création",
+    "leadMessage": "Message",
+    "leadRelatedProperty": "Propriété associée",
+    "leadNotes": "Notes",
+    "leadStatus": "Statut",
+    "leadAdditionalInfo": "Informations supplémentaires",
+    "leadLastUpdate": "Dernière mise à jour",
+    "leadBackToList": "Retour à la liste",
+    "leadSearchPlaceholder": "Rechercher par nom, e-mail ou téléphone...",
+    "leadNotesPlaceholder": "Ajouter des notes sur le prospect...",
+    "leadNotesSaving": "Enregistrement...",
+    "leadNotesSave": "Enregistrer les notes",
+    "leadFilterAll": "Tous",
+    "leadAreaUnit": "m²",
+    "leadBedrooms": "chambres"
   },
   "superAdmin": {
     "title": "Tableau de bord",
@@ -551,7 +585,15 @@
     "terms": "Conditions d'utilisation",
     "contactUsLink": "Contactez-nous",
     "siteTitle": "Immobilier",
-    "siteDescription": "Plateforme professionnelle de gestion immobilière et d'agents immobiliers."
+    "siteDescription": "Plateforme professionnelle de gestion immobilière et d'agents immobiliers.",
+    "platformDescription": "Plateforme professionnelle de gestion immobilière pour les agents immobiliers en Algérie. Ajoutez vos propriétés et suivez vos clients depuis un seul endroit.",
+    "platform": "Plateforme",
+    "createAgency": "Créer une agence",
+    "legal": "Juridique",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfUse": "Conditions d'utilisation",
+    "keywords": ["immobilier", "gestion immobilière", "agents immobiliers", "vente immobilier", "location immobilier", "Algérie"],
+    "agencyDescriptionFallback": "Propriétés de {name} disponibles à la vente et à la location"
   },
   "suspended": {
     "titleSuspended": "Votre compte a été suspendu",

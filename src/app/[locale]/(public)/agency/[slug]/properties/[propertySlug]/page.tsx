@@ -111,6 +111,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
 
   const t = await getTranslations("property");
   const tPropertyTypes = await getTranslations("propertyTypes");
+  const tCommon = await getTranslations("common");
 
   const wilayaDisplayName = property.state
     ? (locale === "fr" ? WILAYAS.find(w => w.name === property.state)?.nameFr : WILAYAS.find(w => w.name === property.state)?.name) || property.state
@@ -175,7 +176,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
             </h1>
             <p className="text-white/80 flex items-center gap-2 text-lg">
               <MapPin className="h-5 w-5 text-accent" />
-              {property.address}، {property.city}{wilayaDisplayName ? `، ${wilayaDisplayName}` : ""}
+              {property.address}{t("addressSeparator")} {property.city}{wilayaDisplayName ? `${t("addressSeparator")} ${wilayaDisplayName}` : ""}
             </p>
           </div>
         </div>
@@ -244,7 +245,7 @@ export default async function AgencyPropertyDetailPage({ params }: Props) {
                     <Maximize className="h-5 w-5 text-accent" />
                   </div>
                   <p className="text-xs text-text-tertiary mb-1">{t("area")}</p>
-                  <p className="font-medium text-text-primary">{property.area} م²</p>
+                  <p className="font-medium text-text-primary">{property.area} {tCommon("areaUnit")}</p>
                 </div>
                 {property.bedrooms !== null && property.bedrooms !== undefined && property.bedrooms > 0 && (
                   <div className="rounded-xl bg-surface-secondary p-4 text-center border border-border/30">

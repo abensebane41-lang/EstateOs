@@ -21,6 +21,7 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
   const t = await getTranslations("property");
   const tPropertyTypes = await getTranslations("propertyTypes");
   const tFilter = await getTranslations("filter");
+  const tCommon = await getTranslations("common");
 
   const TYPE_LABELS: Record<string, string> = {
     APARTMENT: tPropertyTypes("APARTMENT"),
@@ -139,7 +140,7 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
                 </h3>
                 <p className="mb-3 flex items-center gap-1 text-sm text-text-secondary">
                   <MapPin className="h-3 w-3 shrink-0" />
-                  {property.city}، {property.address}
+                  {property.city}{t("addressSeparator")} {property.address}
                 </p>
                 <div className="mb-3 flex items-center gap-4 text-xs text-text-secondary">
                   {property.bedrooms ? (
@@ -148,7 +149,7 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
                       {property.bedrooms} {t("bedsLabel")}
                     </span>
                   ) : null}
-                  <span>{property.area} م²</span>
+                  <span>{property.area} {tCommon("areaUnit")}</span>
                 </div>
                 <div className="border-t border-border pt-3">
                   <p className="text-lg font-bold text-accent">
