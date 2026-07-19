@@ -162,7 +162,7 @@ const contactSchema = z.object({
   agencyId: z.string().min(1, "الوكالة مطلوبة"),
 });
 
-const allowedLeadStatuses = z.enum(["NEW", "CONTACTED", "QUALIFIED", "NEGOTIATING", "WON", "LOST"]);
+const allowedLeadStatuses = z.enum(["NEW", "CONTACTED", "INTERESTED", "NEGOTIATION", "CONVERTED", "LOST"]);
 
 export async function createLead(data: z.infer<typeof contactSchema>): Promise<ActionResponse> {
   const parsed = contactSchema.safeParse(data);

@@ -33,10 +33,6 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/api/")) {
-    if (pathname.startsWith("/api/auth/")) {
-      return NextResponse.next();
-    }
-
     const rule = RATE_LIMITS[pathname] || DEFAULT_LIMIT;
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0] || "anonymous";
