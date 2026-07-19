@@ -73,6 +73,8 @@ export default function NewPropertyPage() {
   const LISTING_TYPES = [
     { value: "SALE", label: tProperty("sale") },
     { value: "RENT", label: tProperty("rent") },
+    { value: "VACATION_RENTAL", label: tProperty("vacationRental") },
+    { value: "TEMPORARY", label: tProperty("temporary") },
   ];
 
   const STATUSES = [

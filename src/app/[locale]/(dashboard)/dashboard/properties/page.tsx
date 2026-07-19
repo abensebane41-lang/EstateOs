@@ -1,5 +1,5 @@
 import { Building2, Plus, Bed, MapPin, Eye } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { PageHeader } from "@/shared/components/shared/page-header";
 import { EmptyState } from "@/shared/components/shared/empty-state";
 import { Button } from "@/shared/components/ui/button";
@@ -25,6 +25,7 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
   const tPropertyTypes = await getTranslations("propertyTypes");
   const tProperty = await getTranslations("property");
   const tCommon = await getTranslations("common");
+  const locale = await getLocale();
 
   const params = await searchParams;
   const status = params?.status || "ALL";
@@ -211,7 +212,7 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
                       </td>
                       <td className="whitespace-nowrap px-6 py-4">
                         <span className="font-semibold text-accent">
-                          {formatCurrency(property.price, property.currency)}
+                          {formatCurrency(property.price, locale)}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4">

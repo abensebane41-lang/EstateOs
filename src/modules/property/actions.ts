@@ -18,6 +18,7 @@ const createPropertySchema = z.object({
   price: z.coerce.number().min(0, "السعر يجب أن يكون أكبر من أو يساوي 0"),
   currency: z.string().default("DZD"),
   bedrooms: z.coerce.number().int().min(0).optional(),
+  floor: z.coerce.number().int().min(0).optional(),
   area: z.coerce.number().min(0, "المساحة يجب أن تكون أكبر من أو تساوي 0").default(0),
   address: z.string().min(2, "العنوان مطلوب"),
   city: z.string().min(2, "المدينة مطلوبة"),
@@ -72,6 +73,7 @@ export async function createProperty(
         price: parsed.data.price,
         currency: parsed.data.currency,
         bedrooms: parsed.data.bedrooms ?? null,
+        floor: parsed.data.floor ?? null,
         area: parsed.data.area,
         address: parsed.data.address,
         city: parsed.data.city,
@@ -144,6 +146,7 @@ export async function updateProperty(
     if (parsed.data.price !== undefined) updateData.price = parsed.data.price;
     if (parsed.data.currency !== undefined) updateData.currency = parsed.data.currency;
     if (parsed.data.bedrooms !== undefined) updateData.bedrooms = parsed.data.bedrooms ?? null;
+    if (parsed.data.floor !== undefined) updateData.floor = parsed.data.floor ?? null;
     if (parsed.data.area !== undefined) updateData.area = parsed.data.area;
     if (parsed.data.address !== undefined) updateData.address = parsed.data.address;
     if (parsed.data.city !== undefined) updateData.city = parsed.data.city;
@@ -293,7 +296,7 @@ export async function getPropertyBySlug(
 ): Promise<ActionResponse> {
   try {
     const property = await prisma.property.findFirst({
-      where: { slug },
+      where: { slug, status: "PUBLISHED" },
       include: {
         images: { orderBy: { sortOrder: "asc" } },
       },

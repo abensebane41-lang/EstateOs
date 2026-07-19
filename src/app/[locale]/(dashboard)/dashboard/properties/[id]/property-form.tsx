@@ -100,6 +100,8 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
   const LISTING_TYPES = [
     { value: "SALE", label: tProperty("sale") },
     { value: "RENT", label: tProperty("rent") },
+    { value: "VACATION_RENTAL", label: tProperty("vacationRental") },
+    { value: "TEMPORARY", label: tProperty("temporary") },
   ];
 
   const STATUSES = [
@@ -152,8 +154,10 @@ export function PropertyForm({ property, mode }: PropertyFormProps) {
     setNewImages((prev) => prev.filter((_, i) => i !== index));
   }
 
-  function removeExistingImage(imageId: string) {
+  async function removeExistingImage(imageId: string) {
     setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
+    const { deletePropertyImage } = await import("@/modules/property/image-actions");
+    deletePropertyImage(imageId).catch(() => {});
   }
 
   async function uploadNewImages(propertyId: string) {

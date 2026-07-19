@@ -1,73 +1,76 @@
-import Link from "next/link";
-import { Check, ArrowRight, Building2, Users, BarChart3, Globe, HardDrive, Headphones } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/client";
+import { Check, ArrowRight } from "lucide-react";
 
-const plans = [
-  {
-    name: "مجاني",
-    nameEn: "Free",
-    price: "0",
-    period: "دائماً",
-    description: "للوكلاء الجدد الذين يريدون تجربة المنصة",
-    highlighted: false,
-    features: [
-      { text: "50 عقار", included: true },
-      { text: "10 صور لكل عقار", included: true },
-      { text: "صفحة عامة احترافية", included: true },
-      { text: "إدارة العملاء المحتملين", included: true },
-      { text: "إحصائيات/basic", included: true },
-      { text: "دعم عبر البريد", included: true },
-      { text: "域名 مخصص", included: false },
-      { text: "إزالة علامة EstateOS", included: false },
-    ],
-  },
-  {
-    name: "أساسي",
-    nameEn: "Basic",
-    price: "1,500",
-    period: "شهرياً",
-    priceNote: "د.ج",
-    description: "للوكلاء النشطين الذين يحتاجون ميزات أكثر",
-    highlighted: false,
-    features: [
-      { text: "200 عقار", included: true },
-      { text: "15 صورة لكل عقار", included: true },
-      { text: "صفحة عامة احترافية", included: true },
-      { text: "إدارة العملاء المحتملين", included: true },
-      { text: "إحصائيات متقدمة", included: true },
-      { text: "دعم عبر البريد", included: true },
-      { text: "域名 مخصص", included: false },
-      { text: "إزالة علامة EstateOS", included: false },
-    ],
-  },
-  {
-    name: "احترافي",
-    nameEn: "Professional",
-    price: "3,500",
-    period: "شهرياً",
-    priceNote: "د.ج",
-    description: "للوكلاء الكبيرة الذين يحتاجون كل شيء",
-    highlighted: true,
-    features: [
-      { text: "1,000 عقار", included: true },
-      { text: "25 صورة لكل عقار", included: true },
-      { text: "صفحة عامة احترافية", included: true },
-      { text: "إدارة العملاء المحتملين", included: true },
-      { text: "إحصائيات وتقارير كاملة", included: true },
-      { text: "دعم أولوية", included: true },
-      { text: "域名 مخصص", included: true },
-      { text: "إزالة علامة EstateOS", included: true },
-    ],
-  },
-];
+export default async function PricingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
-export default function PricingPage() {
+  const t = await getTranslations("pricing");
+
+  const plans = [
+    {
+      name: t("free"),
+      price: "0",
+      period: t("forever"),
+      description: t("freeDesc"),
+      highlighted: false,
+      features: [
+        { text: t("feature50Properties"), included: true },
+        { text: t("feature10Images"), included: true },
+        { text: t("featurePublicPage"), included: true },
+        { text: t("featureLeadManagement"), included: true },
+        { text: t("featureBasicStats"), included: true },
+        { text: t("featureEmailSupport"), included: true },
+        { text: t("featureCustomDomain"), included: false },
+        { text: t("featureRemoveBranding"), included: false },
+      ],
+    },
+    {
+      name: t("basic"),
+      price: "1,500",
+      period: t("perMonth"),
+      priceNote: t("currency"),
+      description: t("basicDesc"),
+      highlighted: false,
+      features: [
+        { text: t("feature200Properties"), included: true },
+        { text: t("feature15Images"), included: true },
+        { text: t("featurePublicPage"), included: true },
+        { text: t("featureLeadManagement"), included: true },
+        { text: t("featureAdvancedStats"), included: true },
+        { text: t("featureEmailSupport"), included: true },
+        { text: t("featureCustomDomain"), included: false },
+        { text: t("featureRemoveBranding"), included: false },
+      ],
+    },
+    {
+      name: t("professional"),
+      price: "3,500",
+      period: t("perMonth"),
+      priceNote: t("currency"),
+      description: t("professionalDesc"),
+      highlighted: true,
+      features: [
+        { text: t("feature1000Properties"), included: true },
+        { text: t("feature25Images"), included: true },
+        { text: t("featurePublicPage"), included: true },
+        { text: t("featureLeadManagement"), included: true },
+        { text: t("featureFullReports"), included: true },
+        { text: t("featurePrioritySupport"), included: true },
+        { text: t("featureCustomDomain"), included: true },
+        { text: t("featureRemoveBranding"), included: true },
+      ],
+    },
+  ];
+
   return (
     <div className="py-16 bg-surface-secondary">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-text-primary mb-3 font-public-heading">الأسعار</h1>
+          <h1 className="text-4xl font-bold text-text-primary mb-3 font-public-heading">{t("title")}</h1>
           <p className="text-lg text-text-secondary max-w-[32rem] mx-auto">
-            اختر الخطة المناسبة لوكالتك. ابدأ مجاناً وطوّر مع نمو أعمالك.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -83,7 +86,7 @@ export default function PricingPage() {
             >
               {plan.highlighted && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-4 py-1 text-xs font-bold text-primary-dark">
-                  الأكثر شيوعاً
+                  {t("mostPopular")}
                 </div>
               )}
 
@@ -119,7 +122,7 @@ export default function PricingPage() {
                     : "bg-primary text-white hover:bg-primary/90"
                 }`}
               >
-                ابدأ الآن
+                {t("startNow")}
                 <ArrowRight className="mr-2 h-4 w-4" />
               </Link>
             </div>
@@ -127,9 +130,9 @@ export default function PricingPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-2xl font-bold text-text-primary mb-4">لديك أسئلة؟</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-4">{t("questions")}</h2>
           <p className="text-text-secondary mb-6 max-w-[28rem] mx-auto">
-            تواصل معنا وسنساعدك في اختيار الخطة المناسبة لاحتياجاتك.
+            {t("questionsDesc")}
           </p>
           <a href="mailto:support@estateos.dz" className="inline-flex items-center text-primary hover:underline font-medium">
             support@estateos.dz

@@ -11,6 +11,15 @@ export async function trackEvent(params: {
   userAgent?: string;
 }) {
   try {
+    const agency = await prisma.agency.findUnique({
+      where: { id: params.agencyId },
+      select: { id: true },
+    });
+    if (!agency) {
+      console.error("Track event error: Invalid agencyId");
+      return;
+    }
+
     await prisma.analyticsEvent.create({
       data: {
         agencyId: params.agencyId,
@@ -27,6 +36,24 @@ export async function trackEvent(params: {
 
 export async function trackPropertyView(propertyId: string, agencyId: string) {
   try {
+    const agency = await prisma.agency.findUnique({
+      where: { id: agencyId },
+      select: { id: true },
+    });
+    if (!agency) {
+      console.error("Track property view error: Invalid agencyId");
+      return;
+    }
+
+    const property = await prisma.property.findUnique({
+      where: { id: propertyId },
+      select: { id: true, agencyId: true },
+    });
+    if (!property || property.agencyId !== agencyId) {
+      console.error("Track property view error: Property not found or does not belong to agency");
+      return;
+    }
+
     await prisma.property.update({
       where: { id: propertyId },
       data: { viewCount: { increment: 1 } },
@@ -44,6 +71,26 @@ export async function trackPropertyView(propertyId: string, agencyId: string) {
 
 export async function trackContactClick(propertyId: string | null, agencyId: string, method: "PHONE" | "EMAIL" | "FORM") {
   try {
+    const agency = await prisma.agency.findUnique({
+      where: { id: agencyId },
+      select: { id: true },
+    });
+    if (!agency) {
+      console.error("Track contact click error: Invalid agencyId");
+      return;
+    }
+
+    if (propertyId) {
+      const property = await prisma.property.findUnique({
+        where: { id: propertyId },
+        select: { id: true, agencyId: true },
+      });
+      if (!property || property.agencyId !== agencyId) {
+        console.error("Track contact click error: Property not found or does not belong to agency");
+        return;
+      }
+    }
+
     await trackEvent({
       agencyId,
       eventType: "CONTACT_CLICK",
