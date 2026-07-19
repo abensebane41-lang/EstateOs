@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
+
+const LOCALES = ["ar", "fr"] as const;
+type Locale = (typeof LOCALES)[number];
+const DEFAULT_LOCALE: Locale = "ar";
 
 const RATE_LIMITS: Record<string, { max: number; windowMs: number }> = {
   "/api/track": { max: 30, windowMs: 60_000 },
@@ -27,7 +29,9 @@ function check(key: string, max: number, windowMs: number): boolean {
   return entry.count <= max;
 }
 
-const intlMiddleware = createMiddleware(routing);
+function isValidLocale(v: string | undefined): v is Locale {
+  return !!v && (LOCALES as readonly string[]).includes(v);
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -53,40 +57,34 @@ export function middleware(request: NextRequest) {
 
   const isSuperAdmin = pathname.startsWith("/super-admin");
   const isDashboard = pathname.startsWith("/dashboard");
-  const isPublic = !isSuperAdmin && !isDashboard;
 
-  let validLocale: string;
-  if (isSuperAdmin) {
-    validLocale = "ar";
-  } else if (isPublic) {
-    const publicLocale = request.cookies.get("PUBLIC_LOCALE")?.value;
-    validLocale = publicLocale && routing.locales.includes(publicLocale as "ar" | "fr")
-      ? publicLocale
-      : "ar";
-  } else {
-    const dashboardLocale = request.cookies.get("NEXT_LOCALE")?.value;
-    validLocale = dashboardLocale && routing.locales.includes(dashboardLocale as "ar" | "fr")
-      ? dashboardLocale
-      : "ar";
+  let cleanPathname = pathname;
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length > 0 && (LOCALES as readonly string[]).includes(segments[0])) {
+    cleanPathname = "/" + segments.slice(1).join("/");
   }
 
-  const newHeaders = new Headers(request.headers);
-  const existingCookies = newHeaders.get("cookie") || "";
-  const filtered = existingCookies
-    .split(";")
-    .map((c) => c.trim())
-    .filter((c) => !c.startsWith("NEXT_LOCALE=") && !c.startsWith("PUBLIC_LOCALE="));
-  filtered.push(`NEXT_LOCALE=${validLocale}`);
-  newHeaders.set("cookie", filtered.join("; "));
-  const modifiedRequest = new NextRequest(request.url, { ...request, headers: newHeaders });
-
-  const response = intlMiddleware(modifiedRequest);
-
-  if (isPublic) {
-    response.cookies.delete("NEXT_LOCALE");
-    response.cookies.set("PUBLIC_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  let locale: Locale = DEFAULT_LOCALE;
+  if (isSuperAdmin) {
+    locale = DEFAULT_LOCALE;
+  } else if (isDashboard) {
+    const dashboardLocale = request.cookies.get("NEXT_LOCALE")?.value;
+    locale = isValidLocale(dashboardLocale) ? dashboardLocale : DEFAULT_LOCALE;
   } else {
-    response.cookies.set("NEXT_LOCALE", validLocale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+    const publicLocale = request.cookies.get("PUBLIC_LOCALE")?.value;
+    locale = isValidLocale(publicLocale) ? publicLocale : DEFAULT_LOCALE;
+  }
+
+  const rewriteUrl = request.nextUrl.clone();
+  rewriteUrl.pathname = `/${locale}${cleanPathname}`;
+
+  const response = NextResponse.rewrite(rewriteUrl);
+
+  if (!isDashboard && !isSuperAdmin) {
+    response.cookies.set("PUBLIC_LOCALE", locale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
+  }
+  if (isDashboard) {
+    response.cookies.set("NEXT_LOCALE", locale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
   }
 
   return response;
