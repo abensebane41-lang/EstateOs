@@ -1,9 +1,9 @@
-export const revalidate = 3600; // ISR: revalidate every hour
+export const dynamic = "force-dynamic";
 
 import { prisma } from "@/shared/lib/prisma";
 import { Building2, MapPin, Bed, Search } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
-import Link from "next/link";
+import { Link } from "@/i18n/client";
 import { FavoriteButton } from "@/shared/components/shared/favorite-button";
 import { getCurrentUser } from "@/shared/lib/auth-helpers";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -14,16 +14,13 @@ interface Props {
   searchParams: Promise<{ city?: string; type?: string; minPrice?: string; maxPrice?: string }>;
 }
 
-export const metadata = {
-  title: "العقارات المتاحة | EstateOS",
-  description: "تصفح أفضل العقارات المتاحة حالياً. شقق، فلل، مكاتب تجارية وأراضي.",
-};
-
 export default async function PublicPropertiesPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const sp = await searchParams;
+  const t = await getTranslations("property");
   const tPropertyTypes = await getTranslations("propertyTypes");
+  const tFilter = await getTranslations("filter");
 
   const TYPE_LABELS: Record<string, string> = {
     APARTMENT: tPropertyTypes("APARTMENT"),
@@ -70,14 +67,14 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary mb-2">العقارات المتاحة</h1>
-        <p className="text-text-secondary">تصفح أفضل العقارات المتاحة حالياً</p>
+        <h1 className="text-3xl font-bold text-text-primary mb-2">{t("availableProperties")}</h1>
+        <p className="text-text-secondary">{t("searchHint")}</p>
       </div>
 
       <form className="mb-8 flex flex-wrap gap-4 rounded-xl border border-border bg-white p-4">
         <div className="flex-1 min-w-[200px]">
           <select name="type" defaultValue={sp.type || ""} className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
-            <option value="">كل الأنواع</option>
+            <option value="">{tFilter("all")}</option>
             {Object.entries(TYPE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>
             ))}
@@ -85,7 +82,7 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
         </div>
         <div className="flex-1 min-w-[200px]">
           <select name="city" defaultValue={sp.city || ""} className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
-            <option value="">كل المدن</option>
+            <option value="">{tFilter("all")}</option>
             {cities.map((c) => (
               <option key={c.city} value={c.city}>{c.city}</option>
             ))}
@@ -93,15 +90,15 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
         </div>
         <button type="submit" className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-light transition-colors">
           <Search className="ml-2 h-4 w-4" />
-          بحث
+          {tFilter("searchButton")}
         </button>
       </form>
 
       {properties.length === 0 ? (
         <div className="py-20 text-center">
           <Building2 className="mx-auto mb-4 h-12 w-12 text-text-tertiary" />
-          <h3 className="text-lg font-semibold text-text-primary mb-2">لا توجد عقارات حالياً</h3>
-          <p className="text-text-secondary">سيظهر هنا العقارات المنشورة قريباً</p>
+          <h3 className="text-lg font-semibold text-text-primary mb-2">{t("noPropertiesFound")}</h3>
+          <p className="text-text-secondary">{t("searchHint")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -148,7 +145,7 @@ export default async function PublicPropertiesPage({ params, searchParams }: Pro
                   {property.bedrooms ? (
                     <span className="flex items-center gap-1">
                       <Bed className="h-3 w-3" />
-                      {property.bedrooms} غرف
+                      {property.bedrooms} {t("bedsLabel")}
                     </span>
                   ) : null}
                   <span>{property.area} م²</span>
