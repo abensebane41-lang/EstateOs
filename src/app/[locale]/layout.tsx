@@ -46,7 +46,7 @@ export default async function LocaleLayout({
   }
 
   setRequestLocale(locale);
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
   const direction = dirMap[locale as "ar" | "fr"] || "rtl";
 
   return (
