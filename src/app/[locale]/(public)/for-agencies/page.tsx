@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/client";
-import { Building2, Users, BarChart3, Globe, Zap, CheckCircle2, X, Star, TrendingUp, Shield, ArrowLeft, BarChart, Eye } from "lucide-react";
+import { Building2, Users, BarChart3, Globe, Zap, CheckCircle2, X, Star, TrendingUp, Shield, ArrowLeft, Eye, CircleDollarSign } from "lucide-react";
 
 export default async function ForAgenciesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -59,7 +59,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
           </div>
           <div className="mx-auto grid max-w-[72rem] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: DollarSign, key: "problem1" },
+              { icon: CircleDollarSign, key: "problem1" },
               { icon: Globe, key: "problem2" },
               { icon: Users, key: "problem3" },
               { icon: Shield, key: "problem4" },
@@ -182,7 +182,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
             {[
               { num: "10+", key: "proof1", icon: Building2 },
               { num: "200+", key: "proof2", icon: Eye },
-              { num: "2,500", key: "proof3", icon: BarChart },
+              { num: "2,500", key: "proof3", icon: BarChart3 },
             ].map(({ key, num, icon: Icon }) => (
               <div key={key} className="rounded-2xl border border-border bg-surface-secondary py-8 px-4 text-center">
                 <Icon className="mx-auto mb-3 h-6 w-6 text-primary/60" />
