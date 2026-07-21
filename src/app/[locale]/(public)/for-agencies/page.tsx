@@ -11,16 +11,16 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
   const t = await getTranslations("marketing");
 
   return (
-    <div className="overflow-hidden" dir="rtl">
+    <div>
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary via-primary-dark to-[#0a1f3a] py-16 text-white md:py-24">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-        <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
+        <div className="container mx-auto px-6 text-center relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full bg-accent/20 px-5 py-2 text-sm text-accent mb-8">
             <Star className="h-4 w-4" />
             {t("heroBadge")}
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 font-public-heading leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             {t("heroTitle")}
           </h1>
           <p className="text-lg md:text-xl text-white/70 mb-3 max-w-3xl mx-auto leading-relaxed">
@@ -43,7 +43,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
 
       {/* Problems */}
       <section className="py-20 bg-surface-secondary">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">{t("problemTitle")}</h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">{t("problemSubtitle")}</p>
@@ -69,7 +69,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
 
       {/* Features */}
       <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">{t("solutionTitle")}</h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">{t("solutionSubtitle")}</p>
@@ -97,7 +97,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
 
       {/* Steps */}
       <section className="py-20 bg-primary text-white">
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("stepsTitle")}</h2>
             <p className="text-lg text-white/50 max-w-xl mx-auto">{t("stepsSubtitle")}</p>
@@ -122,7 +122,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
 
       {/* Comparison */}
       <section className="py-20 bg-surface-secondary">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="container mx-auto px-6">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">{t("comparisonTitle")}</h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">{t("comparisonSubtitle")}</p>
@@ -168,7 +168,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
 
       {/* Stats */}
       <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
               { num: "10+", key: "proof1" },
@@ -176,7 +176,7 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
               { num: "2,500", key: "proof3" },
             ].map(({ key, num }) => (
               <div key={key} className="text-center rounded-2xl border border-border bg-surface-secondary py-8 px-4">
-                <p className="text-4xl font-bold text-primary mb-2 font-public-heading">{num}</p>
+                <p className="text-4xl font-bold text-primary mb-2">{num}</p>
                 <p className="text-sm text-text-secondary">{t(`${key}Label`)}</p>
               </div>
             ))}
@@ -186,8 +186,8 @@ export default async function ForAgenciesPage({ params }: { params: Promise<{ lo
 
       {/* CTA */}
       <section className="py-24 bg-gradient-to-br from-primary to-primary-dark text-white">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 font-public-heading leading-tight">{t("ctaTitle")}</h2>
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">{t("ctaTitle")}</h2>
           <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto">{t("ctaSubtitle")}</p>
           <Link href="/register" className="inline-flex items-center justify-center rounded-xl bg-accent px-12 py-5 text-xl font-bold text-primary-dark hover:bg-accent-light transition-all shadow-xl shadow-accent/20">
             {t("ctaButton")}
