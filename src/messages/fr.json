@@ -220,6 +220,19 @@
     "ctaButton": "Créez votre agence gratuitement",
     "ctaNote": "Essai gratuit 7 jours — sans carte de crédit"
   },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Conseils et guides pour développer votre activité immobilière",
+    "article1Title": "Meilleure plateforme immobilière en Algérie 2026",
+    "article1Excerpt": "Comparaison complète des meilleures plateformes immobilières disponibles pour les agents en Algérie — fonctionnalités, prix et évaluations",
+    "article2Title": "Créez votre site immobilier en 5 minutes",
+    "article2Excerpt": "Guide étape par étape pour créer un site immobilier professionnel qui présente vos propriétés et attire les clients",
+    "article3Title": "Marketing digital pour agents immobiliers",
+    "article3Excerpt": "Stratégies efficaces pour commercialiser vos propriétés en ligne et attirer plus de prospects",
+    "ctaTitle": "Prêt à commencer ?",
+    "ctaSubtitle": "Créez votre agence maintenant et obtenez votre propre site immobilier",
+    "ctaButton": "Commencer gratuitement"
+  },
   "property": {
     "sale": "À vendre",
     "rent": "À louer",
@@ -651,6 +664,7 @@
     "platformDescription": "Plateforme professionnelle de gestion immobilière pour les agents immobiliers en Algérie. Ajoutez vos propriétés et suivez vos clients depuis un seul endroit.",
     "platform": "Plateforme",
     "forAgencies": "Pour les agences",
+    "blog": "Blog",
     "createAgency": "Créer une agence",
     "legal": "Juridique",
     "privacyPolicy": "Politique de confidentialité",
