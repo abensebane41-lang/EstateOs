@@ -21,6 +21,7 @@ export async function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-text-primary mb-4">{t("platform")}</h3>
             <ul className="space-y-2">
+              <li><Link href="/for-agencies" className="text-sm text-text-secondary hover:text-primary transition-colors">{t("forAgencies")}</Link></li>
               <li><Link href="/properties" className="text-sm text-text-secondary hover:text-primary transition-colors">{t("browseProperties")}</Link></li>
               <li><Link href="/register" className="text-sm text-text-secondary hover:text-primary transition-colors">{t("createAgency")}</Link></li>
               <li><Link href="/login" className="text-sm text-text-secondary hover:text-primary transition-colors">{t("login")}</Link></li>
