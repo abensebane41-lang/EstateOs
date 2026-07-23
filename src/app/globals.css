@@ -149,6 +149,13 @@ html[dir="rtl"] [dir="ltr"] {
   white-space: normal !important;
 }
 
+/* RTL landing page text fix */
+[dir="rtl"] {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.8;
+}
+
 /* Focus visible styles */
 *:focus-visible {
   outline: 2px solid var(--color-primary);
