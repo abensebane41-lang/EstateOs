@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 627px; font-family: 'IBM Plex Sans Arabic', sans-serif; background: #0F2747; overflow: hidden; position: relative; display: flex; align-items: center; }
+  .bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0F2747 0%, #1a3a5c 100%); }
+  .gold-circle { position: absolute; right: -120px; top: -120px; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%); }
+  .content { position: relative; z-index: 10; display: flex; align-items: center; width: 100%; padding: 0 80px; gap: 60px; }
+  .right { flex: 1; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,162,39,0.15); border: 1px solid rgba(201,162,39,0.3); border-radius: 100px; padding: 8px 20px; margin-bottom: 24px; color: #C9A227; font-size: 16px; font-weight: 500; }
+  .dot { width: 6px; height: 6px; background: #C9A227; border-radius: 50%; }
+  h1 { font-size: 44px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 16px; }
+  .gold { color: #C9A227; }
+  p { font-size: 20px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .left { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .cta { background: #C9A227; color: #0F2747; font-size: 20px; font-weight: 700; padding: 18px 40px; border-radius: 14px; white-space: nowrap; }
+  .url { font-size: 14px; color: rgba(255,255,255,0.4); direction: ltr; }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="gold-circle"></div>
+  <div class="content">
+    <div class="right">
+      <div class="badge"><div class="dot"></div>7 أيام تجربة مجانية</div>
+      <h1>أنشئ موقعك العقاري<br><span class="gold">احترافياً</span> في دقائق</h1>
+      <p>لوحة تحكم + موقع احترافي + دعم عربي</p>
+    </div>
+    <div class="left">
+      <div class="cta">ابدأ تجربتك المجانية ←</div>
+      <div class="url">estate-os-beryl.vercel.app</div>
+    </div>
+  </div>
+</body>
+</html>

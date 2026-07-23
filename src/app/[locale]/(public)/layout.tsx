@@ -34,22 +34,22 @@ export default async function PublicLayout({
   const t = await getTranslations("public");
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-border bg-white">
+    <div className="min-h-screen flex flex-col bg-[#0B0F1A]">
+      <header className="border-b border-white/8 bg-[#0B0F1A]/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link href="/" className="text-xl font-bold text-primary font-public-heading">
-            EstateOS
+          <Link href="/" className="text-xl font-bold text-white font-public-heading tracking-wide">
+            Estate<span className="text-accent">OS</span>
           </Link>
           <LanguageSwitcher />
         </div>
       </header>
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-border bg-white py-8">
+      <footer className="border-t border-white/8 bg-[#0B0F1A] py-8">
         <div className="container mx-auto px-4 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-          <p className="text-sm text-text-secondary">&copy; {new Date().getFullYear()} EstateOS. {t("copyright")}</p>
+          <p className="text-sm text-white/30">&copy; {new Date().getFullYear()} EstateOS. {t("copyright")}</p>
           <div className="flex items-center gap-6">
-            <Link href="/terms" className="text-sm text-text-secondary hover:text-text-primary transition-colors">{t("terms")}</Link>
-            <a href="mailto:support@estateos.dz" className="text-sm text-text-secondary hover:text-text-primary transition-colors">{t("contactUsLink")}</a>
+            <Link href="/terms" className="text-sm text-white/30 hover:text-white/60 transition-colors">{t("terms")}</Link>
+            <a href="mailto:support@estateos.dz" className="text-sm text-white/30 hover:text-white/60 transition-colors">{t("contactUsLink")}</a>
           </div>
         </div>
       </footer>

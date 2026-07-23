@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
   return (
     <button
       onClick={switchLocale}
-      className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors"
+      className="flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/60 backdrop-blur-sm hover:border-white/25 hover:bg-white/10 hover:text-white transition-colors"
     >
       {locale === "ar" ? "Français" : "العربية"}
     </button>
