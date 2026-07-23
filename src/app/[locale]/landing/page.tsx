@@ -153,7 +153,7 @@ export default async function LandingPage({
                   {n}
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-white/90">{t(`step${n}Title`)}</h3>
-                <p className="mx-auto max-w-xs text-sm text-white/40 leading-relaxed">{t(`step${n}Desc`)}</p>
+                <p className="mx-auto max-w-sm text-sm text-white/40 leading-relaxed">{t(`step${n}Desc`)}</p>
               </div>
             ))}
           </div>
@@ -237,14 +237,14 @@ export default async function LandingPage({
 
         <div className="mx-auto max-w-[1400px] px-6 relative z-10 text-center">
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl">{t("ctaTitle")}</h2>
-          <p className="mx-auto mb-10 max-w-xl text-white/45">{t("ctaSubtitle")}</p>
+          <p className="mx-auto mb-10 max-w-2xl text-lg text-white/45 leading-relaxed">{t("ctaSubtitle")}</p>
 
           <Link href="/register" className="inline-flex items-center gap-2 rounded-xl bg-accent px-10 py-4 text-base font-bold text-[#0B0F1A] shadow-lg shadow-accent/25 transition-all duration-200 hover:bg-accent-light hover:shadow-accent/35">
             {t("ctaButton")}
             <ArrowRight className="h-4 w-4 rtl:rotate-180" />
           </Link>
 
-          <p className="mt-5 text-sm text-white/30">{t("ctaNote")}</p>
+          <p className="mt-5 text-sm text-white/30 max-w-md mx-auto">{t("ctaNote")}</p>
         </div>
       </section>
 
